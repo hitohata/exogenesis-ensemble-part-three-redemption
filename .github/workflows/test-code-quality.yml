@@ -11,7 +11,7 @@ jobs:
     timeout-minutes: 3
     name: test project document quality
     runs-on: ubuntu-latest
-    default:
+    defaults:
       run:
         working-directory: ./docs/project
     steps:

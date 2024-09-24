@@ -10,7 +10,7 @@ jobs:
     timeout-minutes: 3
     name: build a project
     runs-on: ubuntu-latest
-    default:
+    defaults:
       run:
         working-directory: ./docs/project
     steps:
