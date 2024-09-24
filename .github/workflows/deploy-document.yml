@@ -1,0 +1,40 @@
+name: Test Build
+
+on:
+  push:
+#  pull_request:
+#    branch:
+#      - dev
+
+permissions:
+  contents: write
+
+jobs:
+  deploy-project-doc:
+    timeout-minutes: 3
+    name: build a project
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./docs/project
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+      - name: Install package
+        run: bun install
+      - name: Check format
+        run: bun run build
+      - name: deploy project document
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: ./build
+          target-folder: /projects
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  action-timeline:
+    needs: [deploy-project-doc]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Kesin11/actions-timeline@v2
