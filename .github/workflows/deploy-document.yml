@@ -43,6 +43,8 @@ jobs:
     needs:
       - build-project-doc
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: mkdir
         run: sudo mkdir /build && sudo chmod -R 777 /build
       - name: Download artifacts
@@ -59,7 +61,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   action-timeline:
-    needs: [build-project-doc]
+    needs: [build-project-doc, deploy-document]
     runs-on: ubuntu-latest
     steps:
       - uses: Kesin11/actions-timeline@v2
