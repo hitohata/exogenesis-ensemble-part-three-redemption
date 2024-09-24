@@ -7,7 +7,7 @@ const config: Config = {
 	tagline: "Let me started over again",
 	favicon: "img/favicon.ico",
 
-	staticDirectories: ['static'],
+	staticDirectories: ["static"],
 
 	// Set the production url of your site here
 	url: "https://github.com", // TODO: update here after deployed document
@@ -94,8 +94,8 @@ const config: Config = {
 						},
 						{
 							label: "Exogenesis: Symphony Part 3 (Redemption)",
-							href: "https://vimeo.com/83496504"
-						}
+							href: "https://vimeo.com/83496504",
+						},
 					],
 				},
 			],
