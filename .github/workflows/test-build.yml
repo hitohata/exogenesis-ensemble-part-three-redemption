@@ -19,9 +19,9 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
       - name: Install package
-        uses: bun install
+        run: bun install
       - name: Check format
-        uses: bun run build
+        run: bun run build
 
   action-timeline:
     needs: [test-build-project-doc]

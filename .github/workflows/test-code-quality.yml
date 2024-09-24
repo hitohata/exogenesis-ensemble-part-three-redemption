@@ -20,11 +20,11 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
       - name: Install package
-        uses: bun install
+        run: bun install
       - name: Check format
-        uses: bun run format:check
+        run: bun run format:check
       - name: Check type
-        uses: bun run typecheck
+        run: bun run typecheck
 
   action-timeline:
     needs: [check-project-doc]
