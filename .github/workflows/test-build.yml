@@ -1,0 +1,30 @@
+name: Test Build
+
+on:
+  pull_request:
+    branch:
+      - dev
+
+jobs:
+  test-build-project-doc:
+    timeout-minutes: 3
+    name: build a project
+    runs-on: ubuntu-latest
+    default:
+      run:
+        working-directory: ./docs/project
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+      - name: Install package
+        uses: bun install
+      - name: Check format
+        uses: bun run build
+
+  action-timeline:
+    needs: [test-build-project-doc]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Kesin11/actions-timeline@v2
