@@ -22,14 +22,16 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
+      - name: Create a directory
+        run: sudo mkdir /build && sudo chmod -R 777 /build
       - name: Install package
         run: bun install
       - name: Check format
-        run: bun run build
+        run: bun run build --out-dir /build
       - name: deploy project document
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: ./build
+          folder: /build
           target-folder: /projects
           token: ${{ secrets.GITHUB_TOKEN }}
 
