@@ -1,0 +1,33 @@
+name: Code Quality
+
+on:
+  pull_request:
+    branch:
+      - main
+      - dev
+
+jobs:
+  check-project-doc:
+    timeout-minutes: 3
+    name: test project document quality
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./docs/project
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+      - name: Install package
+        run: bun install
+      - name: Check format
+        run: bun run format:check
+      - name: Check type
+        run: bun run typecheck
+
+  action-timeline:
+    needs: [check-project-doc]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Kesin11/actions-timeline@v2
