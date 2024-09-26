@@ -2,7 +2,7 @@ name: Deploy Documents
 
 on:
   push:
-    branch:
+    branches:
       - main
       - dev
 

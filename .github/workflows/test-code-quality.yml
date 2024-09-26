@@ -2,8 +2,7 @@ name: Code Quality
 
 on:
   pull_request:
-    branch:
-      - main
+    branches:
       - dev
 
 jobs:
@@ -26,8 +25,25 @@ jobs:
       - name: Check type
         run: bun run typecheck
 
+  check-top-page-doc:
+    timeout-minutes: 3
+    name: test top page quality
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./docs/top-page
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+      - name: Install package
+        run: bun install
+      - name: Check format
+        run: bun run format:check
+
   action-timeline:
-    needs: [check-project-doc]
+    needs: [check-project-doc, check-top-page-doc]
     runs-on: ubuntu-latest
     steps:
       - uses: Kesin11/actions-timeline@v2
