@@ -112,7 +112,7 @@ jobs:
       - name: Run TypeDoc
         run: bun run typedoc
       - name: move the document
-        run: cp -r ./docs/ /build
+        run: cp -r ./docs/* /build
       - name: Write an artifact
         uses: actions/upload-artifact@v4
         with:
