@@ -92,6 +92,25 @@ jobs:
           overwrite: true
           retention-days: 1
 
+  build-native-front-document:
+    timeout-minutes: 1
+    name: build the native front-end app api doc
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: mkdir
+        run: sudo mkdir /build && sudo chmod -R 777 /build
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+      - name: Install package
+        run: bun install
+      - name: Run TypeDoc
+        run: bun run typedoc --out /build/api/native/front-end
+
   deploy-document:
     timeout-minutes: 3
     name: Build top page document to make sure it can be built
@@ -100,6 +119,7 @@ jobs:
       - build-project-doc
       - build-top-page
       - build-native-back-end-document
+      - build-native-front-document
     steps:
       - name: Checkout
         uses: actions/checkout@v4
