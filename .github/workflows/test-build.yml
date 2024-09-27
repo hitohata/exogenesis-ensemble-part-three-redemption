@@ -61,6 +61,23 @@ jobs:
       - name: Build
         run: cargo doc --all --no-deps --document-private-items
 
+  test-native-front-doc:
+    timeout-minutes: 1
+    name: build the native front-end app api doc
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+      - name: Install package
+        run: bun install
+      - name: Run TypeDoc
+        run: bun run typedoc
+
   action-timeline:
     needs: [test-build-project-doc, test-build-top-page-doc, test-native-back-end-api-doc]
     runs-on: ubuntu-latest
