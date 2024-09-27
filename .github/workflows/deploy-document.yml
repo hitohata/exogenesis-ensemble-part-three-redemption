@@ -53,7 +53,7 @@ jobs:
       - name: Install package
         run: bun install
       - name: Check format
-        run: bun run build --out-dir /top-page
+        run: bun run build --out-dir /build/top-page
       - name: Write an artifact
         uses: actions/upload-artifact@v4
         with:
@@ -87,7 +87,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   action-timeline:
-    needs: [build-project-doc, deploy-document]
+    needs: [build-project-doc, build-top-page, deploy-document]
     runs-on: ubuntu-latest
     steps:
       - uses: Kesin11/actions-timeline@v2
