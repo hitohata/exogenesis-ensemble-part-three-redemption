@@ -132,6 +132,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
       - name: mkdir
         run: |
           sudo mkdir /build && sudo chmod -R 777 /build 
@@ -148,6 +150,11 @@ jobs:
           mkdir -p /build/native/api/front-end && cp -r /temp/native-front-end-document/* /build/native/api/front-end
       - name: copy top index.html
         run: cp ./others/index.html /build
+        working-directory: ./docs
+      - name: mkdir for OpenAPI
+        run: mkdir -p /build/web-api
+      - name: build OpenAPI doc
+        run: bunx @redocly/cli@latest build-docs ./others/backend-api.yaml --output=/build/web-api/index.html
         working-directory: ./docs
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
