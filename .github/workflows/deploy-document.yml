@@ -1,11 +1,10 @@
 name: Deploy Documents
 
 on:
-#  push:
-#    branches:
-#      - main
-#      - dev
-  pull_request:
+  push:
+    branches:
+      - main
+      - dev
 
 permissions:
   contents: write
