@@ -64,7 +64,7 @@ jobs:
 
   build-native-back-end-document:
     timeout-minutes: 3
-    name: deploy the native back end app
+    name: build the native back end app
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -109,7 +109,9 @@ jobs:
       - name: Install package
         run: bun install
       - name: Run TypeDoc
-        run: bun run typedoc --out /build
+        run: bun run typedoc
+      - name: move the document
+        run: cp -r ./docs/* /build
       - name: Write an artifact
         uses: actions/upload-artifact@v4
         with:
@@ -140,10 +142,10 @@ jobs:
           path: /temp
       - name: Copy document to /build
         run: |
-          cp /temp/project /build/project
-          cp /temp/top-page /build/top-page
-          cp /temp/native-back-end-document /build/native/api/back-end
-          cp /temp/native-front-end-document /build/native/api/front-end
+          mv /temp/project /build/project
+          mv /temp/top-page /build/top-page
+          mkdir -p /build/native/api/back-end && mv /temp/native-back-end-document /build/native/api/back-end
+          mkdir -p /build/native/api/front-end && mv /temp/native-front-end-document /build/native/api/front-end
       - name: copy top index.html
         run: cp ./others/index.html /build
         working-directory: ./docs
