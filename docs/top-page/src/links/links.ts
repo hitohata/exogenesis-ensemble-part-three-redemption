@@ -44,4 +44,14 @@ export const DOC_LINKS: DocumentSectionType[] = [
 			},
 		],
 	},
+	{
+		section: "Web API Documents",
+		documents: [
+			{
+				documentName: "WEB API",
+				body: "Back end WEB API",
+				link: addRepoName("/web-api/index.html"),
+			}
+		],
+	},
 ];
