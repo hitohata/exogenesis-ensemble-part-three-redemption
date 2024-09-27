@@ -10,7 +10,7 @@ export type DocLinkType = {
 };
 
 const addRepoName = (resource: string) => {
-	return `/ExogenesisEnsemble-Part3-Redemption${resource.charAt(0) === "/" ? resource : `/${resource}`}`;
+	return `${import.meta.env.BASE_URL}${resource.charAt(0) === "/" ? resource : `/${resource}`}`;
 };
 
 export const DOC_LINKS: DocumentSectionType[] = [
