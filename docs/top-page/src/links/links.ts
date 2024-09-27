@@ -35,12 +35,12 @@ export const DOC_LINKS: DocumentSectionType[] = [
 			{
 				documentName: "Native Back End API",
 				body: "Native Application's back end",
-				link: addRepoName("/api/native/back-end/index.html"),
+				link: addRepoName("/native/api/back-end/doc/app/index.html"),
 			},
 			{
 				documentName: "Native Front End API",
 				body: "Native Application's front end",
-				link: addRepoName("/api/native/front-end/index.html"),
+				link: addRepoName("/native/api/front-end/index.html"),
 			},
 		],
 	},
