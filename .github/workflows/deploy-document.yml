@@ -110,6 +110,13 @@ jobs:
         run: bun install
       - name: Run TypeDoc
         run: bun run typedoc --out /build/api/native/front-end
+      - name: Write an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-back-end-document
+          path: /build
+          overwrite: true
+          retention-days: 1
 
   deploy-document:
     timeout-minutes: 3
