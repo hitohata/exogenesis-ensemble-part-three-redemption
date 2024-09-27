@@ -62,36 +62,36 @@ jobs:
           path: /build/top-page
           overwrite: true
           retention-days: 1
-
-  build-native-back-end-document:
-    timeout-minutes: 3
-    name: build the native back end app
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./app/src-tauri
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: mkdir
-        run: sudo mkdir /build && sudo chmod -R 777 /build
-      - name: Setup Cargo
-        uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          toolchain: stable
-      - name: install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-      - name: Build a document
-        run: cargo doc --all --no-deps --document-private-items --target-dir /build
-      - name: Write an artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: native-back-end-document
-          path: /build
-          overwrite: true
-          retention-days: 1
+#
+#  build-native-back-end-document:
+#    timeout-minutes: 3
+#    name: build the native back end app
+#    runs-on: ubuntu-latest
+#    defaults:
+#      run:
+#        working-directory: ./app/src-tauri
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#      - name: mkdir
+#        run: sudo mkdir /build && sudo chmod -R 777 /build
+#      - name: Setup Cargo
+#        uses: actions-rust-lang/setup-rust-toolchain@v1
+#        with:
+#          toolchain: stable
+#      - name: install dependencies
+#        run: |
+#          sudo apt-get update
+#          sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+#      - name: Build a document
+#        run: cargo doc --all --no-deps --document-private-items --target-dir /build
+#      - name: Write an artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: native-back-end-document
+#          path: /build
+#          overwrite: true
+#          retention-days: 1
 
   build-native-front-document:
     timeout-minutes: 1
@@ -145,8 +145,8 @@ jobs:
         run: |
           mv /temp/project /build/project
           mv /temp/top-page /build/top-page
-          mv /temp/native-back-end-document /build/native/api/back-end
-          mv /temp/native-front-end-document /build/native/api/front-end
+#          mv /temp/native-back-end-document /build/native/api/back-end
+#          mv /temp/native-front-end-document /build/native/api/front-end
       - name: copy top index.html
         run: cp ./others/index.html /build
         working-directory: ./docs
