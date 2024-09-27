@@ -62,7 +62,7 @@ jobs:
           path: /build/top-page
           overwrite: true
           retention-days: 1
-#
+
 #  build-native-back-end-document:
 #    timeout-minutes: 3
 #    name: build the native back end app
@@ -128,7 +128,7 @@ jobs:
     needs:
       - build-project-doc
       - build-top-page
-      - build-native-back-end-document
+#      - build-native-back-end-document
       - build-native-front-document
     steps:
       - name: Checkout
