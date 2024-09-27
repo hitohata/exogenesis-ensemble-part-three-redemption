@@ -63,7 +63,7 @@ jobs:
           retention-days: 1
 
   build-native-back-end-document:
-    timeout-minutes: 1
+    timeout-minutes: 3
     name: deploy the native back end app
     runs-on: ubuntu-latest
     defaults:

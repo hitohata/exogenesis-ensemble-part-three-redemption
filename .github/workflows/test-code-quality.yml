@@ -43,7 +43,7 @@ jobs:
         run: bun run format:check
 
   check-native-back-end:
-    timeout-minutes: 1
+    timeout-minutes: 3
     name: check the native back end app
     runs-on: ubuntu-latest
     defaults:

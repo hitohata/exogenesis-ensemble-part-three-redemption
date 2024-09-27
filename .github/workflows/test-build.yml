@@ -41,7 +41,7 @@ jobs:
         run: bun run build
 
   test-native-back-end-api-doc:
-    timeout-minutes: 1
+    timeout-minutes: 3
     name: build the native back end app api doc
     runs-on: ubuntu-latest
     defaults:
