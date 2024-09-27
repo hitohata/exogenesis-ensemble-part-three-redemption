@@ -1,0 +1,122 @@
+openapi: 3.1.0
+info:
+  title: Exogenesis Ensemble Part 3 (Redemption)
+  description: Exogenesis Ensemble Part 3 (Redemption) API
+  version: 1.0.0
+paths:
+  /bucket/videos/search:
+    get:
+      tags:
+        - Bucket
+        - Search
+      summary: existing video's year
+      description: returns years of the bucket prefix hosted in the S3
+      operationId: getExistingYearsInBucket
+      responses:
+        '200':
+          description: videos
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  years:
+                    type: array
+                    items:
+                      type: string
+  /bucket/videos/search/years/{year}/months:
+    get:
+      tags:
+        - Bucket
+        - Search
+      summary: existing video's month
+      description: returns months of the bucket prefix hosted in the S3 by narrowed down by the year
+      operationId: getExistingMonthsInBucket
+      parameters:
+        - name: year
+          in: path
+          required: true
+          description: Year
+          schema:
+            type: string
+      responses:
+        '200':
+          description: videos
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  months:
+                    type: array
+                    items:
+                      type: string
+  /bucket/videos/search/years/{year}/months/{month}/days:
+    get:
+      tags:
+        - Bucket
+        - Search
+      summary: existing video's days
+      description: returns months of the bucket prefix hosted in the S3 by narrowed down by the year
+      operationId: getExistingDaysInBucket
+      parameters:
+        - name: year
+          in: path
+          required: true
+          description: Year
+          schema:
+            type: string
+        - name: month
+          in: path
+          required: true
+          description: Month
+          schema:
+            type: string
+      responses:
+        '200':
+          description: videos
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  days:
+                    type: array
+                    items:
+                      type: string
+  /bucket/videos/search/years/{year}/months/{month}/days/{day}/objects:
+    get:
+      tags:
+        - Bucket
+        - Search
+      summary: existing video's days
+      description: returns months of the bucket prefix hosted in the S3 by narrowed down by the year
+      operationId: getExistingObjectsInBucket
+      parameters:
+        - name: year
+          in: path
+          description: Year
+          schema:
+            type: string
+        - name: month
+          in: path
+          description: Month
+          schema:
+            type: string
+        - name: day
+          in: path
+          description: Day
+          schema:
+            type: string
+      responses:
+        '200':
+          description: videos
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      type: string
