@@ -9,6 +9,10 @@ export type DocLinkType = {
 	link: string;
 };
 
+const addRepoName = (resource: string) => {
+	return `/ExogenesisEnsemble-Part3-Redemption${resource.charAt(0) === "/" ? resource : `/${resource}`}`;
+};
+
 export const DOC_LINKS: DocumentSectionType[] = [
 	{
 		section: "Overview",
@@ -16,12 +20,12 @@ export const DOC_LINKS: DocumentSectionType[] = [
 			{
 				documentName: "Project Document",
 				body: "Project Document. This document contains high-level design of this system.",
-				link: "/project/index.html",
+				link: addRepoName("/project/index.html"),
 			},
 			{
 				documentName: "Top Page (Here)",
 				body: "Just the entry point of this system document.",
-				link: "/top-page/index.html",
+				link: addRepoName("/top-page/index.html"),
 			},
 		],
 	},
