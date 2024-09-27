@@ -87,7 +87,7 @@ jobs:
       - name: Write an artifact
         uses: actions/upload-artifact@v4
         with:
-          name: top-page
+          name: native-back-end-document
           path: /build/api/native/backend
           overwrite: true
           retention-days: 1
