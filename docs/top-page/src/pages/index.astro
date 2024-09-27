@@ -1,9 +1,11 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Card from '../components/Card.astro';
+import Card from "../components/Card.astro";
+import Section from "../components/Section.astro";
+import Layout from "../layouts/Layout.astro";
+import { DOC_LINKS } from "../links/links";
 ---
 
-<Layout title="Welcome to Astro.">
+<Layout title="Welcome to Exsogenesis: Ensamble Part 3 (Redemption)">
 	<main>
 		<svg
 			class="astro-a"
@@ -33,32 +35,12 @@ import Card from '../components/Card.astro';
 				</linearGradient>
 			</defs>
 		</svg>
-		<h1>Welcome to <span class="text-gradient">Astro</span></h1>
+		<h1>Welcome to <span class="text-gradient">Exogenesis: Ensemble Part 3 (Redemption)</span></h1>
 		<p class="instructions">
-			To get started, open the directory <code>src/pages</code> in your project.<br />
-			<strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message above.
+			This is the top page of <strong>Exogenesis: Ensemble Part 3 (Redemption)</strong> document. <br />
 		</p>
-		<ul role="list" class="link-card-grid">
-			<Card
-				href="https://docs.astro.build/"
-				title="Documentation"
-				body="Learn how Astro works and explore the official API docs."
-			/>
-			<Card
-				href="https://astro.build/integrations/"
-				title="Integrations"
-				body="Supercharge your project with new frameworks and libraries."
-			/>
-			<Card
-				href="https://astro.build/themes/"
-				title="Themes"
-				body="Explore a galaxy of community-built starter themes."
-			/>
-			<Card
-				href="https://astro.build/chat/"
-				title="Community"
-				body="Come say hi to our amazing Discord community. ❤️"
-			/>
+		<ul>
+			{ DOC_LINKS.map(section => <Section section={section} />) }
 		</ul>
 	</main>
 </Layout>
@@ -115,8 +97,6 @@ import Card from '../components/Card.astro';
 		color: rgb(var(--accent-light));
 	}
 	.link-card-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
 		gap: 2rem;
 		padding: 0;
 	}
