@@ -65,7 +65,7 @@ jobs:
 
   build-native-back-end-document:
     timeout-minutes: 3
-    name: deploy the native back end app
+    name: build the native back end app
     runs-on: ubuntu-latest
     defaults:
       run:
