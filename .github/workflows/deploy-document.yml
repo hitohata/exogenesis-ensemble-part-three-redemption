@@ -83,12 +83,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
       - name: Build a document
-        run: cargo doc --all --no-deps --document-private-items --target-dir /build
+        run: cargo doc --all --no-deps --document-private-items --target-dir /build/api/native/backend
       - name: Write an artifact
         uses: actions/upload-artifact@v4
         with:
           name: native-back-end-document
-          path: /build/api/native/backend
+          path: /build
           overwrite: true
           retention-days: 1
 
