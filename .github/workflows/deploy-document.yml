@@ -110,7 +110,9 @@ jobs:
       - name: Install package
         run: bun install
       - name: Run TypeDoc
-        run: bun run typedoc --out /build
+        run: bun run typedoc
+      - name: move the document
+        run: cp -r ./docs/ /build
       - name: Write an artifact
         uses: actions/upload-artifact@v4
         with:
