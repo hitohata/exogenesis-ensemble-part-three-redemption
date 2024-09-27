@@ -5,3 +5,5 @@
 [![Deploy Documents](https://github.com/hitohata/ExogenesisEnsemble-Part3-Redemption/actions/workflows/deploy-document.yml/badge.svg)](https://github.com/hitohata/ExogenesisEnsemble-Part3-Redemption/actions/workflows/deploy-document.yml)
 
 To keep memories...
+
+[Document](https://hitohata.github.io/ExogenesisEnsemble-Part3-Redemption/index.html)
