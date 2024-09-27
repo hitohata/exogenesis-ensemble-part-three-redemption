@@ -131,7 +131,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: mkdir
-        run: sudo mkdir /build && sudo chmod -R 777 /build && sudo mkdir /temp && sudo chmod -R 777 /temp
+        run: |
+          sudo mkdir /build && sudo chmod -R 777 /build 
+          sudo mkdir /temp && sudo chmod -R 777 /temp
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
