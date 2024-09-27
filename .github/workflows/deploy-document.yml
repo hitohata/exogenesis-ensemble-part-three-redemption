@@ -87,7 +87,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   action-timeline:
-    needs: [build-project-doc, deploy-document]
+    needs: [build-project-doc, build-top-page, deploy-document]
     runs-on: ubuntu-latest
     steps:
       - uses: Kesin11/actions-timeline@v2
