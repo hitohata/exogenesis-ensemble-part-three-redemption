@@ -77,9 +77,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: /build
-#      - name: copy top index.html
-#        run: cp ./build/index.html /build
-#        working-directory: ./docs
+      - name: copy top index.html
+        run: cp ./others/index.html /build
+        working-directory: ./docs
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
