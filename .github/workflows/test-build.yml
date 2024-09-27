@@ -2,7 +2,7 @@ name: Test Build
 
 on:
   pull_request:
-    branch:
+    branches:
       - dev
 
 jobs:
@@ -23,8 +23,25 @@ jobs:
       - name: Check format
         run: bun run build
 
+  test-build-top-page-doc:
+    timeout-minutes: 1
+    name: build a top page
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./docs/top-page
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+      - name: Install package
+        run: bun install
+      - name: Check format
+        run: bun run build
+
   action-timeline:
-    needs: [test-build-project-doc]
+    needs: [test-build-project-doc, test-build-top-page-doc]
     runs-on: ubuntu-latest
     steps:
       - uses: Kesin11/actions-timeline@v2

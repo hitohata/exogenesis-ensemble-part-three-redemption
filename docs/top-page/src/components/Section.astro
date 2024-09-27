@@ -1,0 +1,34 @@
+---
+import type { DocumentSectionType } from "../links/links";
+import Card from "./Card.astro";
+
+interface Props {
+	section: DocumentSectionType;
+}
+
+const { section } = Astro.props;
+---
+
+<section>
+    <h2>{section.section}</h2>
+    <ul>
+        { section.documents.map((doc) =>
+                <div class="card">
+                    <Card title={doc.documentName} body={doc.body} href={doc.link}/>
+                </div>
+        ) }
+    </ul>
+</section>
+
+<style>
+    h2 {
+        display: flex;
+        justify-content: center;
+    }
+    ul {
+        padding: 0;
+    }
+    .card {
+        margin-bottom: 1rem;
+    }
+</style>
