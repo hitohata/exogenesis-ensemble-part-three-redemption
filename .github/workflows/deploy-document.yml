@@ -146,7 +146,7 @@ jobs:
           mv /temp/project /build/project
           mv /temp/top-page /build/top-page
 #          mv /temp/native-back-end-document /build/native/api/back-end
-#          mv /temp/native-front-end-document /build/native/api/front-end
+          mv /temp/native-front-end-document /build/native/api/front-end
       - name: copy top index.html
         run: cp ./others/index.html /build
         working-directory: ./docs
