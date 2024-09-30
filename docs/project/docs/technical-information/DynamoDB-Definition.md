@@ -18,6 +18,7 @@ sidebar_position: 2
 | PK         | Year       |                                |
 | SK         | Epoch time |                                |
 | IsUnzipped | boolean    | If the file is unzipped or not |
+| Vault      | String     | Glacier vault                  |
 
 ### Manage Unzipped Files
 

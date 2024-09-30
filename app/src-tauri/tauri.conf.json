@@ -4,7 +4,8 @@
     "beforeDevCommand": "bun run dev",
     "beforeBuildCommand": "bun run build",
     "devPath": "http://localhost:1420",
-    "distDir": "../dist"
+    "distDir": "../dist",
+    "withGlobalTauri": true
   },
   "package": {
     "productName": "app",
@@ -12,7 +13,7 @@
   },
   "tauri": {
     "allowlist": {
-      "all": false,
+      "all": true,
       "shell": {
         "all": false,
         "open": true
@@ -20,7 +21,7 @@
     },
     "windows": [
       {
-        "title": "app",
+        "title": "Exogenesis: Ensemble",
         "width": 800,
         "height": 600
       }

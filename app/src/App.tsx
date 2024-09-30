@@ -1,16 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { listen } from "@tauri-apps/api/event";
+import { TauriEvent } from "@tauri-apps/api/event"
 import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+    const [greetMsg, setGreetMsg] = useState("");
+    const [name, setName] = useState("hoge-");
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    setGreetMsg(await invoke("greet", { name }));
-  }
+    async function greet() {
+        // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+        setGreetMsg(await invoke("greet", { name }));
+    }
+
+    useEffect(() => {
+        console.log("App.tsx");
+    })
+
+    useEffect(() => {
+        listen<TauriEvent.WINDOW_FILE_DROP>(TauriEvent.WINDOW_FILE_DROP, async (event) => {
+            console.log(event);
+        })
+        listen(TauriEvent.WINDOW_FOCUS, (event) => {
+            console.log(event);
+        })
+        listen(TauriEvent.WINDOW_FILE_DROP_CANCELLED, async (event) => {
+            console.log(event);
+        })
+    }, []);
 
   return (
     <div className="container">
