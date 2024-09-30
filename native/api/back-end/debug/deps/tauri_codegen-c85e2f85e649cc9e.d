@@ -1,0 +1,11 @@
+/build/debug/deps/libtauri_codegen-c85e2f85e649cc9e.rmeta: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/context.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/embedded_assets.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/vendor/mod.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/vendor/blake3_reference.rs
+
+/build/debug/deps/libtauri_codegen-c85e2f85e649cc9e.rlib: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/context.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/embedded_assets.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/vendor/mod.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/vendor/blake3_reference.rs
+
+/build/debug/deps/tauri_codegen-c85e2f85e649cc9e.d: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/context.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/embedded_assets.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/vendor/mod.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/vendor/blake3_reference.rs
+
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/lib.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/context.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/embedded_assets.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/vendor/mod.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-codegen-1.4.5/src/vendor/blake3_reference.rs:

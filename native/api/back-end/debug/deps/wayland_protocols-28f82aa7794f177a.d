@@ -1,0 +1,10 @@
+/build/debug/deps/libwayland_protocols-28f82aa7794f177a.rmeta: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wayland-protocols-0.31.2/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wayland-protocols-0.31.2/src/protocol_macro.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wayland-protocols-0.31.2/src/ext.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wayland-protocols-0.31.2/src/wp.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wayland-protocols-0.31.2/src/xdg.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wayland-protocols-0.31.2/src/xwayland.rs
+
+/build/debug/deps/wayland_protocols-28f82aa7794f177a.d: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wayland-protocols-0.31.2/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wayland-protocols-0.31.2/src/protocol_macro.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wayland-protocols-0.31.2/src/ext.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wayland-protocols-0.31.2/src/wp.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wayland-protocols-0.31.2/src/xdg.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wayland-protocols-0.31.2/src/xwayland.rs
+
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wayland-protocols-0.31.2/src/lib.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wayland-protocols-0.31.2/src/protocol_macro.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wayland-protocols-0.31.2/src/ext.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wayland-protocols-0.31.2/src/wp.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wayland-protocols-0.31.2/src/xdg.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wayland-protocols-0.31.2/src/xwayland.rs:
