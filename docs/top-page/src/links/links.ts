@@ -20,7 +20,7 @@ export const DOC_LINKS: DocumentSectionType[] = [
 			{
 				documentName: "Project Document",
 				body: "Project Document. This document contains high-level design of this system.",
-				link: addRepoName("/project/index.html"),
+				link: addRepoName("/project/"),
 			},
 			{
 				documentName: "Top Page (Here)",
@@ -51,7 +51,7 @@ export const DOC_LINKS: DocumentSectionType[] = [
 				documentName: "WEB API",
 				body: "Back end WEB API",
 				link: addRepoName("/web-api/index.html"),
-			}
+			},
 		],
 	},
 ];
