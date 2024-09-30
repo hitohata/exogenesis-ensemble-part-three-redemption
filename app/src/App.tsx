@@ -1,16 +1,68 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { listen } from "@tauri-apps/api/event";
+import { TauriEvent } from "@tauri-apps/api/event"
 import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 
 function App() {
   const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  const [name, setName] = useState("hoge-");
+  const [triggered, setTriggered] = useState<boolean>(false);
 
   async function greet() {
     // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
     setGreetMsg(await invoke("greet", { name }));
   }
+
+  useEffect(() => {
+      console.log("App.tsx");
+  })
+    useEffect(() => {
+        greet().then();
+    }, []);
+
+    useEffect(() => {
+        // let unlisten = null;
+        if (window.__TAURI__ && !triggered) {
+            setTriggered(true);
+
+            listen<TauriEvent.WINDOW_FILE_DROP>(TauriEvent.WINDOW_FILE_DROP, async (event) => {
+                console.log(event);
+                // if (event.payload.type === 'hover') {
+                //     console.log('User hovering', event.payload.paths);
+                //  } else if (event.payload.type === 'drop') {
+                //    console.log('User dropped', event.payload.paths);
+                //  } else {
+                //    console.log('File drop cancelled');
+                //  }
+            })
+            listen(TauriEvent.WINDOW_FOCUS, (event) => {
+                console.log(event);
+            })
+            listen(TauriEvent.WINDOW_FILE_DROP_CANCELLED, async (event) => {
+                console.log(event);
+            })
+            // .then(e => unlisten = e)
+            // .catch(e => console.log(e));
+            // unlisten = appWindow.onFileDropEvent((event) => {
+            //     if (event.payload.type === 'hover') {
+            //         console.log('User hovering', event.payload.paths);
+            //      } else if (event.payload.type === 'drop') {
+            //        console.log('User dropped', event.payload.paths);
+            //      } else {
+            //        console.log('File drop cancelled');
+            //      }
+            // })
+            //
+            // registerEvent();
+
+            setTimeout(() => {
+                setTriggered(false);
+            }, 3000)
+        }
+        // return () => { unlisten && unlisten() }
+    }, []);
 
   return (
     <div className="container">
