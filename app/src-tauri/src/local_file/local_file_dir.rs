@@ -1,13 +1,16 @@
 use crate::local_file::local_file_error::ExogenesisEnsembleLocalFileErrors;
 use chrono::{DateTime, Datelike, Timelike, Utc};
 use directories::UserDirs;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 const DIRECTORY_PATH: &str = "/ExogenesisEnsemblePartThreeRedemption";
 
 /// Return the video path
-/// The video directory is OS specific though, under that, a path will be /yyyy/MM/dd/yyyy-MM-dd-hh-mm-ss.{extension}
-pub fn video_file_dir(path: &Path) -> Result<PathBuf, ExogenesisEnsembleLocalFileErrors> {
+/// The video directory is OS specific though, under that, a path will be an app name + /yyyy/MM/dd/yyyy-MM-dd-hh-mm-ss.{extension}
+pub fn video_file_dir(
+    date_time: &DateTime<Utc>,
+    extension: &str,
+) -> Result<PathBuf, ExogenesisEnsembleLocalFileErrors> {
     let user_dirs = match UserDirs::new() {
         Some(dir) => dir,
         None => return Err(ExogenesisEnsembleLocalFileErrors::DirectoryMoundFailed),
@@ -18,7 +21,12 @@ pub fn video_file_dir(path: &Path) -> Result<PathBuf, ExogenesisEnsembleLocalFil
         None => return Err(ExogenesisEnsembleLocalFileErrors::DirectoryMoundFailed),
     };
 
-    let joined_app_name = video_dir.join(DIRECTORY_PATH);
+    let file_path = match generate_file_path(date_time, extension) {
+        Ok(path) => path,
+        Err(e) => return Err(e),
+    };
+
+    let joined_app_name = video_dir.join(format!("{}{}", DIRECTORY_PATH, file_path.as_str()));
 
     Ok(joined_app_name.into())
 }
@@ -38,7 +46,7 @@ fn generate_file_path(
     };
 
     Ok(format!(
-        "{}/{}/{}/{}-{}-{}-{}-{}-{}.{}",
+        "/{}/{}/{}/{}-{}-{}-{}-{}-{}.{}",
         datetime.year(),
         datetime.month(),
         datetime.day(),
@@ -68,7 +76,7 @@ mod test_generate_file_path {
 
         // Assert
         let expected_date_time = format!(
-            "{}/{}/{}/{}-{}-{}-{}-{}-{}.{}",
+            "/{}/{}/{}/{}-{}-{}-{}-{}-{}.{}",
             1984, 4, 4, 1984, 4, 4, 12, 42, 42, "VIDEO"
         );
         assert_eq!(result.unwrap(), expected_date_time);
