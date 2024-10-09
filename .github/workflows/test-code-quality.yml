@@ -82,7 +82,7 @@ jobs:
         run: bun run format:check
 
   action-timeline:
-    needs: [check-project-doc, check-top-page-doc, check-native-back-end]
+    needs: [check-project-doc, check-top-page-doc, check-native-back-end, check-native-front-end]
     runs-on: ubuntu-latest
     steps:
       - uses: Kesin11/actions-timeline@v2
