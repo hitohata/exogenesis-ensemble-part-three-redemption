@@ -13,4 +13,6 @@ pub enum ExogenesisEnsembleLocalFileErrors {
     DirectoryMoundFailed,
     #[error("Invalid Extension is provided")]
     InvalidExtensionError,
+    #[error("File already exists")]
+    FileCopyFailed,
 }
