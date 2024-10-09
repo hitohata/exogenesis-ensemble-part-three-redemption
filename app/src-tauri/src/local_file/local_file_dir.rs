@@ -7,7 +7,7 @@ const DIRECTORY_PATH: &str = "/ExogenesisEnsemblePartThreeRedemption";
 
 /// Return the video path
 /// The video directory is OS specific though, under that, a path will be an app name + /yyyy/MM/dd/yyyy-MM-dd-hh-mm-ss.{extension}
-pub fn video_file_dir(
+pub fn generate_video_file_dir(
     date_time: &DateTime<Utc>,
     extension: &str,
 ) -> Result<PathBuf, ExogenesisEnsembleLocalFileErrors> {

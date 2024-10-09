@@ -9,10 +9,14 @@ pub enum ExogenesisEnsembleLocalFileErrors {
     FileNotFoundError(String),
     #[error("Invalid date time is provided: {0}")]
     InvalidDateError(String),
-    #[error("Directory mound failed")]
-    DirectoryMoundFailed,
+    #[error("Directory mount failed")]
+    DirectoryMountFailed,
     #[error("Invalid Extension is provided")]
     InvalidExtensionError,
     #[error("File already exists")]
     FileCopyFailed,
+    #[error("Incorrect extension is provided")]
+    ExtensionParseFailed,
+    #[error("{0}")]
+    FileError(String),
 }
