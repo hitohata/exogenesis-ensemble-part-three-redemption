@@ -6,43 +6,24 @@ use std::fs;
 use std::path::Path;
 use std::time::UNIX_EPOCH;
 
-/// This struct holds the target file information.
-pub struct FileInformation {
-    /// get from target's meta-data
-    created_date_time: DateTime<Utc>,
-    /// generate by the date time
-    file_path: String,
-}
+pub(crate) fn generate_file_path(
+    target_path: &str,
+) -> Result<String, ExogenesisEnsembleLocalFileErrors> {
+    let path = Path::new(target_path);
+    let _ = does_file_exist(path)?;
 
-impl FileInformation {
-    pub fn new(target_path: &str) -> Result<Self, ExogenesisEnsembleLocalFileErrors> {
-        let path = Path::new(target_path);
-        let _ = does_file_exist(path)?;
+    let extension = get_extension(path)?;
 
-        let extension = get_extension(path)?;
+    let created_date_time = extract_created_datetime_form_video(path)?;
+    let video_dir = generate_video_file_dir(&created_date_time, &extension)?;
 
-        let created_date_time = extract_created_datetime_form_video(path)?;
-        let video_dir = generate_video_file_dir(&created_date_time, &extension)?;
+    let Some(video_dir_str) = video_dir.to_str() else {
+        return Err(ExogenesisEnsembleLocalFileErrors::FileError(
+            "Directory name change failed".to_string(),
+        ));
+    };
 
-        let Some(video_dir_str) = video_dir.to_str() else {
-            return Err(ExogenesisEnsembleLocalFileErrors::FileError(
-                "Directory name change failed".to_string(),
-            ));
-        };
-
-        Ok(Self {
-            created_date_time,
-            file_path: video_dir_str.to_string(),
-        })
-    }
-
-    pub fn created_date_time(&self) -> DateTime<Utc> {
-        self.created_date_time
-    }
-
-    pub fn file_path(&self) -> &str {
-        self.file_path.as_str()
-    }
+    Ok(video_dir_str.to_string())
 }
 
 /// copy the file from the requested path to the appropriate path
