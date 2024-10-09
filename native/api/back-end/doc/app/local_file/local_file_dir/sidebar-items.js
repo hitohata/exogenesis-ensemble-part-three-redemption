@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["DIRECTORY_PATH"],"fn":["generate_file_path","generate_video_file_dir"]};

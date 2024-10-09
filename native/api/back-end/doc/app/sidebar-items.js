@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["errors"]};
+window.SIDEBAR_ITEMS = {"mod":["errors","handlers","local_file"]};

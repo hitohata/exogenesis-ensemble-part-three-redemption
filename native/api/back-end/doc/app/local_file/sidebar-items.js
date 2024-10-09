@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["assign_file"],"mod":["file_handling","local_file_dir","local_file_error","util"]};

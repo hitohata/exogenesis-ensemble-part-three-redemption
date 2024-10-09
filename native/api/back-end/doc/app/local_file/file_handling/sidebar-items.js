@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["copy_file","extract_created_datetime_form_video","generate_file_path","get_extension"]};
