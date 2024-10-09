@@ -18,17 +18,17 @@ function App() {
 		console.log("App.tsx");
 	});
 
-    useEffect(() => {
-        listen<TauriEvent.DRAG_DROP>(TauriEvent.DRAG_DROP, async (event) => {
-            console.log(event);
-        })
-        listen(TauriEvent.WINDOW_FOCUS, (event) => {
-            console.log(event);
-        })
-        listen(TauriEvent.DRAG_LEAVE, async (event) => {
-            console.log(event);
-        })
-    }, []);
+	useEffect(() => {
+		listen<TauriEvent.DRAG_DROP>(TauriEvent.DRAG_DROP, async (event) => {
+			console.log(event);
+		});
+		listen(TauriEvent.WINDOW_FOCUS, (event) => {
+			console.log(event);
+		});
+		listen(TauriEvent.DRAG_LEAVE, async (event) => {
+			console.log(event);
+		});
+	}, []);
 
 	return (
 		<div className="container">
