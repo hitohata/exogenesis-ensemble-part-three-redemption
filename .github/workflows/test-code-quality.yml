@@ -63,9 +63,26 @@ jobs:
       - name: Build
         run: cargo check
 
+  check-native-front-end:
+    timeout-minutes: 1
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+      - name: Install package
+        run: bun install
+      - name: Run TSC
+        run: bun tsc
+      - name: Check format
+        run: bun run format:check
 
   action-timeline:
-    needs: [check-project-doc, check-top-page-doc, check-native-back-end]
+    needs: [check-project-doc, check-top-page-doc, check-native-back-end, check-native-front-end]
     runs-on: ubuntu-latest
     steps:
       - uses: Kesin11/actions-timeline@v2
