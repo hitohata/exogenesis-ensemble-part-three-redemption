@@ -10,7 +10,8 @@
     "tauri": "tauri",
     "typedoc": "typedoc",
     "format": "biome check ./src --write",
-    "format:check": "biome check ./src"
+    "format:check": "biome check ./src",
+    "tsc": "tsc"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.0.0",
