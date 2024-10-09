@@ -91,11 +91,7 @@ const config: Config = {
 						{
 							label: "GitHub",
 							href: "https://github.com/hitohata/ExogenesisEnsemble_Part3_Redemption",
-						},
-						{
-							label: "Exogenesis: Symphony Part 3 (Redemption)",
-							href: "https://vimeo.com/83496504",
-						},
+						}
 					],
 				},
 			],
