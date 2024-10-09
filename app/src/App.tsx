@@ -19,13 +19,13 @@ function App() {
     })
 
     useEffect(() => {
-        listen<TauriEvent.WINDOW_FILE_DROP>(TauriEvent.WINDOW_FILE_DROP, async (event) => {
+        listen<TauriEvent.DRAG_DROP>(TauriEvent.DRAG_DROP, async (event) => {
             console.log(event);
         })
         listen(TauriEvent.WINDOW_FOCUS, (event) => {
             console.log(event);
         })
-        listen(TauriEvent.WINDOW_FILE_DROP_CANCELLED, async (event) => {
+        listen(TauriEvent.DRAG_LEAVE, async (event) => {
             console.log(event);
         })
     }, []);
