@@ -13,12 +13,12 @@ pub fn generate_video_file_dir(
 ) -> Result<PathBuf, ExogenesisEnsembleLocalFileErrors> {
     let user_dirs = match UserDirs::new() {
         Some(dir) => dir,
-        None => return Err(ExogenesisEnsembleLocalFileErrors::DirectoryMoundFailed),
+        None => return Err(ExogenesisEnsembleLocalFileErrors::DirectoryMountFailed),
     };
 
     let video_dir = match user_dirs.video_dir() {
         Some(dir) => dir,
-        None => return Err(ExogenesisEnsembleLocalFileErrors::DirectoryMoundFailed),
+        None => return Err(ExogenesisEnsembleLocalFileErrors::DirectoryMountFailed),
     };
 
     let file_path = match generate_file_path(date_time, extension) {
