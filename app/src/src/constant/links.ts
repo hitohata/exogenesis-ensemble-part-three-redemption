@@ -1,25 +1,27 @@
-export type LinksType = {
-	url: string;
+export type ModesType = {
+	mode: MODE;
 	name: string;
 	icon: string;
 }[];
 
+export type MODE = "UPLOAD" | "BACK_UP" | "LOCAL";
+
 /**
  * The links of the contents
  */
-export const LINKS: LinksType = [
+export const LINKS: ModesType = [
 	{
-		url: "/upload",
+		mode: "UPLOAD",
 		name: "Upload",
 		icon: "",
 	},
 	{
-		url: "/back-up",
+		mode: "BACK_UP",
 		name: "Buck Up",
 		icon: "",
 	},
 	{
-		url: "/local",
+		mode: "LOCAL",
 		name: "Local",
 		icon: "",
 	},

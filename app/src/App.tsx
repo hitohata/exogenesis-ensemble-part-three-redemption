@@ -1,12 +1,16 @@
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { TauriEvent } from "@tauri-apps/api/event";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
+import "./index.css";
 import "./App.css";
+import { ModeContext } from "./src/context/ModeContext.tsx";
 import { Layout } from "./src/layout/Layout.tsx";
 
 function App() {
+	const { mode } = useContext(ModeContext);
+
 	const [greetMsg, setGreetMsg] = useState("");
 	const [name, setName] = useState("hoge-");
 
@@ -16,8 +20,8 @@ function App() {
 	}
 
 	useEffect(() => {
-		console.log("App.tsx");
-	});
+		console.log(mode);
+	}, [mode]);
 
 	useEffect(() => {
 		listen<TauriEvent.DRAG_DROP>(TauriEvent.DRAG_DROP, async (event) => {

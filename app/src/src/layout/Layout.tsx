@@ -1,11 +1,14 @@
 import { TauriEvent, listen } from "@tauri-apps/api/event";
 import { type ReactNode, useEffect, useState } from "react";
+import type { MODE } from "../constant/links.ts";
 import { DesktopLayout } from "./DesktopLayout/DesktopLayout.tsx";
 import { MobileLayout } from "./MobileLayout/MobileLayout.tsx";
 
 /**
  * This component wrapper of the main contents
  * This component watches the window size and returns an appropriate layout for mobile size or
+ * @param children
+ * @param setMode
  * @constructor
  */
 export function Layout({ children }: { children: ReactNode }) {
@@ -19,7 +22,13 @@ export function Layout({ children }: { children: ReactNode }) {
 		});
 	}, []);
 
-	if (windowWidth < 480) return <MobileLayout>{children}</MobileLayout>;
-
-	return <DesktopLayout>{children}</DesktopLayout>;
+	return (
+		<div>
+			{windowWidth < 480 ? (
+				<MobileLayout>{children}</MobileLayout>
+			) : (
+				<DesktopLayout>{children}</DesktopLayout>
+			)}
+		</div>
+	);
 }
