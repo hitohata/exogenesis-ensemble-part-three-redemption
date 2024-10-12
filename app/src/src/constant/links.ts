@@ -1,7 +1,11 @@
+import upload from "./icons/upload.svg";
+import backUp from "./icons/download.svg";
+import disk from "./icons/disk.svg";
+
 export type ModesType = {
 	mode: MODE;
 	name: string;
-	icon: string;
+	iconPath: string;
 }[];
 
 export type MODE = "UPLOAD" | "BACK_UP" | "LOCAL";
@@ -13,16 +17,16 @@ export const LINKS: ModesType = [
 	{
 		mode: "UPLOAD",
 		name: "Upload",
-		icon: "",
+		iconPath: upload,
 	},
 	{
 		mode: "BACK_UP",
 		name: "Buck Up",
-		icon: "",
+		iconPath: backUp,
 	},
 	{
 		mode: "LOCAL",
 		name: "Local",
-		icon: "",
+		iconPath: disk,
 	},
 ];

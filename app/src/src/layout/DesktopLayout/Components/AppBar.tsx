@@ -6,7 +6,7 @@ export function AppBar() {
 	const { changeMode } = useContext(ModeContext);
 
 	return (
-		<div className="py-5 border-b-4">
+		<div className="py-5 border-b-4 width-limiter">
 			<ul className="flex justify-center content-center space-x-20">
 				{LINKS.map((link) => (
 					<li key={link.mode}>
