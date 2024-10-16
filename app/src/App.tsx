@@ -1,8 +1,8 @@
-import { invoke } from "@tauri-apps/api/core";
-import { listen } from "@tauri-apps/api/event";
-import { TauriEvent } from "@tauri-apps/api/event";
-import { useContext, useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
+// import { invoke } from "@tauri-apps/api/core";
+// import { listen } from "@tauri-apps/api/event";
+// import { TauriEvent } from "@tauri-apps/api/event";
+import { useContext, useEffect } from "react";
+// import reactLogo from "./assets/react.svg";
 import "./index.css";
 import "./App.css";
 import { ModeContext } from "./src/context/ModeContext.tsx";
@@ -11,14 +11,14 @@ import {UploadPage} from "./src/pages/upload/uploadPage.tsx";
 
 function App() {
 	const { mode } = useContext(ModeContext);
-
-	const [greetMsg, setGreetMsg] = useState("");
-	const [name, setName] = useState("hoge-");
-
-	async function greet() {
-		// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-		setGreetMsg(await invoke("greet", { name }));
-	}
+	//
+	// const [greetMsg, setGreetMsg] = useState("");
+	// const [name, setName] = useState("hoge-");
+	//
+	// async function greet() {
+	// 	// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+	// 	setGreetMsg(await invoke("greet", { name }));
+	// }
 
 	useEffect(() => {
 		console.log(mode);
