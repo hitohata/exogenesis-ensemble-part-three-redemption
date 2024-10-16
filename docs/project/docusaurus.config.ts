@@ -91,7 +91,7 @@ const config: Config = {
 						{
 							label: "GitHub",
 							href: "https://github.com/hitohata/ExogenesisEnsemble_Part3_Redemption",
-						}
+						},
 					],
 				},
 			],

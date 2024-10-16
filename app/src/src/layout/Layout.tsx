@@ -14,12 +14,17 @@ export function Layout({ children }: { children: ReactNode }) {
 	const [windowWidth, setWindowWidth] = useState<number>(1000);
 
 	useEffect(() => {
-		 const unlisten = listen<{ width: number, height: number }>(TauriEvent.WINDOW_RESIZED, (event) => {
-			if (event.payload.width) {
-				setWindowWidth(event.payload.width);
-			}
-		 });
-		 return () => {unlisten.then(f => f())};
+		const unlisten = listen<{ width: number; height: number }>(
+			TauriEvent.WINDOW_RESIZED,
+			(event) => {
+				if (event.payload.width) {
+					setWindowWidth(event.payload.width);
+				}
+			},
+		);
+		return () => {
+			unlisten.then((f) => f());
+		};
 	}, []);
 
 	return (

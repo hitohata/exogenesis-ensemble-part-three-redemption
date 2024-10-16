@@ -19,7 +19,11 @@ export function BottomMenu() {
 						key={item.mode}
 						onClick={() => changeMode(item.mode)}
 					>
-						<img src={item.iconPath} alt={item.name} className="h-full w-full"/>
+						<img
+							src={item.iconPath}
+							alt={item.name}
+							className="h-full w-full"
+						/>
 					</button>
 				))}
 			</div>
