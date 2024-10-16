@@ -3,7 +3,7 @@ use chrono::{DateTime, Datelike, Timelike, Utc};
 use directories::UserDirs;
 use std::path::PathBuf;
 
-const DIRECTORY_PATH: &str = "/ExogenesisEnsemblePartThreeRedemption";
+const DIRECTORY_PATH: &str = "ExogenesisEnsemblePartThreeRedemption";
 
 /// Return the video path
 /// The video directory is OS specific though, under that, a path will be an app name + /yyyy/MM/dd/yyyy-MM-dd-hh-mm-ss.{extension}
