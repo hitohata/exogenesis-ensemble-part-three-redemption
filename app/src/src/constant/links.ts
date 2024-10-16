@@ -1,6 +1,6 @@
-import upload from "./icons/upload.svg";
-import backUp from "./icons/download.svg";
 import disk from "./icons/disk.svg";
+import backUp from "./icons/download.svg";
+import upload from "./icons/upload.svg";
 
 export type ModesType = {
 	mode: MODE;
