@@ -1,8 +1,0 @@
-/build/debug/deps/libdarling-3bea997d4a77dffb.rmeta: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/darling-0.20.10/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/darling-0.20.10/src/macros_public.rs
-
-/build/debug/deps/libdarling-3bea997d4a77dffb.rlib: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/darling-0.20.10/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/darling-0.20.10/src/macros_public.rs
-
-/build/debug/deps/darling-3bea997d4a77dffb.d: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/darling-0.20.10/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/darling-0.20.10/src/macros_public.rs
-
-/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/darling-0.20.10/src/lib.rs:
-/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/darling-0.20.10/src/macros_public.rs:
