@@ -9,8 +9,8 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "format": "biome check ./lib ./bin --write",
-    "format:check": "biome check ./lib ./bin"
+    "format": "biome check ./lib ./bin ./util --write",
+    "format:check": "biome check ./lib ./bin ./util"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
