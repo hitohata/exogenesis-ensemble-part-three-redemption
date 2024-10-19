@@ -3,11 +3,11 @@
 // import * as Infra from '../lib/infra-stack';
 
 // example test. To run these tests, uncomment this file along with the
-// example resource in lib/infra-stack.ts
+// example resource in lib/exogenesis-ensemble-stack.ts
 test('SQS Queue Created', () => {
 //   const app = new cdk.App();
 //     // WHEN
-//   const stack = new Infra.InfraStack(app, 'MyTestStack');
+//   const stack = new Infra.ExogenesisEnsembleStack(app, 'MyTestStack');
 //     // THEN
 //   const template = Template.fromStack(stack);
 
