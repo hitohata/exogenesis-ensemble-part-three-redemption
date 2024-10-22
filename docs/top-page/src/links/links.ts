@@ -66,7 +66,7 @@ export const DOC_LINKS: DocumentSectionType[] = [
 				documentName: "S3 hook Application",
 				body: "S3 hook application document",
 				link: addRepoName("/lambda/s3-hook/doc/app/index.html"),
-			}
-		]
-	}
+			},
+		],
+	},
 ];
