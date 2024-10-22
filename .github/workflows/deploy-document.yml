@@ -92,6 +92,58 @@ jobs:
           overwrite: true
           retention-days: 1
 
+  build-web-api-app-doc:
+    timeout-minutes: 3
+    name: build a web API document
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory:
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: mkdir
+        run: sudo mkdir /build && sudo chmod -R 777 /build
+      - name: Setup Cargo
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: build
+        run: cargo doc --all --no-deps --document-private-items --target-dir /build
+      - name: Write an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lambda-wab-api-app
+          path: /build
+          overwrite: true
+          retention-days: 1
+
+  build-s3-hook-doc:
+    timeout-minutes: 3
+    name: build a s3 hook document
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./lambdas/s3-hook-app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: mkdir
+        run: sudo mkdir /build && sudo chmod -R 777 /build
+      - name: Setup Cargo
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: build
+        run: cargo doc --all --no-deps --document-private-items --target-dir /build
+      - name: Write an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lambda-s3-hook-app
+          path: /build
+          overwrite: true
+          retention-days: 1
+
   build-native-front-document:
     timeout-minutes: 1
     name: build the native front-end app api doc
@@ -129,6 +181,8 @@ jobs:
       - build-top-page
       - build-native-back-end-document
       - build-native-front-document
+      - build-web-api-app-doc
+      - build-s3-hook-doc
     steps:
       - name: Checkout
         uses: actions/checkout@v4
