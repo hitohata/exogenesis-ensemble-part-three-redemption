@@ -40,6 +40,44 @@ jobs:
       - name: Check format
         run: bun run build
 
+  test-build-web-api-doc:
+    timeout-minutes: 3
+    name: build a web API document
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./lambdas/web-api-app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: mkdir
+        run: sudo mkdir /build && sudo chmod -R 777 /build
+      - name: Setup Cargo
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: build
+        run: cargo doc --all --no-deps --document-private-items
+
+  test-build-s3-hook-doc:
+    timeout-minutes: 3
+    name: build a s3 hook document
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./lambdas/s3-hook-app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: mkdir
+        run: sudo mkdir /build && sudo chmod -R 777 /build
+      - name: Setup Cargo
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: build
+        run: cargo doc --all --no-deps --document-private-items
+
   test-native-back-end-api-doc:
     timeout-minutes: 3
     name: build the native back end app api doc
@@ -84,6 +122,8 @@ jobs:
       - test-build-top-page-doc
       - test-native-back-end-api-doc
       - test-native-front-doc
+      - test-build-s3-hook-doc
+      - test-build-web-api-doc
     runs-on: ubuntu-latest
     steps:
       - uses: Kesin11/actions-timeline@v2
