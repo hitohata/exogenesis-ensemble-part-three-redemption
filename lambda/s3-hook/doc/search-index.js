@@ -1,0 +1,4 @@
+var searchIndex = new Map(JSON.parse('[["s3_hook_app",{"t":"HH","n":["function_handler","main"],"q":[[0,"s3_hook_app"],[2,"aws_lambda_events::event::s3::event"],[3,"lambda_runtime::types"],[4,"lambda_runtime"],[5,"core::result"]],"i":"``","f":"{{{d{b}}}{{j{fh}}}}{{}{{j{fh}}}}","D":"b","p":[[5,"S3Event",2],[5,"LambdaEvent",3],[1,"unit"],[8,"Error",4],[6,"Result",5]],"r":[],"b":[],"c":"OjAAAAAAAAA=","e":"OjAAAAEAAAAAAAEAEAAAAAAAAgA="}]]'));
+if (typeof exports !== 'undefined') exports.searchIndex = searchIndex;
+else if (window.initSearch) window.initSearch(searchIndex);
+//{"start":39,"fragment_lengths":[398]}
