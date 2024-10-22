@@ -202,6 +202,8 @@ jobs:
           mv /temp/top-page /build/top-page
           mkdir -p /build/native/api/back-end && cp -r /temp/native-back-end-document/* /build/native/api/back-end
           mkdir -p /build/native/api/front-end && cp -r /temp/native-front-end-document/* /build/native/api/front-end
+          mkdir -p /build/lambda/web-api && cp -r /temp/lambda-wab-api-app/* /build/lambda/web-api
+          mkdir -p /build/lambda/s3-hook && cp -r /temp/lambda-s3-hook-app/* /build/lambda/s3-hook
       - name: copy top index.html
         run: cp ./others/index.html /build
         working-directory: ./docs
