@@ -60,12 +60,12 @@ export const DOC_LINKS: DocumentSectionType[] = [
 			{
 				documentName: "WEB API Application",
 				body: "Web API application document",
-				link: addRepoName("/lambda/web-api/doc/app/index.html"),
+				link: addRepoName("/lambda/web-api/doc/web_api_app/index.html"),
 			},
 			{
 				documentName: "S3 hook Application",
 				body: "S3 hook application document",
-				link: addRepoName("/lambda/s3-hook/doc/app/index.html"),
+				link: addRepoName("/lambda/s3-hook/doc/s3_hook_app/index.html"),
 			},
 		],
 	},
