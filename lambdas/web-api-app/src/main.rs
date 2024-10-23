@@ -1,7 +1,10 @@
+mod bucket;
+
 use axum::{Json, Router};
 use axum::routing::get;
 use lambda_http::{run, tracing, Error};
 use serde_json::{json, Value};
+use crate::bucket::bucket_routes;
 
 fn greet() -> Json<Value> {
     return Json(json!({"body": "hello world"}))
@@ -14,7 +17,8 @@ async fn main() -> Result<(), Error> {
     tracing::init_default_subscriber();
 
     let app = Router::new()
-        .route("/", get(greet));
+        .route("/", get(greet))
+        .nest("/bucket", bucket_routes());
 
     run(app)
 }
