@@ -12,88 +12,88 @@ pub fn bucket_routes() -> Router {
     let bucket_route = Router::new()
         .route(
             "/videos",
-            get(Json(videos_handler)),
+            get(videos_handler),
         )
         .route(
             "/videos/years/:year/months",
-            get(Json(months_videos_handler)),
+            get(months_videos_handler),
         )
-        .route("/videos/years/:year/months/:month/days", get(Json(days_videos_handler)))
+        .route("/videos/years/:year/months/:month/days", get(days_videos_handler))
         .route(
             "/videos/years/:year/months/:month/days/:day/objects",
-            get(Json(get_objects_handler)),
+            get(get_objects_handler),
         );
 
     bucket_route
 }
 
 /// The wrapper of the get year
-async fn videos_handler(Path(path): Path<String>) -> (StatusCode, serde_json::Value) {
+async fn videos_handler() -> (StatusCode, Json<serde_json::Value>) {
     match get_years().await {
         Ok(years) => {
             (
                 StatusCode::OK,
-                json!(years)
+                Json(json!(years))
             )
         }
         Err(e) => {
             (
                 StatusCode::BAD_REQUEST,
-                json!({"error": e})
+                Json(json!({"error": e}))
             )
         }
     }
 }
 
 /// The wrapper of the get_months
-async fn months_videos_handler(Path(year): Path<usize>) -> (StatusCode, serde_json::Value) {
+async fn months_videos_handler(Path(year): Path<usize>) -> (StatusCode, Json<serde_json::Value>) {
     match get_months(year).await {
         Ok(months) => {
             (
                 StatusCode::OK,
-                json!(months)
+                Json(json!(months))
             )
         }
         Err(e) => {
             (
                 StatusCode::BAD_REQUEST,
-                json!({"error": e})
+                Json(json!({"error": e}))
             )
         }
     }
 }
 
 /// The wrapper of the get_days
-async fn days_videos_handler(Path((year, month)): Path<(usize, usize)>) -> (StatusCode, serde_json::Value) {
+async fn days_videos_handler(Path((year, month)): Path<(usize, usize)>) -> (StatusCode, Json<serde_json::Value>) {
     match get_days(year, month).await {
         Ok(days) => {
             (
                 StatusCode::OK,
-                json!(days)
+                Json(json!(days))
             )
         }
         Err(e) => {
             (
                 StatusCode::BAD_REQUEST,
-                json!({"error": e})
+                Json(json!({"error": e}))
             )
         }
     }
 }
 
 /// The wrapper of the get_objects
-async fn get_objects_handler(Path((year, month, day)): Path<(usize, usize, usize)>) -> (StatusCode, serde_json::Value) {
+async fn get_objects_handler(Path((year, month, day)): Path<(usize, usize, usize)>) -> (StatusCode, Json<serde_json::Value>) {
     match get_objects(year, month, day).await {
         Ok(video_objects) => {
             (
                 StatusCode::OK,
-                json!(video_objects)
+                Json(json!(video_objects))
             )
         }
         Err(e) => {
             (
                 StatusCode::BAD_REQUEST,
-                json!({"error": e})
+                Json(json!({"error": e}))
             )
         }
     }
