@@ -2,12 +2,13 @@ mod routes;
 
 use crate::routes::bucket;
 use axum::routing::get;
-use axum::{Json, Router};
+use axum::Router;
+use axum::response::Json;
 use lambda_http::{run, tracing, Error};
 use serde_json::{json, Value};
 
-fn greet() -> Json<Value> {
-    return Json(json!({"body": "hello world"}));
+async fn greet() -> Json<Value> {
+    Json(json!({"body": "hello world"}))
 }
 
 /// This project uses the [Axum](https://docs.rs/axum/latest/axum/).
@@ -20,5 +21,5 @@ async fn main() -> Result<(), Error> {
         .route("/", get(greet))
         .nest("/bucket", bucket::route::bucket_routes());
 
-    run(app)
+    run(app).await
 }

@@ -10,16 +10,16 @@ pub async fn get_years() -> Result<YearsVideos, String> {
 }
 
 /// Read the month that existing items are narrowed down by year in the s3 bucket.
-pub async fn get_months(years: usize) -> Result<MonthsVideos, String> {
+pub async fn get_months(_years: usize) -> Result<MonthsVideos, String> {
     Ok(MonthsVideos { months: vec![] })
 }
 
 /// Read the days that existing items are narrowed down by year and month in the s3 bucket.
-pub async fn get_days(year: usize, month: usize) -> Result<DaysVideos, String> {
+pub async fn get_days(_year: usize, _month: usize) -> Result<DaysVideos, String> {
     Ok(DaysVideos { days: vec![] })
 }
 
 /// Read the objects that existing items are narrowed down by year, month and day in the s3 bucket.
-pub async fn get_objects(year: usize, month: usize, day: usize) -> Result<VideoObjects, String> {
+pub async fn get_objects(_year: usize, _month: usize, _day: usize) -> Result<VideoObjects, String> {
     Ok(VideoObjects { objects: vec![] })
 }
