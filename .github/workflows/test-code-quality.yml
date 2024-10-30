@@ -80,6 +80,23 @@ jobs:
       - name: Build
         run: cargo check
 
+  check-web-api-function:
+    timeout-minutes: 3
+    name: check the web api function
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./lambdas/web-api-app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Cargo
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: Check the quality
+        run: cargo check
+
   check-native-front-end:
     timeout-minutes: 1
     runs-on: ubuntu-latest
