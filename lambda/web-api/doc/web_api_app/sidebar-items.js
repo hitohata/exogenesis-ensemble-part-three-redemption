@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["greet","main"]};
+window.SIDEBAR_ITEMS = {"mod":["routes"]};
