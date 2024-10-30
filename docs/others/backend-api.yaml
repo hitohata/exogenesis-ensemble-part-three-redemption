@@ -118,7 +118,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Video"
+                  objects: string
 
 components:
   schemas:
