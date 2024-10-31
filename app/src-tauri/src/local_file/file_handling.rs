@@ -1,7 +1,6 @@
 use crate::local_file::local_file_dir::generate_video_file_dir;
 use crate::local_file::local_file_error::ExogenesisEnsembleLocalFileErrors;
 use crate::local_file::util::does_file_exist;
-use chrono::{DateTime, Utc};
 use std::fs;
 use std::path::Path;
 use std::time::UNIX_EPOCH;
@@ -15,7 +14,7 @@ pub(crate) fn generate_file_path(
     let extension = get_extension(path)?;
 
     let created_date_time = extract_created_datetime_form_video(path)?;
-    let video_dir = generate_video_file_dir(&created_date_time, &extension)?;
+    let video_dir = generate_video_file_dir(created_date_time, &extension)?;
 
     let Some(video_dir_str) = video_dir.to_str() else {
         return Err(ExogenesisEnsembleLocalFileErrors::FileError(
@@ -57,9 +56,10 @@ fn get_extension(path: &Path) -> Result<String, ExogenesisEnsembleLocalFileError
 }
 
 /// Extract a created datetime from the meta-data of the video.
+/// The return date will be epoch time.
 fn extract_created_datetime_form_video(
     path: &Path,
-) -> Result<DateTime<Utc>, ExogenesisEnsembleLocalFileErrors> {
+) -> Result<u128, ExogenesisEnsembleLocalFileErrors> {
     let Ok(meta_date) = fs::metadata(path) else {
         return Err(ExogenesisEnsembleLocalFileErrors::ReadingMetaDataError(
             "Reading a metadata is failed".to_string(),
@@ -72,16 +72,10 @@ fn extract_created_datetime_form_video(
         ));
     };
 
-    let Ok(created_date_time) = created_date_system_time.duration_since(UNIX_EPOCH) else {
-        return Err(ExogenesisEnsembleLocalFileErrors::ReadingMetaDataError(
+    match created_date_system_time.duration_since(UNIX_EPOCH) {
+        Ok(duration) => Ok(duration.as_millis()),
+        Err(_) => Err(ExogenesisEnsembleLocalFileErrors::ReadingMetaDataError(
             "Invalid datetime is recorded".to_string(),
-        ));
-    };
-
-    match chrono::DateTime::from_timestamp_micros(created_date_time.as_micros() as i64) {
-        Some(datetime) => Ok(datetime),
-        None => Err(ExogenesisEnsembleLocalFileErrors::InvalidDateError(
-            format!("{}", created_date_time.as_micros()),
         )),
     }
 }
