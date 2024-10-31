@@ -6,7 +6,7 @@ use chrono::offset::LocalResult;
 
 /// This struct is designed for generating the file path
 /// This main function is `generate_file_path`, but this struct must be created beforehand.
-/// 
+///
 /// # Example
 /// When the input is an ISO format string
 /// ```rust
@@ -16,7 +16,7 @@ use chrono::offset::LocalResult;
 ///  let file_path = FilePath::new().generate_file_path(date_time, "video");
 ///  assert_eq!(file_path.unwrap(), "/1984/4/4/1984-4-4-12-34-50.video");
 /// # }
-/// ``` 
+/// ```
 /// # Example
 /// When the input is an epoch timestamp
 /// ```rust
@@ -30,20 +30,20 @@ use chrono::offset::LocalResult;
 pub struct FilePath {}
 
 impl FilePath {
-    
+
     pub fn new() -> Self { FilePath{} }
-    
+
     /// Check if the extension is not empty
-    fn check_extension(&self, extension: &str) -> Result<(), String> { 
+    fn check_extension(&self, extension: &str) -> Result<(), String> {
         match extension.len() < 1 {
             true => Err("Invalid extension".to_string()),
             false => Ok(())
-        } 
+        }
     }
 
     /// Generate a file path
     /// Acceptable type is u128, epoch time, and &str, the ISO 8061 string.
-    
+
     pub fn generate_file_path<DateTimeType>(&self, date_time: DateTimeType, extension: &str) -> Result<String, String> where Self: GenerateFile<DateTimeType> {
         self.generate_file_path_from_datetime(date_time, extension)
     }
@@ -78,7 +78,7 @@ fn convert_file_name(
     datetime: DateTime<Utc>,
     extension: &str,
 ) -> Result<String, String> {
-    
+
     let without_dot_extension = match extension.starts_with(".") {
         true => extension.split_at(1).1,
         false => extension,
@@ -97,7 +97,7 @@ fn convert_file_name(
         datetime.second(),
         without_dot_extension,
     ))
-} 
+}
 
 /// take an epoch time as an argument, then returns the datetime struct
 fn epoch_to_datetime(epoch_time: u128) -> Result<DateTime<Utc>, String> {
@@ -116,6 +116,7 @@ fn iso_date_time_to_datetime(date_time: &str) -> Result<DateTime<Utc>, String> {
 }
 
 ///  parse the file path
+#[allow(dead_code)] // TODO: must be fixed 
 fn from_file_name_to_date_time(path: &str) -> Result<DateTime<Utc>, String> {
 
     let file_path = match &path[..1] == "/" {
@@ -180,10 +181,10 @@ mod test_generate_file_path {
         const HOUR: u32  = 12;
         const MIN: u32  = 42;
         const SEC: u32  = 42;
-        
+
         let date_time = Utc.with_ymd_and_hms(YEAR, MONTH, DAY, HOUR, MIN, SEC).unwrap();
         let extension = ".VIDEO";
-        
+
         // Act
         let result = convert_file_name(date_time, extension);
 
@@ -199,15 +200,15 @@ mod test_generate_file_path {
 #[cfg(test)]
 mod test_epoch_to_datetime {
     use super::*;
-    
+
     #[test]
     fn test_normal_case() {
         // Arrange
         let date_time = 449930090000;
-        
+
         // Acr
         let result = epoch_to_datetime(date_time).unwrap();
-        
+
         // Assert
         assert_eq!(result.year(), 1984);
         assert_eq!(result.month(), 4);
@@ -221,15 +222,15 @@ mod test_epoch_to_datetime {
 #[cfg(test)]
 mod test_iso_date_time_to_datetime {
     use super::*;
-    
+
     #[test]
     fn test_normal_case() {
         // Arrange
         let date_time = "1984-04-04T12:34:50Z";
-        
+
         // Acr
         let result = iso_date_time_to_datetime(date_time).unwrap();
-        
+
         // Assert
         assert_eq!(result.year(), 1984);
         assert_eq!(result.month(), 4);
