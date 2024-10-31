@@ -1,7 +1,7 @@
 use crate::local_file::local_file_error::ExogenesisEnsembleLocalFileErrors;
 use directories::UserDirs;
 use std::path::PathBuf;
-use time_file_name::generate_local_file_path;
+use time_file_name::FilePath;
 
 const DIRECTORY_PATH: &str = "ExogenesisEnsemblePartThreeRedemption";
 
@@ -21,7 +21,7 @@ pub fn generate_video_file_dir(
         None => return Err(ExogenesisEnsembleLocalFileErrors::DirectoryMountFailed),
     };
 
-    let file_path = match generate_local_file_path(date_time, extension) {
+    let file_path = match FilePath::new().generate_file_path(date_time, extension) {
         Ok(path) => path,
         Err(e) => return Err(ExogenesisEnsembleLocalFileErrors::FileError(e)),
     };
