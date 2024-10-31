@@ -33,6 +33,40 @@ impl FilePath {
 
     pub fn new() -> Self { FilePath{} }
 
+    /// Generate a file path
+    /// Acceptable type is u128, epoch time, and &str, the ISO 8061 string.
+    pub fn generate_file_path<DateTimeType>(&self, date_time: DateTimeType, extension: &str) -> Result<String, String> where Self: GenerateFile<DateTimeType> {
+        self.generate_file_path_from_datetime(date_time, extension)
+    }
+    
+    /// create the file path from the date time.
+    /// It is /yyyy/MM/dd/yyyy-MM-dd-hh-mm-ss.{extension}
+    fn convert_file_name(
+        &self,
+        datetime: DateTime<Utc>,
+        extension: &str,
+    ) -> Result<String, String> {
+
+        let without_dot_extension = match extension.starts_with(".") {
+            true => extension.split_at(1).1,
+            false => extension,
+        };
+
+        Ok(format!(
+            "/{}/{}/{}/{}-{}-{}-{}-{}-{}.{}",
+            datetime.year(),
+            datetime.month(),
+            datetime.day(),
+            datetime.year(),
+            datetime.month(),
+            datetime.day(),
+            datetime.hour(),
+            datetime.minute(),
+            datetime.second(),
+            without_dot_extension,
+        ))
+    }
+    
     /// Check if the extension is not empty
     fn check_extension(&self, extension: &str) -> Result<(), String> {
         match extension.len() < 1 {
@@ -40,12 +74,21 @@ impl FilePath {
             false => Ok(())
         }
     }
+    
+    /// take an epoch time as an argument, then returns the datetime struct
+    fn epoch_to_datetime(&self, epoch_time: u128) -> Result<DateTime<Utc>, String> {
+        match DateTime::from_timestamp_millis(epoch_time as i64) {
+            Some(datetime) => Ok(datetime),
+            None => Err("Cannot convert the provided epoch time".to_string()),
+        }
+    }
 
-    /// Generate a file path
-    /// Acceptable type is u128, epoch time, and &str, the ISO 8061 string.
-
-    pub fn generate_file_path<DateTimeType>(&self, date_time: DateTimeType, extension: &str) -> Result<String, String> where Self: GenerateFile<DateTimeType> {
-        self.generate_file_path_from_datetime(date_time, extension)
+    /// take the ISO 8061 ,
+    fn iso_date_time_to_datetime(&self, date_time: &str) -> Result<DateTime<Utc>, String> {
+        match date_time.parse::<DateTime<Utc>>() {
+            Ok(time) => Ok(time),
+            Err(_) => Err(format!("cannot convert the provided epoch time to datetime: {}", date_time)),
+        }
     }
 }
 
@@ -58,8 +101,8 @@ impl GenerateFile<u128> for FilePath {
     /// The date time must be the epoch time.
     fn generate_file_path_from_datetime(&self, date_time: u128, extension: &str) -> Result<String, String> {
         self.check_extension(extension)?;
-        let date_time_chrono = epoch_to_datetime(date_time)?;
-        convert_file_name(date_time_chrono, extension)
+        let date_time_chrono = self.epoch_to_datetime(date_time)?;
+        self.convert_file_name(date_time_chrono, extension)
     }
 }
 
@@ -67,51 +110,8 @@ impl GenerateFile<&str> for FilePath {
     /// date time must be a ISO 8061 date time string
     fn  generate_file_path_from_datetime(&self, date_time: &str, extension: &str) -> Result<String, String> {
         self.check_extension(extension)?;
-        let date_time_chrono = iso_date_time_to_datetime(date_time)?;
-        convert_file_name(date_time_chrono, extension)
-    }
-}
-
-/// create the file path from the date time.
-/// It is /yyyy/MM/dd/yyyy-MM-dd-hh-mm-ss.{extension}
-fn convert_file_name(
-    datetime: DateTime<Utc>,
-    extension: &str,
-) -> Result<String, String> {
-
-    let without_dot_extension = match extension.starts_with(".") {
-        true => extension.split_at(1).1,
-        false => extension,
-    };
-
-    Ok(format!(
-        "/{}/{}/{}/{}-{}-{}-{}-{}-{}.{}",
-        datetime.year(),
-        datetime.month(),
-        datetime.day(),
-        datetime.year(),
-        datetime.month(),
-        datetime.day(),
-        datetime.hour(),
-        datetime.minute(),
-        datetime.second(),
-        without_dot_extension,
-    ))
-}
-
-/// take an epoch time as an argument, then returns the datetime struct
-fn epoch_to_datetime(epoch_time: u128) -> Result<DateTime<Utc>, String> {
-    match DateTime::from_timestamp_millis(epoch_time as i64) {
-        Some(datetime) => Ok(datetime),
-        None => Err("Cannot convert the provided epoch time".to_string()),
-    }
-}
-
-/// take the ISO 8061 ,
-fn iso_date_time_to_datetime(date_time: &str) -> Result<DateTime<Utc>, String> {
-    match date_time.parse::<DateTime<Utc>>() {
-        Ok(time) => Ok(time),
-        Err(_) => Err(format!("cannot convert the provided epoch time to datetime: {}", date_time)),
+        let date_time_chrono = self.iso_date_time_to_datetime(date_time)?;
+        self.convert_file_name(date_time_chrono, extension)
     }
 }
 
@@ -186,7 +186,7 @@ mod test_generate_file_path {
         let extension = ".VIDEO";
 
         // Act
-        let result = convert_file_name(date_time, extension);
+        let result = FilePath::new().convert_file_name(date_time, extension);
 
         // Assert
         let expected_date_time = format!(
@@ -207,7 +207,7 @@ mod test_epoch_to_datetime {
         let date_time = 449930090000;
 
         // Acr
-        let result = epoch_to_datetime(date_time).unwrap();
+        let result = FilePath::new().epoch_to_datetime(date_time).unwrap();
 
         // Assert
         assert_eq!(result.year(), 1984);
@@ -229,7 +229,7 @@ mod test_iso_date_time_to_datetime {
         let date_time = "1984-04-04T12:34:50Z";
 
         // Acr
-        let result = iso_date_time_to_datetime(date_time).unwrap();
+        let result = FilePath::new().iso_date_time_to_datetime(date_time).unwrap();
 
         // Assert
         assert_eq!(result.year(), 1984);
