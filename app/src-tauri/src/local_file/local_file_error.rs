@@ -7,12 +7,8 @@ pub enum ExogenesisEnsembleLocalFileErrors {
     ReadingMetaDataError(String),
     #[error("File not found: {0}")]
     FileNotFoundError(String),
-    #[error("Invalid date time is provided: {0}")]
-    InvalidDateError(String),
     #[error("Directory mount failed")]
     DirectoryMountFailed,
-    #[error("Invalid Extension is provided")]
-    InvalidExtensionError,
     #[error("File already exists")]
     FileCopyFailed,
     #[error("Incorrect extension is provided")]

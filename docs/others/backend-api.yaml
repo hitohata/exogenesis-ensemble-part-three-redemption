@@ -24,6 +24,43 @@ paths:
                     type: array
                     items:
                       type: string
+    post:
+      tags:
+        - Bucket
+      summary: upload a video
+      description: This API returns the pre-signed URL for uploading the video. You must upload the video via that URL.
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                dateTime:
+                  type: string
+                  description: The dateTime is the ISO 8601 date time format.
+                extension:
+                  type: string
+                  description: extension of the file
+              required:
+                - dateTime
+                - extension
+            example:
+              dateTime: "1984-04-04T00:00:00Z"
+              extension: "video"
+      responses:
+        200:
+          description: the pre-signed URL
+          content:
+            'application/json':
+              schema:
+                type: object
+                description: pre-signed URL
+                properties:
+                  url:
+                    type: string
+              example:
+                url: "https://pre-signed-url/path/to/vide.mov"
+
   /bucket/videos/years/{year}/months:
     get:
       tags:

@@ -80,6 +80,23 @@ jobs:
       - name: Build
         run: cargo check
 
+  check-crate-time-file-name:
+    timeout-minutes: 3
+    name: check the crate, the time file name
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./crate/time_file_name
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Cargo
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: Check the quality
+        run: cargo check
+
   check-web-api-function:
     timeout-minutes: 3
     name: check the web api function
@@ -123,6 +140,7 @@ jobs:
       - check-native-front-end
       - check-cdk-code-quality
       - check-web-api-function
+      - check-crate-time-file-name
     runs-on: ubuntu-latest
     steps:
       - uses: Kesin11/actions-timeline@v2

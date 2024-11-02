@@ -78,7 +78,6 @@ checksum = "86fdf8605db99b54d3cd748a44c6d04df638eb5dafb219b135d0149bd0db01f6"
 name = "app"
 version = "0.1.0"
 dependencies = [
- "chrono",
  "directories",
  "serde",
  "serde_json",
@@ -94,6 +93,7 @@ dependencies = [
  "tauri-plugin-process",
  "tauri-plugin-shell",
  "thiserror",
+ "time_file_name",
 ]
 
 [[package]]
@@ -4810,6 +4810,13 @@ checksum = "3f252a68540fde3a3877aeea552b832b40ab9a69e318efd078774a01ddee1ccf"
 dependencies = [
  "num-conv",
  "time-core",
+]
+
+[[package]]
+name = "time_file_name"
+version = "0.1.0"
+dependencies = [
+ "chrono",
 ]
 
 [[package]]
