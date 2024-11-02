@@ -231,7 +231,7 @@ jobs:
           mkdir -p /build/native/api/front-end && cp -r /temp/native-front-end-document/* /build/native/api/front-end
           mkdir -p /build/lambda/web-api && cp -r /temp/lambda-wab-api-app/* /build/lambda/web-api
           mkdir -p /build/lambda/s3-hook && cp -r /temp/lambda-s3-hook-app/* /build/lambda/s3-hook
-          mkdir -p /build/crate/time-file && cp -r /temp/crate-time-file/* /build/crate/time-file
+          mkdir -p /build/crates/time-file && cp -r /temp/crate-time-file/* /build/crates/time-file
       - name: copy top index.html
         run: cp ./others/index.html /build
         working-directory: ./docs
