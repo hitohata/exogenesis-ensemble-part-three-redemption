@@ -145,30 +145,30 @@ jobs:
           overwrite: true
           retention-days: 1
 
-    build-crate-time-file-doc:
-      name: build a s3 hook document
-      runs-on: ubuntu-latest
-      defaults:
-      run:
-        working-directory: ./crates/time_file_name
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v4
-        - name: mkdir
-          run: sudo mkdir /build && sudo chmod -R 777 /build
-        - name: Setup Cargo
-          uses: actions-rust-lang/setup-rust-toolchain@v1
-          with:
-            toolchain: stable
-        - name: build
-          run: cargo doc --all --no-deps --document-private-items --target-dir /build
-        - name: Write an artifact
-          uses: actions/upload-artifact@v4
-          with:
-            name: crate-time-file
-            path: /build
-            overwrite: true
-            retention-days: 1
+  build-crate-time-file-doc:
+    name: build a s3 hook document
+    runs-on: ubuntu-latest
+    defaults:
+    run:
+      working-directory: ./crates/time_file_name
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: mkdir
+        run: sudo mkdir /build && sudo chmod -R 777 /build
+      - name: Setup Cargo
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: build
+        run: cargo doc --all --no-deps --document-private-items --target-dir /build
+      - name: Write an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: crate-time-file
+          path: /build
+          overwrite: true
+          retention-days: 1
 
   build-native-front-document:
     timeout-minutes: 1
