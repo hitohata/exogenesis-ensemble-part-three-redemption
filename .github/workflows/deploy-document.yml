@@ -149,8 +149,8 @@ jobs:
     name: build a s3 hook document
     runs-on: ubuntu-latest
     defaults:
-    run:
-      working-directory: ./crates/time_file_name
+      run:
+        working-directory: ./crates/time_file_name
     steps:
       - name: Checkout
         uses: actions/checkout@v4
