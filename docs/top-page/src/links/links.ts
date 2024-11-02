@@ -61,8 +61,8 @@ export const DOC_LINKS: DocumentSectionType[] = [
 				documentName: "Time File Crate",
 				body: "The crate for handling file and date time",
 				link: addRepoName("/crates/time-file/doc/time_file_name/index.html"),
-			}
-		]
+			},
+		],
 	},
 	{
 		section: "Lambdas",
