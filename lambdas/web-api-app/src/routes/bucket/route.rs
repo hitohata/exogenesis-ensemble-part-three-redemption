@@ -1,10 +1,12 @@
 //! This is the route of the bucket resource.
 
-use crate::routes::bucket::bucket_function::{get_days, get_months, get_objects, get_years};
+use crate::routes::bucket::bucket_function::{generate_pre_signed_url_for_video, get_days, get_months, get_objects, get_years};
 use axum::http::StatusCode;
 use axum::routing::get;
 use axum::{Json, Router};
 use axum::extract::Path;
+use axum::response::IntoResponse;
+use serde::Deserialize;
 use serde_json::json;
 
 /// This is the root route of the bucket resource.
@@ -12,7 +14,7 @@ pub fn bucket_routes() -> Router {
     let bucket_route = Router::new()
         .route(
             "/videos",
-            get(videos_handler),
+            get(videos_handler).post(get_pre_singed_url),
         )
         .route(
             "/videos/years/:year/months",
@@ -28,19 +30,20 @@ pub fn bucket_routes() -> Router {
 }
 
 /// The wrapper of the get year
-async fn videos_handler() -> (StatusCode, Json<serde_json::Value>) {
+// async fn videos_handler() -> (StatusCode, Json<serde_json::Value>) { 
+async fn videos_handler() -> impl IntoResponse {
     match get_years().await {
         Ok(years) => {
             (
                 StatusCode::OK,
                 Json(json!(years))
-            )
+            ).into_response()
         }
         Err(e) => {
             (
                 StatusCode::BAD_REQUEST,
                 Json(json!({"error": e}))
-            )
+            ).into_response()
         }
     }
 }
@@ -97,4 +100,20 @@ async fn get_objects_handler(Path((year, month, day)): Path<(usize, usize, usize
             )
         }
     }
+}
+
+#[derive(Deserialize)]
+#[allow(non_snake_case)]
+struct GetPreSingnedUrlPayload {
+    dateTime: String,
+    extension: String,
+}
+
+async fn get_pre_singed_url(Json(payload): Json<GetPreSingnedUrlPayload>) -> impl IntoResponse {
+    let date_time = payload.dateTime;
+    let extension = payload.extension;
+    match generate_pre_signed_url_for_video(date_time.as_str(), &extension.as_str()).await {
+        Ok(url) => (StatusCode::OK, url).into_response(),
+        Err(e) => e.return_http_response().into_response()
+    }    
 }

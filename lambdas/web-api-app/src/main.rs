@@ -1,5 +1,6 @@
 mod routes;
-mod environment_values;
+mod static_values;
+mod error;
 
 use crate::routes::bucket;
 use axum::routing::get;

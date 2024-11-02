@@ -15,7 +15,7 @@ pub mod clients {
     use tokio::sync::OnceCell;
 
     static S3_CLIENT: OnceCell<aws_sdk_s3::Client> = OnceCell::const_new();
-    
+
     /// The s3 client
     pub async fn s3_client() -> &'static aws_sdk_s3::Client {
         S3_CLIENT.get_or_init(|| async {

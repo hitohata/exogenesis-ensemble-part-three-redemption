@@ -35,6 +35,7 @@ impl FilePath {
 
     /// Generate a file path
     /// Acceptable type is u128, epoch time, and &str, the ISO 8061 string.
+    #[allow(private_bounds)]
     pub fn generate_file_path<DateTimeType>(&self, date_time: DateTimeType, extension: &str) -> Result<String, String> where Self: GenerateFile<DateTimeType> {
         self.generate_file_path_from_datetime(date_time, extension)
     }
@@ -92,7 +93,7 @@ impl FilePath {
     }
 }
 
-pub trait GenerateFile<DateTimeType> {
+trait GenerateFile<DateTimeType> {
     /// A path is created by the date time.
     fn generate_file_path_from_datetime(&self, date_time: DateTimeType, extension: &str) -> Result<String, String>;
 }

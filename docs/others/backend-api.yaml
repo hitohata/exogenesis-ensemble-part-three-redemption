@@ -37,11 +37,16 @@ paths:
               properties:
                 dateTime:
                   type: string
-                  description: The dateTime is the ISO date time format.
+                  description: The dateTime is the ISO 8601 date time format.
+                extension:
+                  type: string
+                  description: extension of the file
               required:
                 - dateTime
+                - extension
             example:
-              dateTime: "1984-04-04 00:00:00.000"
+              dateTime: "1984-04-04T00:00:00Z"
+              extension: "video"
       responses:
         200:
           description: the pre-signed URL
