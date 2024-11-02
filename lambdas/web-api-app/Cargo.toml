@@ -24,5 +24,5 @@ tokio = { version = "1", features = ["macros"] }
 aws-sdk-s3 = "1.58.0"
 aws-config = { version = "1", features = ["behavior-version-latest"] }
 
-time_file_name = { path = "../../crate/time_file_name" }
+time_file_name = { path = "../../crates/time_file_name" }
 thiserror = "1.0.66"
