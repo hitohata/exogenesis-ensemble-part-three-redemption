@@ -23,11 +23,71 @@
 <a href="#23" id="23">23</a>
 <a href="#24" id="24">24</a>
 <a href="#25" id="25">25</a>
+<a href="#26" id="26">26</a>
+<a href="#27" id="27">27</a>
+<a href="#28" id="28">28</a>
+<a href="#29" id="29">29</a>
+<a href="#30" id="30">30</a>
+<a href="#31" id="31">31</a>
+<a href="#32" id="32">32</a>
+<a href="#33" id="33">33</a>
+<a href="#34" id="34">34</a>
+<a href="#35" id="35">35</a>
+<a href="#36" id="36">36</a>
+<a href="#37" id="37">37</a>
+<a href="#38" id="38">38</a>
+<a href="#39" id="39">39</a>
+<a href="#40" id="40">40</a>
+<a href="#41" id="41">41</a>
+<a href="#42" id="42">42</a>
+<a href="#43" id="43">43</a>
+<a href="#44" id="44">44</a>
+<a href="#45" id="45">45</a>
+<a href="#46" id="46">46</a>
+<a href="#47" id="47">47</a>
+<a href="#48" id="48">48</a>
+<a href="#49" id="49">49</a>
+<a href="#50" id="50">50</a>
+<a href="#51" id="51">51</a>
+<a href="#52" id="52">52</a>
+<a href="#53" id="53">53</a>
+<a href="#54" id="54">54</a>
+<a href="#55" id="55">55</a>
+<a href="#56" id="56">56</a>
+<a href="#57" id="57">57</a>
+<a href="#58" id="58">58</a>
+<a href="#59" id="59">59</a>
+<a href="#60" id="60">60</a>
+<a href="#61" id="61">61</a>
+<a href="#62" id="62">62</a>
+<a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
+<a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
+<a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a>
+<a href="#74" id="74">74</a>
+<a href="#75" id="75">75</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! This mod has s3-related functions.
 
-</span><span class="kw">use </span><span class="kw">crate</span>::routes::return_types::return_data_types::{
+</span><span class="kw">use </span>std::time::Duration;
+<span class="kw">use </span>aws_sdk_s3::presigning::{PresigningConfig};
+<span class="kw">use </span>lambda_http::tracing::error;
+<span class="kw">use </span>time_file_name::FilePath;
+<span class="kw">use </span><span class="kw">crate</span>::error::WebApiAppError;
+<span class="kw">use </span><span class="kw">crate</span>::routes::return_types::return_data_types::{
     DaysVideos, MonthsVideos, VideoObjects, YearsVideos,
 };
+<span class="kw">use </span><span class="kw">crate</span>::static_values::clients::s3_client;
+<span class="kw">use </span><span class="kw">crate</span>::static_values::lambda_environment_values::standard_bucked_name;
+
+<span class="doccomment">/// The expiring time for the s3 pre-signed URL
+</span><span class="kw">static </span>PRE_SIGN_EXPIRING_TIME: Duration = Duration::from_secs(<span class="number">5 </span>* <span class="number">60</span>);
 
 <span class="doccomment">/// Read the years that exist items in the s3 bucket.
 </span><span class="kw">pub async fn </span>get_years() -&gt; <span class="prelude-ty">Result</span>&lt;YearsVideos, String&gt; {
@@ -48,4 +108,44 @@
 </span><span class="kw">pub async fn </span>get_objects(_year: usize, _month: usize, _day: usize) -&gt; <span class="prelude-ty">Result</span>&lt;VideoObjects, String&gt; {
     <span class="prelude-val">Ok</span>(VideoObjects { objects: <span class="macro">vec!</span>[] })
 }
+
+<span class="doccomment">/// get a date time as an argument and return the [s3 pre-signed URL](https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html)
+/// The expiring time is 3600 sec
+/// The date time in the argument must be ISO
+</span><span class="kw">pub async fn </span>generate_pre_signed_url_for_video(date_time: <span class="kw-2">&amp;</span>str, extension: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;String, WebApiAppError&gt; {
+    <span class="kw">let </span>config = <span class="kw">match </span>PresigningConfig::expires_in(PRE_SIGN_EXPIRING_TIME) {
+        <span class="prelude-val">Ok</span>(config) =&gt; config,
+        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(WebApiAppError::ValidationError(<span class="string">"Too long expiring is provided"</span>.to_string())),
+    };
+
+    <span class="kw">let </span>s3_client = s3_client().<span class="kw">await</span>;
+
+    <span class="kw">let </span>file_path = <span class="kw">match </span>FilePath::new().generate_file_path(date_time, extension) {
+        <span class="prelude-val">Ok</span>(file_path) =&gt; file_path,
+        <span class="prelude-val">Err</span>(e) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(WebApiAppError::ValidationError(e))
+    };
+
+    get_pre_signed_url(s3_client, config, file_path.as_str()).<span class="kw">await
+</span>}
+
+<span class="doccomment">/// Calling the s3 bucket to get the pre-signed URL.
+/// [see](https://docs.aws.amazon.com/AmazonS3/latest/API/s3_example_s3_Scenario_PresignedUrl_section.html)
+/// [errors](https://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html)
+</span><span class="kw">async fn </span>get_pre_signed_url(client: <span class="kw-2">&amp;</span>aws_sdk_s3::Client, config: PresigningConfig, file_path: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;String, WebApiAppError&gt; {
+    <span class="kw">let </span>pre_signed_request_result = client
+        .put_object()
+        .bucket(standard_bucked_name())
+        .key(file_path)
+        .presigned(config)
+        .<span class="kw">await</span>;
+
+    <span class="kw">match </span>pre_signed_request_result {
+        <span class="prelude-val">Ok</span>(result) =&gt; <span class="prelude-val">Ok</span>(result.uri().into()),
+        <span class="prelude-val">Err</span>(e) =&gt; {
+            <span class="macro">error!</span>(<span class="string">"{}"</span>, e.to_string());
+            <span class="prelude-val">Err</span>(WebApiAppError::StorageError(<span class="string">"Get pre-signed url failed"</span>.to_string()))
+        }
+    }
+}
+
 </code></pre></div></section></main></body></html>

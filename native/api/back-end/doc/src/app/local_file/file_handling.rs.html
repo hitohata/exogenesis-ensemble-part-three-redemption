@@ -156,16 +156,9 @@
 <a href="#156" id="156">156</a>
 <a href="#157" id="157">157</a>
 <a href="#158" id="158">158</a>
-<a href="#159" id="159">159</a>
-<a href="#160" id="160">160</a>
-<a href="#161" id="161">161</a>
-<a href="#162" id="162">162</a>
-<a href="#163" id="163">163</a>
-<a href="#164" id="164">164</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::local_file::local_file_dir::generate_video_file_dir;
 <span class="kw">use </span><span class="kw">crate</span>::local_file::local_file_error::ExogenesisEnsembleLocalFileErrors;
 <span class="kw">use </span><span class="kw">crate</span>::local_file::util::does_file_exist;
-<span class="kw">use </span>chrono::{DateTime, Utc};
 <span class="kw">use </span>std::fs;
 <span class="kw">use </span>std::path::Path;
 <span class="kw">use </span>std::time::UNIX_EPOCH;
@@ -179,7 +172,7 @@
     <span class="kw">let </span>extension = get_extension(path)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>created_date_time = extract_created_datetime_form_video(path)<span class="question-mark">?</span>;
-    <span class="kw">let </span>video_dir = generate_video_file_dir(<span class="kw-2">&amp;</span>created_date_time, <span class="kw-2">&amp;</span>extension)<span class="question-mark">?</span>;
+    <span class="kw">let </span>video_dir = generate_video_file_dir(created_date_time, <span class="kw-2">&amp;</span>extension)<span class="question-mark">?</span>;
 
     <span class="kw">let </span><span class="prelude-val">Some</span>(video_dir_str) = video_dir.to_str() <span class="kw">else </span>{
         <span class="kw">return </span><span class="prelude-val">Err</span>(ExogenesisEnsembleLocalFileErrors::FileError(
@@ -221,9 +214,10 @@
 }
 
 <span class="doccomment">/// Extract a created datetime from the meta-data of the video.
+/// The return date will be epoch time.
 </span><span class="kw">fn </span>extract_created_datetime_form_video(
     path: <span class="kw-2">&amp;</span>Path,
-) -&gt; <span class="prelude-ty">Result</span>&lt;DateTime&lt;Utc&gt;, ExogenesisEnsembleLocalFileErrors&gt; {
+) -&gt; <span class="prelude-ty">Result</span>&lt;u128, ExogenesisEnsembleLocalFileErrors&gt; {
     <span class="kw">let </span><span class="prelude-val">Ok</span>(meta_date) = fs::metadata(path) <span class="kw">else </span>{
         <span class="kw">return </span><span class="prelude-val">Err</span>(ExogenesisEnsembleLocalFileErrors::ReadingMetaDataError(
             <span class="string">"Reading a metadata is failed"</span>.to_string(),
@@ -236,16 +230,10 @@
         ));
     };
 
-    <span class="kw">let </span><span class="prelude-val">Ok</span>(created_date_time) = created_date_system_time.duration_since(UNIX_EPOCH) <span class="kw">else </span>{
-        <span class="kw">return </span><span class="prelude-val">Err</span>(ExogenesisEnsembleLocalFileErrors::ReadingMetaDataError(
+    <span class="kw">match </span>created_date_system_time.duration_since(UNIX_EPOCH) {
+        <span class="prelude-val">Ok</span>(duration) =&gt; <span class="prelude-val">Ok</span>(duration.as_millis()),
+        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(ExogenesisEnsembleLocalFileErrors::ReadingMetaDataError(
             <span class="string">"Invalid datetime is recorded"</span>.to_string(),
-        ));
-    };
-
-    <span class="kw">match </span>chrono::DateTime::from_timestamp_micros(created_date_time.as_micros() <span class="kw">as </span>i64) {
-        <span class="prelude-val">Some</span>(datetime) =&gt; <span class="prelude-val">Ok</span>(datetime),
-        <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(ExogenesisEnsembleLocalFileErrors::InvalidDateError(
-            <span class="macro">format!</span>(<span class="string">"{}"</span>, created_date_time.as_micros()),
         )),
     }
 }

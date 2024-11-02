@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["bucket_routes","days_videos_handler","get_objects_handler","months_videos_handler","videos_handler"]};
+window.SIDEBAR_ITEMS = {"fn":["bucket_routes","days_videos_handler","get_objects_handler","get_pre_singed_url","months_videos_handler","videos_handler"],"struct":["GetPreSingnedUrlPayload"]};

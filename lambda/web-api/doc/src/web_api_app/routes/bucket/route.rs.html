@@ -98,13 +98,34 @@
 <a href="#98" id="98">98</a>
 <a href="#99" id="99">99</a>
 <a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
+<a href="#110" id="110">110</a>
+<a href="#111" id="111">111</a>
+<a href="#112" id="112">112</a>
+<a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
+<a href="#117" id="117">117</a>
+<a href="#118" id="118">118</a>
+<a href="#119" id="119">119</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! This is the route of the bucket resource.
 
-</span><span class="kw">use </span><span class="kw">crate</span>::routes::bucket::bucket_function::{get_days, get_months, get_objects, get_years};
+</span><span class="kw">use </span><span class="kw">crate</span>::routes::bucket::bucket_function::{generate_pre_signed_url_for_video, get_days, get_months, get_objects, get_years};
 <span class="kw">use </span>axum::http::StatusCode;
 <span class="kw">use </span>axum::routing::get;
 <span class="kw">use </span>axum::{Json, Router};
 <span class="kw">use </span>axum::extract::Path;
+<span class="kw">use </span>axum::response::IntoResponse;
+<span class="kw">use </span>serde::Deserialize;
 <span class="kw">use </span>serde_json::json;
 
 <span class="doccomment">/// This is the root route of the bucket resource.
@@ -112,7 +133,7 @@
     <span class="kw">let </span>bucket_route = Router::new()
         .route(
             <span class="string">"/videos"</span>,
-            get(videos_handler),
+            get(videos_handler).post(get_pre_singed_url),
         )
         .route(
             <span class="string">"/videos/years/:year/months"</span>,
@@ -128,19 +149,20 @@
 }
 
 <span class="doccomment">/// The wrapper of the get year
-</span><span class="kw">async fn </span>videos_handler() -&gt; (StatusCode, Json&lt;serde_json::Value&gt;) {
+</span><span class="comment">// async fn videos_handler() -&gt; (StatusCode, Json&lt;serde_json::Value&gt;) { 
+</span><span class="kw">async fn </span>videos_handler() -&gt; <span class="kw">impl </span>IntoResponse {
     <span class="kw">match </span>get_years().<span class="kw">await </span>{
         <span class="prelude-val">Ok</span>(years) =&gt; {
             (
                 StatusCode::OK,
                 Json(<span class="macro">json!</span>(years))
-            )
+            ).into_response()
         }
         <span class="prelude-val">Err</span>(e) =&gt; {
             (
                 StatusCode::BAD_REQUEST,
                 Json(<span class="macro">json!</span>({<span class="string">"error"</span>: e}))
-            )
+            ).into_response()
         }
     }
 }
@@ -197,4 +219,21 @@
             )
         }
     }
-}</code></pre></div></section></main></body></html>
+}
+
+<span class="attr">#[derive(Deserialize)]
+#[allow(non_snake_case)]
+</span><span class="kw">struct </span>GetPreSingnedUrlPayload {
+    dateTime: String,
+    extension: String,
+}
+
+<span class="kw">async fn </span>get_pre_singed_url(Json(payload): Json&lt;GetPreSingnedUrlPayload&gt;) -&gt; <span class="kw">impl </span>IntoResponse {
+    <span class="kw">let </span>date_time = payload.dateTime;
+    <span class="kw">let </span>extension = payload.extension;
+    <span class="kw">match </span>generate_pre_signed_url_for_video(date_time.as_str(), <span class="kw-2">&amp;</span>extension.as_str()).<span class="kw">await </span>{
+        <span class="prelude-val">Ok</span>(url) =&gt; (StatusCode::OK, url).into_response(),
+        <span class="prelude-val">Err</span>(e) =&gt; e.return_http_response().into_response()
+    }    
+}
+</code></pre></div></section></main></body></html>
