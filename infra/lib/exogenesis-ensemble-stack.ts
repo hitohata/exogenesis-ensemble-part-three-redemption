@@ -1,12 +1,16 @@
 import * as path from "node:path";
 import * as cdk from "aws-cdk-lib";
 import { RemovalPolicy } from "aws-cdk-lib";
+import * as iam from "aws-cdk-lib/aws-iam";
+import { Effect, type PolicyStatement } from "aws-cdk-lib/aws-iam";
 import * as s3 from "aws-cdk-lib/aws-s3";
+import * as ssm from "aws-cdk-lib/aws-ssm";
 import { RustFunction } from "cargo-lambda-cdk";
 import type { Construct } from "constructs";
 import type { StageTypes } from "../util/types";
 
 const APP_NAME = "exogenesis-ensemble";
+const NOTIFICATION_ARN_PARAMETER_NAME = "/arn/notification/event-bus";
 
 interface IProps extends cdk.StackProps {
 	stage: StageTypes;
@@ -46,5 +50,31 @@ export class ExogenesisEnsembleStack extends cdk.Stack {
 		// standard s3 bucket
 		standardS3Bucket.grantReadWrite(apiFunction);
 		standardS3Bucket.grantRead(s3HookFunction);
+
+		// add permission to lambdas to put events
+		apiFunction.addToRolePolicy(this.getNotificationServicePolicyStatement());
+		s3HookFunction.addToRolePolicy(
+			this.getNotificationServicePolicyStatement(),
+		);
+	}
+
+	/**
+	 * The policy statement to put events to the notification service
+	 * To call notification service, a service must be attached this policy
+	 * In this function, get the notification services' ARN then create a statement
+	 * { @link https://github.com/hitohata/my-notification-service }
+	 * @private
+	 */
+	private getNotificationServicePolicyStatement(): PolicyStatement {
+		const eventBusArn = ssm.StringParameter.valueForStringParameter(
+			this,
+			NOTIFICATION_ARN_PARAMETER_NAME,
+		);
+
+		return new iam.PolicyStatement({
+			effect: Effect.ALLOW,
+			actions: ["events:PutEvents"],
+			resources: [eventBusArn],
+		});
 	}
 }
