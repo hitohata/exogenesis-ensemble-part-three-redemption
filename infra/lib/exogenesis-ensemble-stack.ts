@@ -8,6 +8,7 @@ import * as ssm from "aws-cdk-lib/aws-ssm";
 import { RustFunction } from "cargo-lambda-cdk";
 import type { Construct } from "constructs";
 import type { StageTypes } from "../util/types";
+import {LambdaRestApi} from "aws-cdk-lib/aws-apigateway";
 
 const APP_NAME = "exogenesis-ensemble";
 const NOTIFICATION_ARN_PARAMETER_NAME = "/arn/notification/event-bus";
@@ -37,13 +38,18 @@ export class ExogenesisEnsembleStack extends cdk.Stack {
 				STANDARD_BUCKET_NAME: standardS3Bucket.bucketName,
 			},
 		});
-		apiFunction.addFunctionUrl();
 
 		const s3HookFunction = new RustFunction(this, "S3HookFunction", {
 			functionName: `${APP_NAME}-s3-hook-app-${stage}`,
 			manifestPath: path.join(__dirname, "../../lambdas/s3-hook-app"),
 			runtime: "provided.al2",
 		});
+
+		// api gateway
+		new LambdaRestApi(this, "WebAPIFunctionGateway", {
+			restApiName: `${APP_NAME}-api-gateway`,
+			handler: apiFunction
+		})
 
 		// Access Control
 
