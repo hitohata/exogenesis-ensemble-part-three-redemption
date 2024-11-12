@@ -42,44 +42,44 @@ async fn videos_handler() -> impl IntoResponse {
         Err(e) => {
             (
                 StatusCode::BAD_REQUEST,
-                Json(json!({"error": e}))
+                Json(json!({"error": e.to_string()}))
             ).into_response()
         }
     }
 }
 
 /// The wrapper of the get_months
-async fn months_videos_handler(Path(year): Path<usize>) -> (StatusCode, Json<serde_json::Value>) {
+async fn months_videos_handler(Path(year): Path<usize>) -> impl IntoResponse {
     match get_months(year).await {
         Ok(months) => {
             (
                 StatusCode::OK,
                 Json(json!(months))
-            )
+            ).into_response()
         }
         Err(e) => {
             (
                 StatusCode::BAD_REQUEST,
-                Json(json!({"error": e}))
-            )
+                Json(json!({"error": e.to_string()}))
+            ).into_response()
         }
     }
 }
 
 /// The wrapper of the get_days
-async fn days_videos_handler(Path((year, month)): Path<(usize, usize)>) -> (StatusCode, Json<serde_json::Value>) {
+async fn days_videos_handler(Path((year, month)): Path<(usize, usize)>) -> impl IntoResponse {
     match get_days(year, month).await {
         Ok(days) => {
             (
                 StatusCode::OK,
                 Json(json!(days))
-            )
+            ).into_response()
         }
         Err(e) => {
             (
                 StatusCode::BAD_REQUEST,
-                Json(json!({"error": e}))
-            )
+                Json(json!({"error": e.to_string()}))
+            ).into_response()
         }
     }
 }
