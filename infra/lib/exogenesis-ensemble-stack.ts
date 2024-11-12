@@ -1,6 +1,7 @@
 import * as path from "node:path";
 import * as cdk from "aws-cdk-lib";
 import { RemovalPolicy } from "aws-cdk-lib";
+import { LambdaRestApi } from "aws-cdk-lib/aws-apigateway";
 import * as iam from "aws-cdk-lib/aws-iam";
 import { Effect, type PolicyStatement } from "aws-cdk-lib/aws-iam";
 import * as s3 from "aws-cdk-lib/aws-s3";
@@ -8,7 +9,6 @@ import * as ssm from "aws-cdk-lib/aws-ssm";
 import { RustFunction } from "cargo-lambda-cdk";
 import type { Construct } from "constructs";
 import type { StageTypes } from "../util/types";
-import {LambdaRestApi} from "aws-cdk-lib/aws-apigateway";
 
 const APP_NAME = "exogenesis-ensemble";
 const NOTIFICATION_ARN_PARAMETER_NAME = "/arn/notification/event-bus";
@@ -48,8 +48,8 @@ export class ExogenesisEnsembleStack extends cdk.Stack {
 		// api gateway
 		new LambdaRestApi(this, "WebAPIFunctionGateway", {
 			restApiName: `${APP_NAME}-api-gateway`,
-			handler: apiFunction
-		})
+			handler: apiFunction,
+		});
 
 		// Access Control
 
