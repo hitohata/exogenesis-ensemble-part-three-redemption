@@ -35,6 +35,7 @@ export class ExogenesisEnsembleStack extends cdk.Stack {
 		// functions
 		const [apiFunction, s3HookFunction] = this.lambdaFunctions({
 			standardBucketName: standardS3Bucket.bucketName,
+			tableName: dynamoTable.tableName
 		});
 
 		// api gateway
@@ -105,13 +106,18 @@ export class ExogenesisEnsembleStack extends cdk.Stack {
 	 */
 	private lambdaFunctions({
 		standardBucketName,
-	}: { standardBucketName: string }): [RustFunction, RustFunction] {
+		tableName,
+	}: { standardBucketName: string; tableName: string }): [
+		RustFunction,
+		RustFunction,
+	] {
 		const webApi = new RustFunction(this, "WebAPIFunction", {
 			functionName: `${APP_NAME}-web-api-app-${this.stage}`,
 			manifestPath: path.join(__dirname, "../../lambdas/web-api-app"),
 			runtime: "provided.al2",
 			environment: {
 				STANDARD_BUCKET_NAME: standardBucketName,
+				TABLE_NAME: tableName,
 			},
 		});
 
@@ -119,6 +125,9 @@ export class ExogenesisEnsembleStack extends cdk.Stack {
 			functionName: `${APP_NAME}-s3-hook-app-${this.stage}`,
 			manifestPath: path.join(__dirname, "../../lambdas/s3-hook-app"),
 			runtime: "provided.al2023",
+			environment: {
+				TABLE_NAME: tableName,
+			},
 		});
 
 		return [webApi, s3Hook];
