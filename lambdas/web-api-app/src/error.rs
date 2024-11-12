@@ -6,6 +6,7 @@ use thiserror::Error;
 #[derive(Error, Debug)]
 pub enum WebApiAppError {
     #[error("{0}")]
+    #[allow(dead_code)] // TODO: review
     ValidationError(String),
     #[error("Storage error: {0}")]
     StorageError(String),
