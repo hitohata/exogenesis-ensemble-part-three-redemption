@@ -115,5 +115,5 @@ async fn get_pre_singed_url(Json(payload): Json<GetPreSingnedUrlPayload>) -> imp
     match generate_pre_signed_url_for_video(date_time.as_str(), &extension.as_str()).await {
         Ok(url) => (StatusCode::OK, url).into_response(),
         Err(e) => e.return_http_response().into_response()
-    }    
+    }
 }
