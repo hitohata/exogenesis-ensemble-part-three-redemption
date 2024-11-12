@@ -461,6 +461,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "aws_clients"
+version = "0.1.0"
+dependencies = [
+ "aws-config",
+ "aws-sdk-s3",
+ "tokio",
+]
+
+[[package]]
 name = "aws_lambda_events"
 version = "0.15.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2350,6 +2359,7 @@ version = "0.1.0"
 dependencies = [
  "aws-config",
  "aws-sdk-s3",
+ "aws_clients",
  "axum",
  "lambda_http",
  "serde",
