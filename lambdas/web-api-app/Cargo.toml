@@ -21,9 +21,6 @@ axum = "0.7"
 serde = "1"
 serde_json = "1"
 tokio = { version = "1", features = ["macros"] }
-aws-sdk-s3 = { version =  "1", features = ["behavior-version-latest"] }
-aws-config = { version = "1", features = ["behavior-version-latest"] }
 
-time_file_name = { path = "../../crates/time_file_name" }
 aws_clients = { path = "../../crates/aws_clients" }
 thiserror = "2.0.3"

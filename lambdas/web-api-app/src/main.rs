@@ -1,11 +1,10 @@
-mod routes;
-mod static_values;
 mod error;
+mod routes;
 
-use crate::routes::{ bucket, db};
+use crate::routes::{bucket, db};
+use axum::response::Json;
 use axum::routing::get;
 use axum::Router;
-use axum::response::Json;
 use lambda_http::{run, tracing, Error};
 use serde_json::{json, Value};
 
@@ -16,13 +15,13 @@ async fn greet() -> Json<Value> {
 /// This project uses the [Axum](https://docs.rs/axum/latest/axum/).
 /// The way of adoption of Axum refers to [this repo](https://github.com/awslabs/aws-lambda-rust-runtime/blob/main/examples/http-axum/src/main.rs).
 #[tokio::main]
-async fn main() -> Result<(), Error> { 
+async fn main() -> Result<(), Error> {
     tracing::init_default_subscriber();
 
     let app = Router::new()
         .route("/", get(greet))
         .nest("/bucket", bucket::route::bucket_routes())
         .nest("/db", db::routes::db_routes());
-    
+
     run(app).await
 }

@@ -84,6 +84,40 @@ pub mod client {
 
             Ok(days)
         }
+        
+        /// get objects
+        pub async fn get_objects(year: usize, month: usize, day: usize) -> Result<Vec<String>, String> {
+            let result = s3_client()
+                .await
+                .list_objects_v2()
+                .bucket(standard_bucked_name())
+                .prefix(format!("{year}/{month}/{day}"))
+                .send()
+                .await;
+
+            let output = match result {
+                Ok(out) => out,
+                Err(e) => {
+                    return Err(format!("Failed to get objects: {}", e));
+                }
+            };
+
+            let saved_objects = output.contents();
+
+            let mut objects: Vec<String> = Vec::new();
+
+            for object in saved_objects {
+                if let Some(key) = &object.key {
+                    // the return data contains the directory, not only the object's keys
+                    if &key[key.len() - 1..] != "/" {
+                        objects.push(key.to_owned())
+                    }
+                }
+            }
+            
+            Ok(objects)
+        }
+        
         /// get a date time as an argument and return the [s3 pre-signed URL](https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html)
         /// The expiring time is 3600 sec
         /// The date time in the argument must be ISO
