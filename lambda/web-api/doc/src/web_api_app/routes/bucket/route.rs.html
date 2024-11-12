@@ -161,62 +161,62 @@
         <span class="prelude-val">Err</span>(e) =&gt; {
             (
                 StatusCode::BAD_REQUEST,
-                Json(<span class="macro">json!</span>({<span class="string">"error"</span>: e}))
+                Json(<span class="macro">json!</span>({<span class="string">"error"</span>: e.to_string()}))
             ).into_response()
         }
     }
 }
 
 <span class="doccomment">/// The wrapper of the get_months
-</span><span class="kw">async fn </span>months_videos_handler(Path(year): Path&lt;usize&gt;) -&gt; (StatusCode, Json&lt;serde_json::Value&gt;) {
+</span><span class="kw">async fn </span>months_videos_handler(Path(year): Path&lt;usize&gt;) -&gt; <span class="kw">impl </span>IntoResponse {
     <span class="kw">match </span>get_months(year).<span class="kw">await </span>{
         <span class="prelude-val">Ok</span>(months) =&gt; {
             (
                 StatusCode::OK,
                 Json(<span class="macro">json!</span>(months))
-            )
+            ).into_response()
         }
         <span class="prelude-val">Err</span>(e) =&gt; {
             (
                 StatusCode::BAD_REQUEST,
-                Json(<span class="macro">json!</span>({<span class="string">"error"</span>: e}))
-            )
+                Json(<span class="macro">json!</span>({<span class="string">"error"</span>: e.to_string()}))
+            ).into_response()
         }
     }
 }
 
 <span class="doccomment">/// The wrapper of the get_days
-</span><span class="kw">async fn </span>days_videos_handler(Path((year, month)): Path&lt;(usize, usize)&gt;) -&gt; (StatusCode, Json&lt;serde_json::Value&gt;) {
+</span><span class="kw">async fn </span>days_videos_handler(Path((year, month)): Path&lt;(usize, usize)&gt;) -&gt; <span class="kw">impl </span>IntoResponse {
     <span class="kw">match </span>get_days(year, month).<span class="kw">await </span>{
         <span class="prelude-val">Ok</span>(days) =&gt; {
             (
                 StatusCode::OK,
                 Json(<span class="macro">json!</span>(days))
-            )
+            ).into_response()
         }
         <span class="prelude-val">Err</span>(e) =&gt; {
             (
                 StatusCode::BAD_REQUEST,
-                Json(<span class="macro">json!</span>({<span class="string">"error"</span>: e}))
-            )
+                Json(<span class="macro">json!</span>({<span class="string">"error"</span>: e.to_string()}))
+            ).into_response()
         }
     }
 }
 
 <span class="doccomment">/// The wrapper of the get_objects
-</span><span class="kw">async fn </span>get_objects_handler(Path((year, month, day)): Path&lt;(usize, usize, usize)&gt;) -&gt; (StatusCode, Json&lt;serde_json::Value&gt;) {
+</span><span class="kw">async fn </span>get_objects_handler(Path((year, month, day)): Path&lt;(usize, usize, usize)&gt;) -&gt; <span class="kw">impl </span>IntoResponse {
     <span class="kw">match </span>get_objects(year, month, day).<span class="kw">await </span>{
         <span class="prelude-val">Ok</span>(video_objects) =&gt; {
             (
                 StatusCode::OK,
                 Json(<span class="macro">json!</span>(video_objects))
-            )
+            ).into_response()
         }
         <span class="prelude-val">Err</span>(e) =&gt; {
             (
                 StatusCode::BAD_REQUEST,
-                Json(<span class="macro">json!</span>({<span class="string">"error"</span>: e}))
-            )
+                Json(<span class="macro">json!</span>({<span class="string">"error"</span>: e.to_string()}))
+            ).into_response()
         }
     }
 }
