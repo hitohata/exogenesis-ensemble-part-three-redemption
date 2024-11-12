@@ -1,6 +1,7 @@
 //! This mod has s3-related functions.
 
 use std::time::Duration;
+use aws_clients::s3::client::StandardS3Client;
 use aws_sdk_s3::operation::list_objects_v2::ListObjectsV2Output;
 use aws_sdk_s3::presigning::{PresigningConfig};
 use lambda_http::tracing::error;
@@ -18,23 +19,13 @@ static PRE_SIGN_EXPIRING_TIME: Duration = Duration::from_secs(5 * 60);
 /// Read the years that exist items in the s3 bucket.
 pub async fn get_years() -> Result<YearsVideos, WebApiAppError> {
     
-    let result = s3_client()
-        .await
-        .list_objects_v2()
-        .bucket(standard_bucked_name())
-        .delimiter("/")
-        .send()
-        .await;
-    
-    let output = match result {
-        Ok(out) => out,
-            Err(e) => {
-                error!("Failed to get objects: {}", e);
-                return Err(WebApiAppError::StorageError("Get years failed".to_string()))
-            }
+    let years = match StandardS3Client::get_years().await {
+        Ok(y) => y,
+        Err(e) => {
+            error!(e);
+            return Err(WebApiAppError::StorageError("Get years failed".to_string()))
+        }
     };
-    
-    let years: Vec<String> = retrieve_prefixes(&output);
 
     Ok(YearsVideos { years })
 }

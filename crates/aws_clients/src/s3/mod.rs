@@ -1,12 +1,19 @@
 pub mod client {
-    use aws_sdk_s3::operation::list_objects_v2::ListObjectsV2Output;
     use crate::environment_values::clients::s3_client;
     use crate::environment_values::lambda_environment_values::standard_bucked_name;
+    use aws_sdk_s3::operation::list_objects_v2::ListObjectsV2Output;
+    use aws_sdk_s3::presigning::PresigningConfig;
+    use std::time::Duration;
+    use time_file_name::FilePath;
+
+    /// The expiring time for the s3 pre-signed URL
+    static PRE_SIGN_EXPIRING_TIME: Duration = Duration::from_secs(5 * 60);
 
     /// The client for the standard bucket
     pub struct StandardS3Client {}
 
     impl StandardS3Client {
+        // return years
         pub async fn get_years() -> Result<Vec<String>, String> {
             let result = s3_client()
                 .await
@@ -18,10 +25,106 @@ pub mod client {
 
             let output = match result {
                 Ok(out) => out,
-                Err(e) => return Err(format!("Failed to get objects: {}", e))
+                Err(e) => return Err(format!("Failed to get objects: {}", e)),
             };
 
             Ok(retrieve_prefixes(&output))
+        }
+
+        // return months
+        pub async fn get_month(years: usize) -> Result<Vec<String>, String> {
+            let result = s3_client()
+                .await
+                .list_objects_v2()
+                .bucket(standard_bucked_name())
+                .prefix(format!("{years}/"))
+                .delimiter("/")
+                .send()
+                .await;
+
+            let output = match result {
+                Ok(out) => out,
+                Err(e) => {
+                    return Err(format!("Failed to get objects: {}", e));
+                }
+            };
+
+            let removed_delimiter: Vec<String> = retrieve_prefixes(&output);
+            let months: Vec<String> = removed_delimiter
+                .iter()
+                .map(|st| st.split("/").collect::<Vec<&str>>()[1].to_string())
+                .collect();
+
+            Ok(months)
+        }
+
+        /// get days form bucket
+        pub async fn get_days(year: usize, month: usize) -> Result<Vec<String>, String> {
+            let result = s3_client()
+                .await
+                .list_objects_v2()
+                .bucket(standard_bucked_name())
+                .prefix(format!("{year}/{month}/"))
+                .delimiter("/")
+                .send()
+                .await;
+
+            let output = match result {
+                Ok(out) => out,
+                Err(e) => {
+                    return Err(format!("Failed to get objects: {}", e));
+                }
+            };
+
+            let removed_delimiter: Vec<String> = retrieve_prefixes(&output);
+            let days: Vec<String> = removed_delimiter
+                .iter()
+                .map(|st| st.split("/").collect::<Vec<&str>>()[2].to_string())
+                .collect();
+
+            Ok(days)
+        }
+        /// get a date time as an argument and return the [s3 pre-signed URL](https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html)
+        /// The expiring time is 3600 sec
+        /// The date time in the argument must be ISO
+        pub async fn generate_pre_signed_url_for_video(
+            date_time: &str,
+            extension: &str,
+        ) -> Result<String, String> {
+            let config = match PresigningConfig::expires_in(PRE_SIGN_EXPIRING_TIME) {
+                Ok(config) => config,
+                Err(_) => return Err("Too long expiring is provided".to_string()),
+            };
+
+            let s3_client = s3_client().await;
+
+            let file_path = match FilePath::new().generate_file_path(date_time, extension) {
+                Ok(file_path) => file_path,
+                Err(e) => return Err(e),
+            };
+
+            get_pre_signed_url(s3_client, config, file_path.as_str()).await
+        }
+    }
+
+    /// Calling the s3 bucket to get the pre-signed URL.
+    /// [see](https://docs.aws.amazon.com/AmazonS3/latest/API/s3_example_s3_Scenario_PresignedUrl_section.html)
+    /// [errors](https://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html)
+    async fn get_pre_signed_url(
+        client: &aws_sdk_s3::Client,
+        config: PresigningConfig,
+        file_path: &str,
+    ) -> Result<String, String> {
+        let pre_signed_request_result = client
+            .put_object()
+            .bucket(standard_bucked_name())
+            .key(file_path)
+            .presigned(config)
+            .await;
+
+        match pre_signed_request_result {
+            Ok(result) => Ok(result.uri().into()),
+            Err(e) => Err(format!("{}", e.to_string())),
         }
     }
 
@@ -39,7 +142,7 @@ pub mod client {
             if let Some(prefix_value) = prefix.prefix() {
                 result.push(remove_delimiter(prefix_value).to_string());
             };
-        };
+        }
 
         result
     }
@@ -47,7 +150,7 @@ pub mod client {
     /// remove "/" from the string
     fn remove_delimiter(prefix: &str) -> &str {
         if &prefix[prefix.len() - 1..] != "/" {
-            return prefix
+            return prefix;
         }
         &prefix[..prefix.len() - 1]
     }
@@ -67,7 +170,6 @@ pub mod client {
             // Assert
             assert_eq!(result, "1984/4/4");
         }
-
 
         #[test]
         fn without_delimiter() {
