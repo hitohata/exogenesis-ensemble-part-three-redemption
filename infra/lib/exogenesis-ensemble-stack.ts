@@ -114,7 +114,7 @@ export class ExogenesisEnsembleStack extends cdk.Stack {
 		const webApi = new RustFunction(this, "WebAPIFunction", {
 			functionName: `${APP_NAME}-web-api-app-${this.stage}`,
 			manifestPath: path.join(__dirname, "../../lambdas/web-api-app"),
-			runtime: "provided.al2",
+			runtime: "provided.al2023",
 			environment: {
 				STANDARD_BUCKET_NAME: standardBucketName,
 				TABLE_NAME: tableName,
