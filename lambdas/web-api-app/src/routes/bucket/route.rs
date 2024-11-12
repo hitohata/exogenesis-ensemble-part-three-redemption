@@ -85,19 +85,19 @@ async fn days_videos_handler(Path((year, month)): Path<(usize, usize)>) -> impl 
 }
 
 /// The wrapper of the get_objects
-async fn get_objects_handler(Path((year, month, day)): Path<(usize, usize, usize)>) -> (StatusCode, Json<serde_json::Value>) {
+async fn get_objects_handler(Path((year, month, day)): Path<(usize, usize, usize)>) -> impl IntoResponse {
     match get_objects(year, month, day).await {
         Ok(video_objects) => {
             (
                 StatusCode::OK,
                 Json(json!(video_objects))
-            )
+            ).into_response()
         }
         Err(e) => {
             (
                 StatusCode::BAD_REQUEST,
-                Json(json!({"error": e}))
-            )
+                Json(json!({"error": e.to_string()}))
+            ).into_response()
         }
     }
 }

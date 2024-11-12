@@ -47,7 +47,7 @@ pub async fn get_months(years: usize) -> Result<MonthsVideos, WebApiAppError> {
         .await
         .list_objects_v2()
         .bucket(standard_bucked_name())
-        .prefix(format!("{}/", years))
+        .prefix(format!("{years}/"))
         .delimiter("/")
         .send()
         .await;
@@ -73,7 +73,7 @@ pub async fn get_days(years: usize, months: usize) -> Result<DaysVideos, WebApiA
         .await
         .list_objects_v2()
         .bucket(standard_bucked_name())
-        .prefix(format!("{}/{}/", years, months))
+        .prefix(format!("{years}/{months}/"))
         .delimiter("/")
         .send()
         .await;
@@ -94,8 +94,37 @@ pub async fn get_days(years: usize, months: usize) -> Result<DaysVideos, WebApiA
 }
 
 /// Read the objects that existing items are narrowed down by year, month and day in the s3 bucket.
-pub async fn get_objects(_year: usize, _month: usize, _day: usize) -> Result<VideoObjects, String> {
-    Ok(VideoObjects { objects: vec![] })
+pub async fn get_objects(years: usize, months: usize, days: usize) -> Result<VideoObjects, WebApiAppError> {
+    let result = s3_client()
+        .await
+        .list_objects_v2()
+        .bucket(standard_bucked_name())
+        .prefix(format!("{years}/{months}/{days}"))
+        .send()
+        .await;
+    
+    let output = match result {
+        Ok(out) => out,
+            Err(e) => {
+                error!("Failed to get objects: {}", e);
+                return Err(WebApiAppError::StorageError("Get objects failed".to_string()))
+            }
+    };
+    
+    let saved_objects = output.contents();
+    
+    let mut objects: Vec<String> = Vec::new();
+    
+    for object in saved_objects {
+        if let Some(key) = &object.key {
+            // the return data contains the directory, not only the object's keys
+            if &key[key.len() - 1..] != "/" {
+                objects.push(key.to_owned())
+            }
+        }
+    }
+    
+    Ok(VideoObjects { objects })
 }
 
 /// get a date time as an argument and return the [s3 pre-signed URL](https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html)
