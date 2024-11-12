@@ -153,20 +153,129 @@ paths:
           content:
             'application/json':
               schema:
-                type: array
-                items:
-                  objects: string
-
-components:
-  schemas:
-    Video:
-      type: object
-      properties:
-        year:
-          type: integer
-        month:
-          type: integer
-        day:
-          type: integer
-        name:
-          type: string
+                type: object
+                description: days
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      type: string
+  /db/videos:
+    get:
+      tags:
+        - DB
+      summary: saved video's year
+      description: returns years of videos that hosted in the DB
+      operationId: getExistingYearsInBucket
+      responses:
+        '200':
+          description: videos
+          content:
+            'application/json':
+              schema:
+                type: object
+                description: years
+                properties:
+                  years:
+                    type: array
+                    items:
+                      type: string
+  /db/videos/years/{year}/months:
+    get:
+      tags:
+        - DB
+      summary: saved video's month
+      description: returns months that hosted in the S3 by narrowed down by the year
+      operationId: getExistingMonthsInBucket
+      parameters:
+        - name: year
+          in: path
+          required: true
+          description: Year
+          schema:
+            type: string
+      responses:
+        '200':
+          description: videos
+          content:
+            'application/json':
+              schema:
+                type: object
+                description: months
+                properties:
+                  months:
+                    type: array
+                    items:
+                      type: string
+  /db/videos/years/{year}/months/{month}/days:
+    get:
+      tags:
+        - DB
+      summary: saved video's days
+      description: returns months hosted in DB by narrowed down by the year and month
+      operationId: getExistingDaysInBucket
+      parameters:
+        - name: year
+          in: path
+          required: true
+          description: Year
+          schema:
+            type: string
+        - name: month
+          in: path
+          required: true
+          description: Month
+          schema:
+            type: string
+      responses:
+        '200':
+          description: videos
+          content:
+            'application/json':
+              schema:
+                type: object
+                description: days
+                properties:
+                  days:
+                    type: array
+                    items:
+                      type: string
+  /DB/videos/years/{year}/months/{month}/days/{day}/objects:
+    get:
+      tags:
+        - DB
+      summary: saved video's days
+      description: returns paths hosted in the DB by narrowed down by the year, month, and day
+      operationId: getExistingObjectsInBucket
+      parameters:
+        - name: year
+          in: path
+          required: true
+          description: Year
+          schema:
+            type: string
+        - name: month
+          in: path
+          required: true
+          description: Month
+          schema:
+            type: string
+        - name: day
+          in: path
+          required: true
+          description: Day
+          schema:
+            type: string
+      responses:
+        '200':
+          description: videos
+          content:
+            'application/json':
+              schema:
+                type: object
+                description: days
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      type: string
