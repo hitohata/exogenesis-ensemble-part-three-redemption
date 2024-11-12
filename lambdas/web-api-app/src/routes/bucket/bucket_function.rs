@@ -1,7 +1,6 @@
 //! This mod has s3-related functions.
 
 use std::time::Duration;
-use aws_sdk_s3::operation::list_objects::ListObjectsOutput;
 use aws_sdk_s3::operation::list_objects_v2::ListObjectsV2Output;
 use aws_sdk_s3::presigning::{PresigningConfig};
 use lambda_http::tracing::error;
