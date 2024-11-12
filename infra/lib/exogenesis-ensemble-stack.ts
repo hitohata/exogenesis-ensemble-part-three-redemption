@@ -2,6 +2,8 @@ import * as path from "node:path";
 import * as cdk from "aws-cdk-lib";
 import { RemovalPolicy } from "aws-cdk-lib";
 import { LambdaRestApi } from "aws-cdk-lib/aws-apigateway";
+import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
+import { AttributeType, BillingMode } from "aws-cdk-lib/aws-dynamodb";
 import * as iam from "aws-cdk-lib/aws-iam";
 import { Effect, type PolicyStatement } from "aws-cdk-lib/aws-iam";
 import * as s3 from "aws-cdk-lib/aws-s3";
@@ -18,31 +20,21 @@ interface IProps extends cdk.StackProps {
 }
 
 export class ExogenesisEnsembleStack extends cdk.Stack {
+	private readonly stage: StageTypes;
 	constructor(scope: Construct, id: string, props: IProps) {
 		super(scope, id, props);
 
-		const { stage } = props;
+		this.stage = props.stage;
 
-		const standardS3Bucket = new s3.Bucket(this, "StandardBucket", {
-			bucketName: `${APP_NAME}-bucked-${stage}`,
-			removalPolicy:
-				stage === "prod" ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
-			autoDeleteObjects: stage === "dev", // when the stage is the dev, objects will be removed.
-		});
+		// Dynamo Table
+		const dynamoTable = this.dynamoDb();
 
-		const apiFunction = new RustFunction(this, "WebAPIFunction", {
-			functionName: `${APP_NAME}-web-api-app-${stage}`,
-			manifestPath: path.join(__dirname, "../../lambdas/web-api-app"),
-			runtime: "provided.al2",
-			environment: {
-				STANDARD_BUCKET_NAME: standardS3Bucket.bucketName,
-			},
-		});
+		// bucket
+		const standardS3Bucket = this.s3StandardBucket();
 
-		const s3HookFunction = new RustFunction(this, "S3HookFunction", {
-			functionName: `${APP_NAME}-s3-hook-app-${stage}`,
-			manifestPath: path.join(__dirname, "../../lambdas/s3-hook-app"),
-			runtime: "provided.al2",
+		// functions
+		const [apiFunction, s3HookFunction] = this.lambdaFunctions({
+			standardBucketName: standardS3Bucket.bucketName,
 		});
 
 		// api gateway
@@ -56,6 +48,10 @@ export class ExogenesisEnsembleStack extends cdk.Stack {
 		// standard s3 bucket
 		standardS3Bucket.grantReadWrite(apiFunction);
 		standardS3Bucket.grantRead(s3HookFunction);
+
+		// DynamoTable
+		dynamoTable.grantReadData(apiFunction);
+		dynamoTable.grantReadWriteData(s3HookFunction);
 
 		// add permission to lambdas to put events
 		apiFunction.addToRolePolicy(this.getNotificationServicePolicyStatement());
@@ -81,6 +77,59 @@ export class ExogenesisEnsembleStack extends cdk.Stack {
 			effect: Effect.ALLOW,
 			actions: ["events:PutEvents"],
 			resources: [eventBusArn],
+		});
+	}
+
+	private dynamoDb(): dynamodb.Table {
+		return new dynamodb.Table(this, "DynamoDB", {
+			tableName: `${APP_NAME}-table-${this.stage}`,
+			removalPolicy:
+				this.stage === "dev" ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
+			partitionKey: {
+				name: "PK",
+				type: AttributeType.STRING,
+			},
+			sortKey: {
+				name: "SK",
+				type: AttributeType.NUMBER,
+			},
+			billingMode: BillingMode.PAY_PER_REQUEST,
+		});
+	}
+
+	/**
+	 * The rust functions
+	 * The return value is tuple.
+	 * The first one is s3 hook, the second one is s3 hook
+	 * @private
+	 */
+	private lambdaFunctions({
+		standardBucketName,
+	}: { standardBucketName: string }): [RustFunction, RustFunction] {
+		const webApi = new RustFunction(this, "WebAPIFunction", {
+			functionName: `${APP_NAME}-web-api-app-${this.stage}`,
+			manifestPath: path.join(__dirname, "../../lambdas/web-api-app"),
+			runtime: "provided.al2",
+			environment: {
+				STANDARD_BUCKET_NAME: standardBucketName,
+			},
+		});
+
+		const s3Hook = new RustFunction(this, "S3HookFunction", {
+			functionName: `${APP_NAME}-s3-hook-app-${this.stage}`,
+			manifestPath: path.join(__dirname, "../../lambdas/s3-hook-app"),
+			runtime: "provided.al2023",
+		});
+
+		return [webApi, s3Hook];
+	}
+
+	private s3StandardBucket(): s3.Bucket {
+		return new s3.Bucket(this, "StandardBucket", {
+			bucketName: `${APP_NAME}-bucked-${this.stage}`,
+			removalPolicy:
+				this.stage === "prod" ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
+			autoDeleteObjects: this.stage === "dev", // when the stage is the dev, objects will be removed.
 		});
 	}
 }
