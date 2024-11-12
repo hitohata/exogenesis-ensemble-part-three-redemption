@@ -2,7 +2,8 @@ mod routes;
 mod static_values;
 mod error;
 
-use crate::routes::{ bucket, db};
+use std::env::set_var;
+use crate::routes::{bucket, db};
 use axum::routing::get;
 use axum::Router;
 use axum::response::Json;
@@ -17,6 +18,9 @@ async fn greet() -> Json<Value> {
 /// The way of adoption of Axum refers to [this repo](https://github.com/awslabs/aws-lambda-rust-runtime/blob/main/examples/http-axum/src/main.rs).
 #[tokio::main]
 async fn main() -> Result<(), Error> { 
+    
+    set_var("AWS_LAMBDA_HTTP_IGNORE_STAGE_IN_PATH", "true");
+    
     tracing::init_default_subscriber();
 
     let app = Router::new()
