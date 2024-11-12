@@ -7,6 +7,7 @@ use axum::routing::get;
 use axum::Router;
 use lambda_http::{run, tracing, Error};
 use serde_json::{json, Value};
+use std::env::set_var;
 
 async fn greet() -> Json<Value> {
     Json(json!({"body": "hello world"}))
@@ -16,6 +17,8 @@ async fn greet() -> Json<Value> {
 /// The way of adoption of Axum refers to [this repo](https://github.com/awslabs/aws-lambda-rust-runtime/blob/main/examples/http-axum/src/main.rs).
 #[tokio::main]
 async fn main() -> Result<(), Error> {
+    set_var("AWS_LAMBDA_HTTP_IGNORE_STAGE_IN_PATH", "true");
+
     tracing::init_default_subscriber();
 
     let app = Router::new()

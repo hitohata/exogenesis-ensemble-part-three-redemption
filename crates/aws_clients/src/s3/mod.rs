@@ -84,9 +84,13 @@ pub mod client {
 
             Ok(days)
         }
-        
+
         /// get objects
-        pub async fn get_objects(year: usize, month: usize, day: usize) -> Result<Vec<String>, String> {
+        pub async fn get_objects(
+            year: usize,
+            month: usize,
+            day: usize,
+        ) -> Result<Vec<String>, String> {
             let result = s3_client()
                 .await
                 .list_objects_v2()
@@ -114,10 +118,10 @@ pub mod client {
                     }
                 }
             }
-            
+
             Ok(objects)
         }
-        
+
         /// get a date time as an argument and return the [s3 pre-signed URL](https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html)
         /// The expiring time is 3600 sec
         /// The date time in the argument must be ISO

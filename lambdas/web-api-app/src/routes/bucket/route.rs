@@ -1,6 +1,8 @@
 //! This is the route of the bucket resource.
 
-use crate::routes::bucket::bucket_function::{generate_pre_signed_url_for_upload, get_days, get_months, get_objects, get_years};
+use crate::routes::bucket::bucket_function::{
+    generate_pre_signed_url_for_upload, get_days, get_months, get_objects, get_years,
+};
 use axum::extract::Path;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
