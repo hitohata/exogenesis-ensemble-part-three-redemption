@@ -35,7 +35,7 @@ export class ExogenesisEnsembleStack extends cdk.Stack {
 		// functions
 		const [apiFunction, s3HookFunction] = this.lambdaFunctions({
 			standardBucketName: standardS3Bucket.bucketName,
-			tableName: dynamoTable.tableName
+			tableName: dynamoTable.tableName,
 		});
 
 		// api gateway
