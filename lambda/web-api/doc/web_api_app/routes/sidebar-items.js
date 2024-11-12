@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["bucket","return_types"]};
+window.SIDEBAR_ITEMS = {"mod":["bucket","db","return_types"]};

@@ -234,6 +234,6 @@
     <span class="kw">match </span>generate_pre_signed_url_for_video(date_time.as_str(), <span class="kw-2">&amp;</span>extension.as_str()).<span class="kw">await </span>{
         <span class="prelude-val">Ok</span>(url) =&gt; (StatusCode::OK, url).into_response(),
         <span class="prelude-val">Err</span>(e) =&gt; e.return_http_response().into_response()
-    }    
+    }
 }
 </code></pre></div></section></main></body></html>

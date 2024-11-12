@@ -25,11 +25,12 @@
 <a href="#25" id="25">25</a>
 <a href="#26" id="26">26</a>
 <a href="#27" id="27">27</a>
+<a href="#28" id="28">28</a>
 </pre></div><pre class="rust"><code><span class="kw">mod </span>routes;
 <span class="kw">mod </span>static_values;
 <span class="kw">mod </span>error;
 
-<span class="kw">use </span><span class="kw">crate</span>::routes::bucket;
+<span class="kw">use </span><span class="kw">crate</span>::routes::{ bucket, db};
 <span class="kw">use </span>axum::routing::get;
 <span class="kw">use </span>axum::Router;
 <span class="kw">use </span>axum::response::Json;
@@ -43,13 +44,14 @@
 <span class="doccomment">/// This project uses the [Axum](https://docs.rs/axum/latest/axum/).
 /// The way of adoption of Axum refers to [this repo](https://github.com/awslabs/aws-lambda-rust-runtime/blob/main/examples/http-axum/src/main.rs).
 </span><span class="attr">#[tokio::main]
-</span><span class="kw">async fn </span>main() -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+</span><span class="kw">async fn </span>main() -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; { 
     tracing::init_default_subscriber();
 
     <span class="kw">let </span>app = Router::new()
         .route(<span class="string">"/"</span>, get(greet))
-        .nest(<span class="string">"/bucket"</span>, bucket::route::bucket_routes());
-
+        .nest(<span class="string">"/bucket"</span>, bucket::route::bucket_routes())
+        .nest(<span class="string">"/db"</span>, db::routes::db_routes());
+    
     run(app).<span class="kw">await
 </span>}
 </code></pre></div></section></main></body></html>

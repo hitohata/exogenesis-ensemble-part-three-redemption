@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["days_videos_handler","db_routes","get_objects_handler","months_videos_handler","years_videos_handler"]};
