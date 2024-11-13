@@ -18,9 +18,11 @@ pub mod clients {
 
     /// The s3 client
     pub async fn s3_client() -> &'static aws_sdk_s3::Client {
-        S3_CLIENT.get_or_init(|| async {
-            let config = aws_config::load_from_env().await;
-            aws_sdk_s3::Client::new(&config)
-        }).await
+        S3_CLIENT
+            .get_or_init(|| async {
+                let config = aws_config::load_from_env().await;
+                aws_sdk_s3::Client::new(&config)
+            })
+            .await
     }
 }
