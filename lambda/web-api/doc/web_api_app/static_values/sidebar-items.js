@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["clients","lambda_environment_values"]};

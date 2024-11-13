@@ -99,28 +99,21 @@
 <a href="#99" id="99">99</a>
 <a href="#100" id="100">100</a>
 <a href="#101" id="101">101</a>
-<a href="#102" id="102">102</a>
-<a href="#103" id="103">103</a>
-<a href="#104" id="104">104</a>
-<a href="#105" id="105">105</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>axum::{Json, Router};
-<span class="kw">use </span>axum::routing::get;
-<span class="kw">use </span>axum::extract::Path;
+</pre></div><pre class="rust"><code><span class="kw">use </span>axum::extract::Path;
 <span class="kw">use </span>axum::http::StatusCode;
 <span class="kw">use </span>axum::response::IntoResponse;
+<span class="kw">use </span>axum::routing::get;
+<span class="kw">use </span>axum::{Json, Router};
 
 <span class="doccomment">/// This is the root route of the bd resource.
 </span><span class="kw">pub fn </span>db_routes() -&gt; Router {
     <span class="kw">let </span>bucket_route = Router::new()
+        .route(<span class="string">"/videos"</span>, get(years_videos_handler))
+        .route(<span class="string">"/videos/years/:year/months"</span>, get(months_videos_handler))
         .route(
-            <span class="string">"/videos"</span>,
-            get(years_videos_handler),
+            <span class="string">"/videos/years/:year/months/:month/days"</span>,
+            get(days_videos_handler),
         )
-        .route(
-            <span class="string">"/videos/years/:year/months"</span>,
-            get(months_videos_handler),
-        )
-        .route(<span class="string">"/videos/years/:year/months/:month/days"</span>, get(days_videos_handler))
         .route(
             <span class="string">"/videos/years/:year/months/:month/days/:day/objects"</span>,
             get(get_objects_handler),
@@ -130,7 +123,7 @@
 }
 
 <span class="doccomment">/// The wrapper of the get year
-</span><span class="comment">// async fn videos_handler() -&gt; (StatusCode, Json&lt;serde_json::Value&gt;) { 
+</span><span class="comment">// async fn videos_handler() -&gt; (StatusCode, Json&lt;serde_json::Value&gt;) {
 </span><span class="kw">async fn </span>years_videos_handler() -&gt; <span class="kw">impl </span>IntoResponse {
     <span class="comment">// match get_years().await {
     //     Ok(years) =&gt; {
@@ -146,10 +139,7 @@
     //         ).into_response()
     //     }
     // }
-    </span>(
-        StatusCode::OK, 
-        Json(<span class="string">""</span>)
-    ).into_response()
+    </span>(StatusCode::OK, Json(<span class="string">""</span>)).into_response()
 }
 
 <span class="doccomment">/// The wrapper of the get_months
@@ -191,7 +181,9 @@
 </span>}
 
 <span class="doccomment">/// The wrapper of the get_objects
-</span><span class="kw">async fn </span>get_objects_handler(Path((_year, _month, _day)): Path&lt;(usize, usize, usize)&gt;) -&gt; <span class="kw">impl </span>IntoResponse {
+</span><span class="kw">async fn </span>get_objects_handler(
+    Path((_year, _month, _day)): Path&lt;(usize, usize, usize)&gt;,
+) -&gt; <span class="kw">impl </span>IntoResponse {
     <span class="comment">// match get_objects(year, month, day).await {
     //     Ok(video_objects) =&gt; {
     //         (

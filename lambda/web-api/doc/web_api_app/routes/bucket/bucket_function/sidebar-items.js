@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["generate_pre_signed_url_for_video","get_days","get_months","get_objects","get_pre_signed_url","get_years","remove_delimiter","retrieve_prefixes"],"static":["PRE_SIGN_EXPIRING_TIME"]};
+window.SIDEBAR_ITEMS = {"fn":["generate_pre_signed_url_for_upload","get_days","get_months","get_objects","get_years"]};

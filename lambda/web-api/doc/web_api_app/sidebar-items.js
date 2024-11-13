@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["greet","main"],"mod":["error","routes","static_values"]};
+window.SIDEBAR_ITEMS = {"fn":["greet","main"],"mod":["error","routes"]};
