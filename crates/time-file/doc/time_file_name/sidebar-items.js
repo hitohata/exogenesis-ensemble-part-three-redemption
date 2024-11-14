@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["from_file_name_to_date_time"],"struct":["FilePath"],"trait":["GenerateFile"]};
+window.SIDEBAR_ITEMS = {"mod":["file_datetime","file_path"]};
