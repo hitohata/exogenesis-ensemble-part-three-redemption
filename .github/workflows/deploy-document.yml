@@ -258,7 +258,7 @@ jobs:
       - build-native-front-document
       - build-web-api-app-doc
       - build-crate-time-file-doc
-      - build-crate-aws-client-doc
+      - build-crate-aws-clients-doc
       - build-crate-shared-doc
       - build-s3-hook-doc
     steps:
