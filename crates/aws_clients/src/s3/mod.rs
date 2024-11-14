@@ -6,7 +6,7 @@ pub mod client {
     use aws_sdk_s3::presigning::PresigningConfig;
     use std::time::Duration;
     use shared::traits::GetFileListTrait;
-    use time_file_name::FilePath;
+    use time_file_name::file_path::FilePath;
 
     /// The expiring time for the s3 pre-signed URL
     static PRE_SIGN_EXPIRING_TIME: Duration = Duration::from_secs(5 * 60);
@@ -20,7 +20,7 @@ pub mod client {
             extension: &str,
         ) -> impl Future<Output=Result<String, String>> + Send;
     }
-    
+
     impl GetFileListTrait for StandardS3Client {
         async fn get_years() -> Result<Vec<String>, String> {
             let result = s3_client()
