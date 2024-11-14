@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["dynamodb","environment_values","s3"]};

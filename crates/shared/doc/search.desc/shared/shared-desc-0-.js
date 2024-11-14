@@ -1,0 +1,1 @@
+searchState.loadedDescShard("shared", 0, "This is a shared crate. This crate contains general things …\nThe searching is shared in the DB and bucket This trait …\nget days list\nget months list\nget objects list\nget years list")

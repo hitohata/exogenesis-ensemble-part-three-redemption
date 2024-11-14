@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["get_pre_signed_url","remove_delimiter","retrieve_prefixes"],"static":["PRE_SIGN_EXPIRING_TIME"],"struct":["StandardS3Client"],"trait":["StandardS3ClientTrait"]};
