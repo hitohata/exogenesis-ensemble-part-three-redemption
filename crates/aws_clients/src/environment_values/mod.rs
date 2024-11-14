@@ -28,6 +28,7 @@ pub mod clients {
     }
 
     /// The DynamoDB client
+    #[allow(dead_code)] // TODO: fix
     pub async fn dynamodb_client() -> &'static aws_sdk_dynamodb::Client {
         DYNAMODB_CLIENT
             .get_or_init(|| async {

@@ -23,4 +23,5 @@ serde_json = "1"
 tokio = { version = "1", features = ["macros"] }
 
 aws_clients = { path = "../../crates/aws_clients" }
+shared = { path = "../../crates/shared" }
 thiserror = "2.0.3"
