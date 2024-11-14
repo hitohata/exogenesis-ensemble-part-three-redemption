@@ -62,6 +62,16 @@ export const DOC_LINKS: DocumentSectionType[] = [
 				body: "The crate for handling file and date time",
 				link: addRepoName("/crates/time-file/doc/time_file_name/index.html"),
 			},
+			{
+				documentName: "AWS Clients",
+				body: "The crate for accessing the AWS resources",
+				link: addRepoName("/crates/aws-clients/doc/aws_clients/index.html"),
+			},
+			{
+				documentName: "Time File Crate",
+				body: "The crate for handling file and date time",
+				link: addRepoName("/crates/shared/doc/shared/index.html"),
+			},
 		],
 	},
 	{
