@@ -1,10 +1,11 @@
 //! This mod has s3-related functions.
 
+use shared::traits::GetFileListTrait;
 use crate::error::WebApiAppError;
 use crate::routes::return_types::return_data_types::{
     DaysVideos, MonthsVideos, VideoObjects, YearsVideos,
 };
-use aws_clients::s3::client::StandardS3Client;
+use aws_clients::s3::client::{StandardS3Client, StandardS3ClientTrait};
 use lambda_http::tracing::error;
 
 /// Read the years that exist items in the s3 bucket.

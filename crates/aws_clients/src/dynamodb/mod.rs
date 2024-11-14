@@ -10,15 +10,15 @@ pub mod client {
             Ok(vec![])
         }
 
-        async fn get_month(years: usize) -> Result<Vec<String>, String> {
+        async fn get_month(_years: usize) -> Result<Vec<String>, String> {
             todo!()
         }
 
-        async fn get_days(year: usize, month: usize) -> Result<Vec<String>, String> {
+        async fn get_days(_year: usize, _month: usize) -> Result<Vec<String>, String> {
             todo!()
         }
 
-        async fn get_objects(year: usize, month: usize, day: usize) -> Result<Vec<String>, String>{
+        async fn get_objects(_year: usize, _month: usize, _day: usize) -> Result<Vec<String>, String>{
             todo!()
         }
     }

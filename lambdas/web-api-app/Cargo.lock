@@ -2392,6 +2392,7 @@ dependencies = [
  "lambda_http",
  "serde",
  "serde_json",
+ "shared",
  "thiserror",
  "tokio",
 ]
