@@ -1,3 +1,6 @@
+//! This is a shared crate.
+//! This crate contains general things that are used in the whole system
+
 pub mod traits {
     use std::future::Future;
 
