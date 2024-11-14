@@ -79,7 +79,7 @@ jobs:
         run: cargo doc --all --no-deps --document-private-items
 
   test-native-back-end-api-doc:
-    timeout-minutes: 3
+    timeout-minutes: 5
     name: build the native back end app api doc
     runs-on: ubuntu-latest
     defaults:
