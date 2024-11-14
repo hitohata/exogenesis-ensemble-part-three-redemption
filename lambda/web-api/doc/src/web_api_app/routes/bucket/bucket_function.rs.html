@@ -73,13 +73,15 @@
 <a href="#73" id="73">73</a>
 <a href="#74" id="74">74</a>
 <a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! This mod has s3-related functions.
 
-</span><span class="kw">use </span><span class="kw">crate</span>::error::WebApiAppError;
+</span><span class="kw">use </span>shared::traits::GetFileListTrait;
+<span class="kw">use </span><span class="kw">crate</span>::error::WebApiAppError;
 <span class="kw">use </span><span class="kw">crate</span>::routes::return_types::return_data_types::{
     DaysVideos, MonthsVideos, VideoObjects, YearsVideos,
 };
-<span class="kw">use </span>aws_clients::s3::client::StandardS3Client;
+<span class="kw">use </span>aws_clients::s3::client::{StandardS3Client, StandardS3ClientTrait};
 <span class="kw">use </span>lambda_http::tracing::error;
 
 <span class="doccomment">/// Read the years that exist items in the s3 bucket.
