@@ -5,6 +5,7 @@ pub mod client {
     use aws_sdk_s3::operation::list_objects_v2::ListObjectsV2Output;
     use aws_sdk_s3::presigning::PresigningConfig;
     use std::time::Duration;
+    use shared::traits::GetFileListTrait;
     use time_file_name::FilePath;
 
     /// The expiring time for the s3 pre-signed URL
@@ -13,19 +14,14 @@ pub mod client {
     /// The client for the standard bucket
     pub struct StandardS3Client {}
 
-    pub trait StandardS3ClientTrait {
-        fn get_years() -> impl Future<Output = Result<Vec<String>, String>> + Send;
-        fn get_month(years: usize) -> impl Future<Output=Result<Vec<String>, String>> + Send;
-        fn get_days(year: usize, month: usize) -> impl Future<Output=Result<Vec<String>, String>> + Send;
-        fn get_objects(year: usize, month: usize, day: usize) -> impl Future<Output=Result<Vec<String>, String>> + Send;
+    pub trait StandardS3ClientTrait : GetFileListTrait {
         fn generate_pre_signed_url_for_video(
             date_time: &str,
             extension: &str,
         ) -> impl Future<Output=Result<String, String>> + Send;
     }
-
-    impl StandardS3ClientTrait for StandardS3Client {
-        // return years
+    
+    impl GetFileListTrait for StandardS3Client {
         async fn get_years() -> Result<Vec<String>, String> {
             let result = s3_client()
                 .await
@@ -43,7 +39,6 @@ pub mod client {
             Ok(retrieve_prefixes(&output))
         }
 
-        // return months
         async fn get_month(years: usize) -> Result<Vec<String>, String> {
             let result = s3_client()
                 .await
@@ -70,7 +65,6 @@ pub mod client {
             Ok(months)
         }
 
-        /// get days form bucket
         async fn get_days(year: usize, month: usize) -> Result<Vec<String>, String> {
             let result = s3_client()
                 .await
@@ -97,7 +91,6 @@ pub mod client {
             Ok(days)
         }
 
-        /// get objects
         async fn get_objects(
             year: usize,
             month: usize,
@@ -134,6 +127,9 @@ pub mod client {
             Ok(objects)
         }
 
+    }
+
+    impl StandardS3ClientTrait for StandardS3Client {
         /// get a date time as an argument and return the [s3 pre-signed URL](https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html)
         /// The expiring time is 3600 sec
         /// The date time in the argument must be ISO
