@@ -1,7 +1,7 @@
 use crate::local_file::local_file_error::ExogenesisEnsembleLocalFileErrors;
 use directories::UserDirs;
 use std::path::PathBuf;
-use time_file_name::FilePath;
+use time_file_name::file_path::FilePath;
 
 const DIRECTORY_PATH: &str = "ExogenesisEnsemblePartThreeRedemption";
 
