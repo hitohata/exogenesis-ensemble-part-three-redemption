@@ -155,6 +155,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "aws-sdk-dynamodb"
+version = "1.54.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8efdda6a491bb4640d35b99b0a4b93f75ce7d6e3a1937c3e902d3cb23d0a179c"
+dependencies = [
+ "aws-credential-types",
+ "aws-runtime",
+ "aws-smithy-async",
+ "aws-smithy-http",
+ "aws-smithy-json",
+ "aws-smithy-runtime",
+ "aws-smithy-runtime-api",
+ "aws-smithy-types",
+ "aws-types",
+ "bytes",
+ "fastrand",
+ "http 0.2.12",
+ "once_cell",
+ "regex-lite",
+ "tracing",
+]
+
+[[package]]
 name = "aws-sdk-s3"
 version = "1.58.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -396,9 +419,9 @@ dependencies = [
 
 [[package]]
 name = "aws-smithy-runtime-api"
-version = "1.7.2"
+version = "1.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e086682a53d3aa241192aa110fa8dfce98f2f5ac2ead0de84d41582c7e8fdb96"
+checksum = "92165296a47a812b267b4f41032ff8069ab7ff783696d217f0994a0d7ab585cd"
 dependencies = [
  "aws-smithy-async",
  "aws-smithy-types",
@@ -413,9 +436,9 @@ dependencies = [
 
 [[package]]
 name = "aws-smithy-types"
-version = "1.2.8"
+version = "1.2.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "07c9cdc179e6afbf5d391ab08c85eac817b51c87e1892a5edb5f7bbdc64314b4"
+checksum = "4fbd94a32b3a7d55d3806fe27d98d3ad393050439dd05eb53ece36ec5e3d3510"
 dependencies = [
  "base64-simd",
  "bytes",
@@ -465,7 +488,9 @@ name = "aws_clients"
 version = "0.1.0"
 dependencies = [
  "aws-config",
+ "aws-sdk-dynamodb",
  "aws-sdk-s3",
+ "shared",
  "time_file_name",
  "tokio",
 ]
@@ -1860,6 +1885,10 @@ checksum = "f40ca3c46823713e0d4209592e8d6e826aa57e928f09752619fc696c499637f6"
 dependencies = [
  "lazy_static",
 ]
+
+[[package]]
+name = "shared"
+version = "0.1.0"
 
 [[package]]
 name = "shlex"

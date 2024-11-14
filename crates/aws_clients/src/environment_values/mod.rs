@@ -15,6 +15,7 @@ pub mod clients {
     use tokio::sync::OnceCell;
 
     static S3_CLIENT: OnceCell<aws_sdk_s3::Client> = OnceCell::const_new();
+    static DYNAMODB_CLIENT: OnceCell<aws_sdk_dynamodb::Client> = OnceCell::const_new();
 
     /// The s3 client
     pub async fn s3_client() -> &'static aws_sdk_s3::Client {
@@ -22,6 +23,16 @@ pub mod clients {
             .get_or_init(|| async {
                 let config = aws_config::load_from_env().await;
                 aws_sdk_s3::Client::new(&config)
+            })
+            .await
+    }
+
+    /// The DynamoDB client
+    pub async fn dynamodb_client() -> &'static aws_sdk_dynamodb::Client {
+        DYNAMODB_CLIENT
+            .get_or_init(|| async {
+                let config = aws_config::load_from_env().await;
+                aws_sdk_dynamodb::Client::new(&config)
             })
             .await
     }

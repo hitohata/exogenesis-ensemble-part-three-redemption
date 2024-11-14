@@ -8,3 +8,5 @@ tokio = {  version =  "1", features = ["sync"] }
 aws-sdk-s3 = { version = "1", features = ["behavior-version-latest"] }
 aws-config = { version = "1", features = ["behavior-version-latest"] }
 time_file_name = { path = "../time_file_name" }
+shared = { path = "../shared" }
+aws-sdk-dynamodb = "1.54.0"
