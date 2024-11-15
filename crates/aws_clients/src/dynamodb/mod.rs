@@ -3,7 +3,7 @@ pub mod client {
 
     pub struct DynamoDbClient {}
 
-    pub trait DynamoClientTrait : GetFileListTrait {}
+    pub trait DynamoClientTrait: GetFileListTrait {}
 
     impl GetFileListTrait for DynamoDbClient {
         async fn get_years() -> Result<Vec<String>, String> {
@@ -18,23 +18,31 @@ pub mod client {
             todo!()
         }
 
-        async fn get_objects(_year: usize, _month: usize, _day: usize) -> Result<Vec<String>, String>{
+        async fn get_objects(
+            _year: usize,
+            _month: usize,
+            _day: usize,
+        ) -> Result<Vec<String>, String> {
             todo!()
         }
     }
-    
-    impl DynamoClientTrait for DynamoDbClient {}
 
+    impl DynamoClientTrait for DynamoDbClient {}
 }
+
+
+#[cfg(test)]
+mod test_util;
 
 #[cfg(test)]
 mod test {
-    use crate::environment_values::clients::test_dynamo_client;
+    use super::*;
+    use test_util::create_table;
     use tokio;
 
     #[tokio::test]
     async fn test() {
-        test_dynamo_client().await;
+        create_table("new-table").await;
         assert!(true)
-    } 
+    }
 }
