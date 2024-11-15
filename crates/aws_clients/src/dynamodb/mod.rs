@@ -26,3 +26,15 @@ pub mod client {
     impl DynamoClientTrait for DynamoDbClient {}
 
 }
+
+#[cfg(test)]
+mod test {
+    use crate::environment_values::clients::test_dynamo_client;
+    use tokio;
+
+    #[tokio::test]
+    async fn test() {
+        test_dynamo_client().await;
+        assert!(true)
+    } 
+}
