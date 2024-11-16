@@ -28,7 +28,7 @@ For the search sake.
 | Key       | Derail                                              | Note                   |
 |:----------|:----------------------------------------------------|:-----------------------|
 | PK        | date                                                | `{Year}-{month}-{day}` |
-| SK         | Epoch time | must be zero           |
+| SK        | Epoch time                                          | must be zero           |
 | SavedDate | The list of the years, months, days, or objects key |                        |
 
 

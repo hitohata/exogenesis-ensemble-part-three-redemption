@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-tokio = {  version =  "1", features = ["sync"] }
+tokio = {  version =  "1", features = ["sync", "macros"] }
 aws-sdk-s3 = { version = "1", features = ["behavior-version-latest"] }
 aws-config = { version = "1", features = ["behavior-version-latest"] }
 time_file_name = { path = "../time_file_name" }

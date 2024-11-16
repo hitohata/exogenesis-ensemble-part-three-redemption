@@ -112,7 +112,7 @@ jobs:
         with:
           toolchain: stable
       - name: Cargo test
-        run: cargo test
+        run: docker compose up -d && cargo test
 
   check-crate-shared:
     timeout-minutes: 3

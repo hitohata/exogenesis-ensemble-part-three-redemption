@@ -1,11 +1,11 @@
 pub mod client {
-    use std::future::Future;
     use crate::environment_values::clients::s3_client;
     use crate::environment_values::lambda_environment_values::standard_bucked_name;
     use aws_sdk_s3::operation::list_objects_v2::ListObjectsV2Output;
     use aws_sdk_s3::presigning::PresigningConfig;
-    use std::time::Duration;
     use shared::traits::GetFileListTrait;
+    use std::future::Future;
+    use std::time::Duration;
     use time_file_name::file_path::FilePath;
 
     /// The expiring time for the s3 pre-signed URL
@@ -14,11 +14,11 @@ pub mod client {
     /// The client for the standard bucket
     pub struct StandardS3Client {}
 
-    pub trait StandardS3ClientTrait : GetFileListTrait {
+    pub trait StandardS3ClientTrait: GetFileListTrait {
         fn generate_pre_signed_url_for_video(
             date_time: &str,
             extension: &str,
-        ) -> impl Future<Output=Result<String, String>> + Send;
+        ) -> impl Future<Output = Result<String, String>> + Send;
     }
 
     impl GetFileListTrait for StandardS3Client {
@@ -91,11 +91,7 @@ pub mod client {
             Ok(days)
         }
 
-        async fn get_objects(
-            year: usize,
-            month: usize,
-            day: usize,
-        ) -> Result<Vec<String>, String> {
+        async fn get_objects(year: usize, month: usize, day: usize) -> Result<Vec<String>, String> {
             let result = s3_client()
                 .await
                 .list_objects_v2()
@@ -126,7 +122,6 @@ pub mod client {
 
             Ok(objects)
         }
-
     }
 
     impl StandardS3ClientTrait for StandardS3Client {
