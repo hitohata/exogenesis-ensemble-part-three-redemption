@@ -26,12 +26,19 @@
 <a href="#26" id="26">26</a>
 <a href="#27" id="27">27</a>
 <a href="#28" id="28">28</a>
+<a href="#29" id="29">29</a>
+<a href="#30" id="30">30</a>
+<a href="#31" id="31">31</a>
+<a href="#32" id="32">32</a>
+<a href="#33" id="33">33</a>
+<a href="#34" id="34">34</a>
+<a href="#35" id="35">35</a>
 </pre></div><pre class="rust"><code><span class="kw">pub mod </span>client {
     <span class="kw">use </span>shared::traits::GetFileListTrait;
 
     <span class="kw">pub struct </span>DynamoDbClient {}
 
-    <span class="kw">pub trait </span>DynamoClientTrait : GetFileListTrait {}
+    <span class="kw">pub trait </span>DynamoClientTrait: GetFileListTrait {}
 
     <span class="kw">impl </span>GetFileListTrait <span class="kw">for </span>DynamoDbClient {
         <span class="kw">async fn </span>get_years() -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt; {
@@ -46,11 +53,19 @@
             <span class="macro">todo!</span>()
         }
 
-        <span class="kw">async fn </span>get_objects(_year: usize, _month: usize, _day: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt;{
+        <span class="kw">async fn </span>get_objects(
+            _year: usize,
+            _month: usize,
+            _day: usize,
+        ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt; {
             <span class="macro">todo!</span>()
         }
     }
-    
-    <span class="kw">impl </span>DynamoClientTrait <span class="kw">for </span>DynamoDbClient {}
 
-}</code></pre></div></section></main></body></html>
+    <span class="kw">impl </span>DynamoClientTrait <span class="kw">for </span>DynamoDbClient {}
+}
+
+<span class="attr">#[cfg(test)]
+</span><span class="kw">mod </span>test_util;
+
+</code></pre></div></section></main></body></html>

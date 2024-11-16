@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["standard_bucked_name"]};
+window.SIDEBAR_ITEMS = {"fn":["standard_bucked_name","table_name"]};
