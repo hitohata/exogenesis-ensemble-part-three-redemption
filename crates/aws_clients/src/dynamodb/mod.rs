@@ -7,6 +7,7 @@ pub mod client {
     use shared::traits::GetFileListTrait;
     use std::future::Future;
     use std::time::{SystemTime, UNIX_EPOCH};
+    use log::error;
 
     pub struct DynamoDbClient {}
 
@@ -118,7 +119,7 @@ pub mod client {
             Some(now) => Ok(now),
             None => match SystemTime::now().duration_since(UNIX_EPOCH) {
                 Ok(now) => Ok(now.as_millis()),
-                Err(e) => return Err("Failed to get current time".to_string()),
+                Err(_) => Err("Failed to get current time".to_string()),
             },
         }
     }
