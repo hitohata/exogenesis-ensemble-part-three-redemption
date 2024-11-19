@@ -126,6 +126,39 @@
 <a href="#126" id="126">126</a>
 <a href="#127" id="127">127</a>
 <a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a>
+<a href="#146" id="146">146</a>
+<a href="#147" id="147">147</a>
+<a href="#148" id="148">148</a>
+<a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
+<a href="#151" id="151">151</a>
+<a href="#152" id="152">152</a>
+<a href="#153" id="153">153</a>
+<a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
+<a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
+<a href="#159" id="159">159</a>
+<a href="#160" id="160">160</a>
+<a href="#161" id="161">161</a>
 </pre></div><pre class="rust"><code><span class="kw">pub mod </span>entities;
 <span class="kw">pub mod </span>client {
     <span class="kw">use </span><span class="kw">crate</span>::dynamodb::entities::collection::CollectionItem;
@@ -159,8 +192,8 @@
 
     <span class="kw">impl </span>GetFileListTrait <span class="kw">for </span>DynamoDbClient {
         <span class="kw">async fn </span>get_years() -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt; {
-            <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[])
-        }
+            get_date_list(<span class="string">"root"</span>).<span class="kw">await
+        </span>}
 
         <span class="kw">async fn </span>get_month(_years: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt; {
             <span class="macro">todo!</span>()
@@ -236,6 +269,39 @@
 
             <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>)
         }
+    }
+
+    <span class="kw">async fn </span>get_date_list(key: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt; {
+        <span class="kw">let </span>request = dynamodb_client()
+            .<span class="kw">await
+            </span>.get_item()
+            .table_name(table_name())
+            .key(<span class="string">"PK"</span>, AttributeValue::S(key.to_string()))
+            .key(<span class="string">"SK"</span>, AttributeValue::N(<span class="string">"0"</span>.to_string()));
+
+        <span class="kw">let </span>saved_date = <span class="kw">match </span>request.send().<span class="kw">await </span>{
+            <span class="prelude-val">Ok</span>(result) =&gt; <span class="kw">match </span>result.item {
+                <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(Vec::new()),
+                <span class="prelude-val">Some</span>(item) =&gt; <span class="kw">match </span>item.get_key_value(<span class="string">"SavedDate"</span>) {
+                    <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">"Saved date is not found"</span>.to_string()),
+                    <span class="prelude-val">Some</span>(val) =&gt; <span class="kw">match </span>val.<span class="number">1</span>.as_l() {
+                        <span class="prelude-val">Ok</span>(attribute) =&gt; attribute.to_owned(),
+                        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">"Casting to list is failed."</span>.to_string()),
+                    },
+                },
+            },
+            <span class="prelude-val">Err</span>(e) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(e.to_string()),
+        };
+
+        <span class="kw">let </span><span class="kw-2">mut </span>date = Vec::new();
+
+        <span class="kw">for </span>attribute <span class="kw">in </span>saved_date {
+            <span class="kw">match </span>attribute.as_s() {
+                <span class="prelude-val">Ok</span>(s) =&gt; date.push(s.to_owned()),
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">"Invalid date is stored"</span>.to_string()),
+            }
+        }
+        <span class="prelude-val">Ok</span>(date)
     }
 
     <span class="doccomment">/// this is a helper function.
