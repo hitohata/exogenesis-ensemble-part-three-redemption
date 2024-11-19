@@ -11,7 +11,6 @@ pub mod lambda_environment_values {
     }
 
     /// DynamoDB table name
-    #[allow(dead_code)] // TODO: Delete
     pub fn table_name() -> &'static str {
         static TABLE_NAME: OnceLock<String> = OnceLock::new();
         TABLE_NAME.get_or_init(|| var("TABLE_NAME").unwrap())
