@@ -43,11 +43,11 @@ pub mod client {
         }
 
         async fn get_objects(
-            _year: usize,
-            _month: usize,
-            _day: usize,
+            year: usize,
+            month: usize,
+            day: usize,
         ) -> Result<Vec<String>, String> {
-            todo!()
+            get_date_list(format!("{year}-{month}-{day}").as_str()).await
         }
     }
 
