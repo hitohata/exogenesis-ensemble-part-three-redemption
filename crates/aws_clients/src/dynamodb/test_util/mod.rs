@@ -1,4 +1,3 @@
-
 use crate::environment_values::clients::test_dynamo_client;
 use aws_sdk_dynamodb::types::{
     AttributeDefinition, KeySchemaElement, KeyType, ProvisionedThroughput, ScalarAttributeType,
@@ -96,12 +95,12 @@ mod test {
     use super::*;
     use crate::dynamodb::test_util::create_table;
     use tokio;
-    
+
     #[tokio::test]
     async fn test_table_existence() {
         // Act
         let result = table_existence("non-existing-table").await;
-        
+
         // Assert
         assert_eq!(result, false);
     }
@@ -111,10 +110,10 @@ mod test {
         // Arrange
         let table_name = "new-table";
         create_table(table_name).await;
-        
+
         // Act
         let result = table_existence(table_name).await;
-        
+
         // Assert
         assert!(result);
     }

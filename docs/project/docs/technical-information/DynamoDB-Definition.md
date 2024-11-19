@@ -13,13 +13,13 @@ sidebar_position: 2
 
 ### Manage Files
 
-| Key        | Detail     | Note                                                     |
-|:-----------|:-----------|:---------------------------------------------------------|
-| PK         | datetime   | The key is `{year}-{month}-{day}-{hour}-{min}-{sec}`[^1] |
-| SK         | Epoch time |                                                          |
-| IsUnzipped | boolean    | If the file is unzipped or not                           |
-| Vault      | String     | Glacier vault                                            |
-| KeyName    | String     | S3 prefix                                                |
+| Key        | Detail     | Note                           |
+|:-----------|:-----------|:-------------------------------|
+| PK         | datetime   | The key is `{year}`            |
+| SK         | Epoch time |                                |
+| IsUnzipped | boolean    | If the file is unzipped or not |
+| Vault      | String     | Glacier vault                  |
+| KeyName    | String     | S3 prefix                      |
 
 ### Date Lookup
 
@@ -45,22 +45,22 @@ If the `{year}-{month}` has days in the month of the year.
 
 This is for the unzipped files
 
-| Key         | Detail             | Note                                               |
-|:------------|:-------------------|:---------------------------------------------------|
-| PK          | Unzipped           | Fixed string "Unzipped"                            |
-| CreatedDate | Epoch time         | The datetime that the file is retrieved or created |
-| KeyName     | name of object key | The object key name                                |
+| Key     | Detail             | Note                                               |
+|:--------|:-------------------|:---------------------------------------------------|
+| PK      | Unzipped           | Fixed string "Unzipped"                            |
+| SK      | Epoch time         | The datetime that the file is retrieved or created |
+| KeyName | name of object key | The object key name                                |
 
 
 ### Manage Unzipping Files
 
 This is for the unzipping files
 
-| Key         | Detail             | Note                                            |
-|:------------|:-------------------|:------------------------------------------------|
-| PK          | Unzipped           | Fixed string "Unzipping"                        |
-| CreatedDate | Epoch time         | The datetime that the retrieval request is made |
-| KeyName     | name of object key | The object key name                             |
+| Key     | Detail             | Note                                            |
+|:--------|:-------------------|:------------------------------------------------|
+| PK      | Unzipped           | Fixed string "Unzipping"                        |
+| SK      | Epoch time         | The datetime that the retrieval request is made |
+| KeyName | name of object key | The object key name                             |
 
 
 ## Access Pattern
