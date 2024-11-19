@@ -38,8 +38,8 @@ pub mod client {
             todo!()
         }
 
-        async fn get_days(_year: usize, _month: usize) -> Result<Vec<String>, String> {
-            todo!()
+        async fn get_days(year: usize, month: usize) -> Result<Vec<String>, String> {
+            get_date_list(format!("{year}-{month}").as_str()).await
         }
 
         async fn get_objects(
