@@ -109,37 +109,37 @@ pub mod client {
             Ok(true)
         }
     }
-    
+
     async fn get_date_list(key: &str) -> Result<Vec<String>, String> {
         let request = dynamodb_client()
-                .await
-                .get_item()
-                .table_name(table_name())
-                .key("PK", AttributeValue::S(key.to_string()))
-                .key("SK", AttributeValue::N("0".to_string()));
+            .await
+            .get_item()
+            .table_name(table_name())
+            .key("PK", AttributeValue::S(key.to_string()))
+            .key("SK", AttributeValue::N("0".to_string()));
 
-            let saved_date = match request.send().await {
-                Ok(result) => match result.item {
-                    None => return Ok(Vec::new()),
-                    Some(item) => match item.get_key_value("SavedDate") {
-                        None => return Err("Saved date is not found".to_string()),
-                        Some(val) => match val.1.as_l() {
-                            Ok(attribute) => attribute.to_owned(),
-                            Err(_) => return Err("Casting to list is failed.".to_string()),
-                        },
+        let saved_date = match request.send().await {
+            Ok(result) => match result.item {
+                None => return Ok(Vec::new()),
+                Some(item) => match item.get_key_value("SavedDate") {
+                    None => return Err("Saved date is not found".to_string()),
+                    Some(val) => match val.1.as_l() {
+                        Ok(attribute) => attribute.to_owned(),
+                        Err(_) => return Err("Casting to list is failed.".to_string()),
                     },
                 },
-                Err(e) => return Err(e.to_string()),
-            };
+            },
+            Err(e) => return Err(e.to_string()),
+        };
 
-            let mut date = Vec::new();
+        let mut date = Vec::new();
 
-            for attribute in saved_date {
-                match attribute.as_s() {
-                    Ok(s) => date.push(s.to_owned()),
-                    Err(_) => return Err("Invalid date is stored".to_string()),
-                }
+        for attribute in saved_date {
+            match attribute.as_s() {
+                Ok(s) => date.push(s.to_owned()),
+                Err(_) => return Err("Invalid date is stored".to_string()),
             }
+        }
         Ok(date)
     }
 
