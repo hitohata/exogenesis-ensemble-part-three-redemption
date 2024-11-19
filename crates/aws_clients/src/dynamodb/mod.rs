@@ -7,7 +7,6 @@ pub mod client {
     use shared::traits::GetFileListTrait;
     use std::future::Future;
     use std::time::{SystemTime, UNIX_EPOCH};
-    use log::error;
 
     pub struct DynamoDbClient {}
 
