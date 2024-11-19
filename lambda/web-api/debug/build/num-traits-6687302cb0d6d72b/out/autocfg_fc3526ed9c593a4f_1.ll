@@ -1,5 +1,5 @@
-; ModuleID = 'autocfg_5a6fa95a4d2ba7d5_1.4a90b3a208a39f36-cgu.0'
-source_filename = "autocfg_5a6fa95a4d2ba7d5_1.4a90b3a208a39f36-cgu.0"
+; ModuleID = 'autocfg_fc3526ed9c593a4f_1.912a4ffd02a23813-cgu.0'
+source_filename = "autocfg_fc3526ed9c593a4f_1.912a4ffd02a23813-cgu.0"
 target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-i128:128-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-unknown-linux-gnu"
 
@@ -8,7 +8,7 @@ target triple = "x86_64-unknown-linux-gnu"
 
 ; core::f64::<impl f64>::total_cmp
 ; Function Attrs: inlinehint nonlazybind uwtable
-define internal i8 @"_ZN4core3f6421_$LT$impl$u20$f64$GT$9total_cmp17hae377ad866219b02E"(ptr align 8 %self, ptr align 8 %other) unnamed_addr #0 {
+define internal i8 @"_ZN4core3f6421_$LT$impl$u20$f64$GT$9total_cmp17h1e3dd6dd02afa5c7E"(ptr align 8 %self, ptr align 8 %other) unnamed_addr #0 {
 start:
   %right = alloca [8 x i8], align 8
   %left = alloca [8 x i8], align 8
@@ -40,12 +40,12 @@ start:
   ret i8 %_0
 }
 
-; autocfg_5a6fa95a4d2ba7d5_1::probe
+; autocfg_fc3526ed9c593a4f_1::probe
 ; Function Attrs: nonlazybind uwtable
-define void @_ZN26autocfg_5a6fa95a4d2ba7d5_15probe17h5e05f5373d50c0dfE() unnamed_addr #1 {
+define void @_ZN26autocfg_fc3526ed9c593a4f_15probe17he5cf91d2f55d98acE() unnamed_addr #1 {
 start:
 ; call core::f64::<impl f64>::total_cmp
-  %_1 = call i8 @"_ZN4core3f6421_$LT$impl$u20$f64$GT$9total_cmp17hae377ad866219b02E"(ptr align 8 @alloc_f93507f8ba4b5780b14b2c2584609be0, ptr align 8 @alloc_ef0a1f828f3393ef691f2705e817091c)
+  %_1 = call i8 @"_ZN4core3f6421_$LT$impl$u20$f64$GT$9total_cmp17h1e3dd6dd02afa5c7E"(ptr align 8 @alloc_f93507f8ba4b5780b14b2c2584609be0, ptr align 8 @alloc_ef0a1f828f3393ef691f2705e817091c)
   ret void
 }
 

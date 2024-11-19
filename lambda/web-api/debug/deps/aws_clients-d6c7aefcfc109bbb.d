@@ -1,8 +1,0 @@
-/build/debug/deps/libaws_clients-d6c7aefcfc109bbb.rmeta: /home/runner/work/ExogenesisEnsemble-Part3-Redemption/ExogenesisEnsemble-Part3-Redemption/crates/aws_clients/src/lib.rs /home/runner/work/ExogenesisEnsemble-Part3-Redemption/ExogenesisEnsemble-Part3-Redemption/crates/aws_clients/src/dynamodb/mod.rs /home/runner/work/ExogenesisEnsemble-Part3-Redemption/ExogenesisEnsemble-Part3-Redemption/crates/aws_clients/src/environment_values/mod.rs /home/runner/work/ExogenesisEnsemble-Part3-Redemption/ExogenesisEnsemble-Part3-Redemption/crates/aws_clients/src/s3/mod.rs
-
-/build/debug/deps/aws_clients-d6c7aefcfc109bbb.d: /home/runner/work/ExogenesisEnsemble-Part3-Redemption/ExogenesisEnsemble-Part3-Redemption/crates/aws_clients/src/lib.rs /home/runner/work/ExogenesisEnsemble-Part3-Redemption/ExogenesisEnsemble-Part3-Redemption/crates/aws_clients/src/dynamodb/mod.rs /home/runner/work/ExogenesisEnsemble-Part3-Redemption/ExogenesisEnsemble-Part3-Redemption/crates/aws_clients/src/environment_values/mod.rs /home/runner/work/ExogenesisEnsemble-Part3-Redemption/ExogenesisEnsemble-Part3-Redemption/crates/aws_clients/src/s3/mod.rs
-
-/home/runner/work/ExogenesisEnsemble-Part3-Redemption/ExogenesisEnsemble-Part3-Redemption/crates/aws_clients/src/lib.rs:
-/home/runner/work/ExogenesisEnsemble-Part3-Redemption/ExogenesisEnsemble-Part3-Redemption/crates/aws_clients/src/dynamodb/mod.rs:
-/home/runner/work/ExogenesisEnsemble-Part3-Redemption/ExogenesisEnsemble-Part3-Redemption/crates/aws_clients/src/environment_values/mod.rs:
-/home/runner/work/ExogenesisEnsemble-Part3-Redemption/ExogenesisEnsemble-Part3-Redemption/crates/aws_clients/src/s3/mod.rs:
