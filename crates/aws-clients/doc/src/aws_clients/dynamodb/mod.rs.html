@@ -195,21 +195,21 @@
             get_date_list(<span class="string">"root"</span>).<span class="kw">await
         </span>}
 
-        <span class="kw">async fn </span>get_month(_years: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt; {
-            <span class="macro">todo!</span>()
-        }
+        <span class="kw">async fn </span>get_month(year: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt; {
+            get_date_list(<span class="macro">format!</span>(<span class="string">"{year}"</span>).as_str()).<span class="kw">await
+        </span>}
 
-        <span class="kw">async fn </span>get_days(_year: usize, _month: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt; {
-            <span class="macro">todo!</span>()
-        }
+        <span class="kw">async fn </span>get_days(year: usize, month: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt; {
+            get_date_list(<span class="macro">format!</span>(<span class="string">"{year}-{month}"</span>).as_str()).<span class="kw">await
+        </span>}
 
         <span class="kw">async fn </span>get_objects(
-            _year: usize,
-            _month: usize,
-            _day: usize,
+            year: usize,
+            month: usize,
+            day: usize,
         ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt; {
-            <span class="macro">todo!</span>()
-        }
+            get_date_list(<span class="macro">format!</span>(<span class="string">"{year}-{month}-{day}"</span>).as_str()).<span class="kw">await
+        </span>}
     }
 
     <span class="kw">impl </span>DynamoClientTrait <span class="kw">for </span>DynamoDbClient {
