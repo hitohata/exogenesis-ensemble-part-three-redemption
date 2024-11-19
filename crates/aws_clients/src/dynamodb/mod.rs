@@ -34,8 +34,8 @@ pub mod client {
             get_date_list("root").await
         }
 
-        async fn get_month(_years: usize) -> Result<Vec<String>, String> {
-            todo!()
+        async fn get_month(years: usize) -> Result<Vec<String>, String> {
+            get_date_list(format!("{years}").as_str()).await
         }
 
         async fn get_days(_year: usize, _month: usize) -> Result<Vec<String>, String> {
