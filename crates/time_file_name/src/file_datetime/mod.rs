@@ -56,10 +56,7 @@ impl PathDateTime {
 
 /// Convert from the file path to the DateTime of Chrono
 fn from_file_name_to_date_time(path: &str) -> Result<DateTime<Utc>, String> {
-    let file_path = match &path[..1] == "/" {
-        true => path[1..].to_owned(),
-        false => path.to_owned(),
-    };
+    let file_path = remove_slash(path);
 
     let vec_path = file_path.split("/").collect::<Vec<&str>>();
 
@@ -110,7 +107,9 @@ fn from_file_name_to_date_time(path: &str) -> Result<DateTime<Utc>, String> {
 
 /// retrieve a file name form the file path
 fn retrieve_file_name(path: &str) -> Result<String, String> {
-    let vec_path = path.split("/").collect::<Vec<&str>>();
+    let file_path = remove_slash(path);
+    
+    let vec_path = file_path.split("/").collect::<Vec<&str>>();
     
     // it will be four elements, year, month, day, file name
     if vec_path.len() != 4 {
@@ -118,6 +117,14 @@ fn retrieve_file_name(path: &str) -> Result<String, String> {
     };
     
     Ok(vec_path[3].to_string())
+}
+
+/// remove the slash
+fn remove_slash(path: &str) -> String {
+    match &path[..1] == "/" {
+        true => path[1..].to_owned(),
+        false => path.to_owned(),
+    }
 }
 
 #[cfg(test)]
@@ -197,7 +204,7 @@ mod test_from_file_name_to_date_time {
     
     #[test]
     fn test_retrieve_file_name() {
-        let path = "/1984/04/04/1984-4-4-12-34-56.video";
+        let path = "1984/04/04/1984-4-4-12-34-56.video";
         let object_name = retrieve_file_name(path).unwrap();
         assert_eq!(object_name, "1984-4-4-12-34-56.video".to_string());
     }
