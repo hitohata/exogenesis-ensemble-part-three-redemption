@@ -11,6 +11,7 @@ pub struct PathDateTime {
     pub hour: u32,
     pub minute: u32,
     pub second: u32,
+    pub file_name: String,
     pub unix_time: i64,
     pub iso_string: String,
 }
@@ -30,12 +31,14 @@ impl PathDateTime {
     /// assert_eq!(date_time.day, 4);
     /// assert_eq!(date_time.hour, 12);
     /// assert_eq!(date_time.minute, 34);
-    /// assert_eq!(date_time.second, 50);
+    /// assert_eq!(date_time.second, 50 );
+    /// assert_eq!(date_time.file_name, "1984-4-4-12-34-50.video".to_string());
     /// assert_eq!(date_time.unix_time, Utc.with_ymd_and_hms(1984, 4, 4, 12, 34, 50).unwrap().timestamp_millis());
     /// # }
     /// ```
     pub fn parse(file_path: &str) -> Result<Self, String> {
         let date_time = from_file_name_to_date_time(file_path)?;
+        let file_name = retrieve_file_name(file_path)?;
 
         Ok(Self {
             year: date_time.year(),
@@ -44,6 +47,7 @@ impl PathDateTime {
             hour: date_time.hour(),
             minute: date_time.minute(),
             second: date_time.second(),
+            file_name,
             unix_time: date_time.timestamp_millis(),
             iso_string: date_time.to_rfc3339().to_string(),
         })
@@ -52,10 +56,7 @@ impl PathDateTime {
 
 /// Convert from the file path to the DateTime of Chrono
 fn from_file_name_to_date_time(path: &str) -> Result<DateTime<Utc>, String> {
-    let file_path = match &path[..1] == "/" {
-        true => path[1..].to_owned(),
-        false => path.to_owned(),
-    };
+    let file_path = remove_slash(path);
 
     let vec_path = file_path.split("/").collect::<Vec<&str>>();
 
@@ -101,6 +102,28 @@ fn from_file_name_to_date_time(path: &str) -> Result<DateTime<Utc>, String> {
         LocalResult::Single(datetime) => Ok(datetime),
         LocalResult::Ambiguous(_, _) => Err(format!("Ambiguous path: {}", path)),
         _ => Err("Invalid path is provided, so cannot convert it.".to_string()),
+    }
+}
+
+/// retrieve a file name form the file path
+fn retrieve_file_name(path: &str) -> Result<String, String> {
+    let file_path = remove_slash(path);
+    
+    let vec_path = file_path.split("/").collect::<Vec<&str>>();
+    
+    // it will be four elements, year, month, day, file name
+    if vec_path.len() != 4 {
+        return Err("invalid file path is provided".to_string());
+    };
+    
+    Ok(vec_path[3].to_string())
+}
+
+/// remove the slash
+fn remove_slash(path: &str) -> String {
+    match &path[..1] == "/" {
+        true => path[1..].to_owned(),
+        false => path.to_owned(),
     }
 }
 
@@ -177,5 +200,12 @@ mod test_from_file_name_to_date_time {
 
         // Assert
         assert!(result.is_err());
+    }
+    
+    #[test]
+    fn test_retrieve_file_name() {
+        let path = "1984/04/04/1984-4-4-12-34-56.video";
+        let object_name = retrieve_file_name(path).unwrap();
+        assert_eq!(object_name, "1984-4-4-12-34-56.video".to_string());
     }
 }
