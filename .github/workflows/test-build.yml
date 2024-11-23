@@ -24,7 +24,7 @@ jobs:
         run: bun run build
 
   test-build-top-page-doc:
-    timeout-minutes: 1
+    timeout-minutes: 2
     name: build a top page
     runs-on: ubuntu-latest
     defaults:
