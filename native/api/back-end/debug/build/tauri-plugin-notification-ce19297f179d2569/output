@@ -1,0 +1,6 @@
+cargo:rerun-if-changed=permissions
+cargo:PERMISSION_FILES_PATH=/build/debug/build/tauri-plugin-notification-ce19297f179d2569/out/tauri-plugin-notification-permission-files
+cargo:GLOBAL_API_SCRIPT_PATH=/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-notification-2.0.1/api-iife.js
+cargo:rustc-check-cfg=cfg(mobile)
+cargo:rustc-check-cfg=cfg(desktop)
+cargo:rustc-cfg=desktop

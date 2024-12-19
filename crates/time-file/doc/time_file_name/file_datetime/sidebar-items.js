@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["from_file_name_to_date_time"],"struct":["PathDateTime"]};
+window.SIDEBAR_ITEMS = {"fn":["from_file_name_to_date_time","remove_slash","retrieve_file_name"],"struct":["PathDateTime"]};

@@ -1,0 +1,10 @@
+/build/debug/deps/libtauri_plugin_dialog-9e7422a581583113.rmeta: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-dialog-2.0.1/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-dialog-2.0.1/src/desktop.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-dialog-2.0.1/src/commands.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-dialog-2.0.1/src/error.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-dialog-2.0.1/src/models.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-dialog-2.0.1/src/init-iife.js
+
+/build/debug/deps/tauri_plugin_dialog-9e7422a581583113.d: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-dialog-2.0.1/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-dialog-2.0.1/src/desktop.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-dialog-2.0.1/src/commands.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-dialog-2.0.1/src/error.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-dialog-2.0.1/src/models.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-dialog-2.0.1/src/init-iife.js
+
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-dialog-2.0.1/src/lib.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-dialog-2.0.1/src/desktop.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-dialog-2.0.1/src/commands.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-dialog-2.0.1/src/error.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-dialog-2.0.1/src/models.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tauri-plugin-dialog-2.0.1/src/init-iife.js:

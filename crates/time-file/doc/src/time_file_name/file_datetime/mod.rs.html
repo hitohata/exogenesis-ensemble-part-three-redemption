@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/file_datetime/mod.rs`."><title>mod.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-492a78a4a87dcc01.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="time_file_name" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0 (f6e511eec 2024-10-15)" data-channel="1.82.0" data-search-js="search-a99f1315e7cc5121.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-921df33f47b8780c.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/file_datetime/mod.rs`."><title>mod.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-b0742ba02757f159.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="time_file_name" data-themes="" data-resource-suffix="" data-rustdoc-version="1.83.0 (90b35a623 2024-11-26)" data-channel="1.83.0" data-search-js="search-f0d225181b97f9a4.js" data-settings-js="settings-805db61a62df4bd2.js" ><script src="../../../static.files/storage-1d39b6787ed640ff.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-f070b9041d14864c.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-0111fcff984fae8f.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">time_file_name/file_datetime/</div>mod.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
+<a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -179,7 +180,36 @@
 <a href="#179" id="179">179</a>
 <a href="#180" id="180">180</a>
 <a href="#181" id="181">181</a>
-</pre></div><pre class="rust"><code><span class="doccomment">//! This module handles conversion from the file path to the date time
+<a href="#182" id="182">182</a>
+<a href="#183" id="183">183</a>
+<a href="#184" id="184">184</a>
+<a href="#185" id="185">185</a>
+<a href="#186" id="186">186</a>
+<a href="#187" id="187">187</a>
+<a href="#188" id="188">188</a>
+<a href="#189" id="189">189</a>
+<a href="#190" id="190">190</a>
+<a href="#191" id="191">191</a>
+<a href="#192" id="192">192</a>
+<a href="#193" id="193">193</a>
+<a href="#194" id="194">194</a>
+<a href="#195" id="195">195</a>
+<a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a></pre></div><pre class="rust"><code><span class="doccomment">//! This module handles conversion from the file path to the date time
 
 </span><span class="kw">use </span>chrono::offset::LocalResult;
 <span class="kw">use </span>chrono::{DateTime, Datelike, TimeZone, Timelike, Utc};
@@ -192,6 +222,7 @@
     <span class="kw">pub </span>hour: u32,
     <span class="kw">pub </span>minute: u32,
     <span class="kw">pub </span>second: u32,
+    <span class="kw">pub </span>file_name: String,
     <span class="kw">pub </span>unix_time: i64,
     <span class="kw">pub </span>iso_string: String,
 }
@@ -211,12 +242,14 @@
     /// assert_eq!(date_time.day, 4);
     /// assert_eq!(date_time.hour, 12);
     /// assert_eq!(date_time.minute, 34);
-    /// assert_eq!(date_time.second, 50);
+    /// assert_eq!(date_time.second, 50 );
+    /// assert_eq!(date_time.file_name, "1984-4-4-12-34-50.video".to_string());
     /// assert_eq!(date_time.unix_time, Utc.with_ymd_and_hms(1984, 4, 4, 12, 34, 50).unwrap().timestamp_millis());
     /// # }
     /// ```
     </span><span class="kw">pub fn </span>parse(file_path: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, String&gt; {
         <span class="kw">let </span>date_time = from_file_name_to_date_time(file_path)<span class="question-mark">?</span>;
+        <span class="kw">let </span>file_name = retrieve_file_name(file_path)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
             year: date_time.year(),
@@ -225,6 +258,7 @@
             hour: date_time.hour(),
             minute: date_time.minute(),
             second: date_time.second(),
+            file_name,
             unix_time: date_time.timestamp_millis(),
             iso_string: date_time.to_rfc3339().to_string(),
         })
@@ -233,10 +267,7 @@
 
 <span class="doccomment">/// Convert from the file path to the DateTime of Chrono
 </span><span class="kw">fn </span>from_file_name_to_date_time(path: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;DateTime&lt;Utc&gt;, String&gt; {
-    <span class="kw">let </span>file_path = <span class="kw">match </span><span class="kw-2">&amp;</span>path[..<span class="number">1</span>] == <span class="string">"/" </span>{
-        <span class="bool-val">true </span>=&gt; path[<span class="number">1</span>..].to_owned(),
-        <span class="bool-val">false </span>=&gt; path.to_owned(),
-    };
+    <span class="kw">let </span>file_path = remove_slash(path);
 
     <span class="kw">let </span>vec_path = file_path.split(<span class="string">"/"</span>).collect::&lt;Vec&lt;<span class="kw-2">&amp;</span>str&gt;&gt;();
 
@@ -282,6 +313,28 @@
         LocalResult::Single(datetime) =&gt; <span class="prelude-val">Ok</span>(datetime),
         LocalResult::Ambiguous(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(<span class="macro">format!</span>(<span class="string">"Ambiguous path: {}"</span>, path)),
         <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="string">"Invalid path is provided, so cannot convert it."</span>.to_string()),
+    }
+}
+
+<span class="doccomment">/// retrieve a file name form the file path
+</span><span class="kw">fn </span>retrieve_file_name(path: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;String, String&gt; {
+    <span class="kw">let </span>file_path = remove_slash(path);
+    
+    <span class="kw">let </span>vec_path = file_path.split(<span class="string">"/"</span>).collect::&lt;Vec&lt;<span class="kw-2">&amp;</span>str&gt;&gt;();
+    
+    <span class="comment">// it will be four elements, year, month, day, file name
+    </span><span class="kw">if </span>vec_path.len() != <span class="number">4 </span>{
+        <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">"invalid file path is provided"</span>.to_string());
+    };
+    
+    <span class="prelude-val">Ok</span>(vec_path[<span class="number">3</span>].to_string())
+}
+
+<span class="doccomment">/// remove the slash
+</span><span class="kw">fn </span>remove_slash(path: <span class="kw-2">&amp;</span>str) -&gt; String {
+    <span class="kw">match </span><span class="kw-2">&amp;</span>path[..<span class="number">1</span>] == <span class="string">"/" </span>{
+        <span class="bool-val">true </span>=&gt; path[<span class="number">1</span>..].to_owned(),
+        <span class="bool-val">false </span>=&gt; path.to_owned(),
     }
 }
 
@@ -358,6 +411,13 @@
 
         <span class="comment">// Assert
         </span><span class="macro">assert!</span>(result.is_err());
+    }
+    
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_retrieve_file_name() {
+        <span class="kw">let </span>path = <span class="string">"1984/04/04/1984-4-4-12-34-56.video"</span>;
+        <span class="kw">let </span>object_name = retrieve_file_name(path).unwrap();
+        <span class="macro">assert_eq!</span>(object_name, <span class="string">"1984-4-4-12-34-56.video"</span>.to_string());
     }
 }
 </code></pre></div></section></main></body></html>
