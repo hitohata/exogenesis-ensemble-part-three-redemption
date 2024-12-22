@@ -1,0 +1,82 @@
+name: Check Code quality
+
+on:
+  workflow_call:
+
+jobs:
+  backend-format:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app/src-tauri
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+      - name: Setup Cargo
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: app/src-tauri
+      - name: run format check
+        run: cargo fmt --all -- --check
+  crate-aws-client:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: crates/aws_clients
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup Cargo
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: crates/aws_clients
+      - name: run format check
+        run: cargo fmt --all -- --check
+  chared:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: crates/shared
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup Cargo
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: crates/shared
+      - name: run format check
+        run: cargo fmt --all -- --check
+  crate-time-file-name:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: crates/time_file_name
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup Cargo
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: crates/time_file_name
+      - name: run format check
+        run: cargo fmt --all -- --check
