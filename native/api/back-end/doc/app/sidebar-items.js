@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["errors","handlers","local_file"]};
+window.SIDEBAR_ITEMS = {"fn":["greet","main"],"mod":["errors","handlers","local_file"]};
