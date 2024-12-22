@@ -5,7 +5,6 @@ pub mod errors;
 pub mod handlers;
 pub mod local_file;
 
-
 use handlers::select_file::select_file;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
