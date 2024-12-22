@@ -5,4 +5,4 @@ on:
 
 jobs:
   format_check:
-    uses: ./rust-format.yml
+    uses: ./.github/workflows/rust-format.yml
