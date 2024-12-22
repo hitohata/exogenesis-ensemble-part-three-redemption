@@ -108,14 +108,14 @@ fn from_file_name_to_date_time(path: &str) -> Result<DateTime<Utc>, String> {
 /// retrieve a file name form the file path
 fn retrieve_file_name(path: &str) -> Result<String, String> {
     let file_path = remove_slash(path);
-    
+
     let vec_path = file_path.split("/").collect::<Vec<&str>>();
-    
+
     // it will be four elements, year, month, day, file name
     if vec_path.len() != 4 {
         return Err("invalid file path is provided".to_string());
     };
-    
+
     Ok(vec_path[3].to_string())
 }
 
@@ -201,7 +201,7 @@ mod test_from_file_name_to_date_time {
         // Assert
         assert!(result.is_err());
     }
-    
+
     #[test]
     fn test_retrieve_file_name() {
         let path = "1984/04/04/1984-4-4-12-34-56.video";
