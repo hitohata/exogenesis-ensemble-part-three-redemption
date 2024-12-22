@@ -1,9 +1,10 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-mod errors;
-mod handlers;
-mod local_file;
+pub mod errors;
+pub mod handlers;
+pub mod local_file;
+
 
 use handlers::select_file::select_file;
 

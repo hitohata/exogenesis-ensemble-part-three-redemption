@@ -1,4 +1,4 @@
-/// The lambda's environment values
+//! The lambda's environment values
 
 pub mod lambda_environment_values {
     use std::env::var;
