@@ -1,6 +1,5 @@
 pub mod client {
-    use crate::environment_values::clients::s3_client;
-    use crate::environment_values::lambda_environment_values::standard_bucked_name;
+    use crate::environment_values::clients::{s3_client, standard_bucked_name};
     use aws_sdk_s3::operation::list_objects_v2::ListObjectsV2Output;
     use aws_sdk_s3::presigning::PresigningConfig;
     use shared::traits::GetFileListTrait;
@@ -12,7 +11,17 @@ pub mod client {
     static PRE_SIGN_EXPIRING_TIME: Duration = Duration::from_secs(5 * 60);
 
     /// The client for the standard bucket
-    pub struct StandardS3Client {}
+    pub struct StandardS3Client {
+        pub(crate) client: &'static aws_sdk_s3::Client,
+    }
+
+    impl StandardS3Client {
+        pub async fn new() -> Self {
+            Self {
+                client: s3_client().await,
+            }
+        }
+    }
 
     pub trait StandardS3ClientTrait: GetFileListTrait {
         fn generate_pre_signed_url_for_video(
@@ -22,9 +31,9 @@ pub mod client {
     }
 
     impl GetFileListTrait for StandardS3Client {
-        async fn get_years() -> Result<Vec<String>, String> {
-            let result = s3_client()
-                .await
+        async fn get_years(&self) -> Result<Vec<String>, String> {
+            let result = self
+                .client
                 .list_objects_v2()
                 .bucket(standard_bucked_name())
                 .delimiter("/")
@@ -39,9 +48,9 @@ pub mod client {
             Ok(retrieve_prefixes(&output))
         }
 
-        async fn get_month(years: usize) -> Result<Vec<String>, String> {
-            let result = s3_client()
-                .await
+        async fn get_month(&self, years: usize) -> Result<Vec<String>, String> {
+            let result = self
+                .client
                 .list_objects_v2()
                 .bucket(standard_bucked_name())
                 .prefix(format!("{years}/"))
@@ -65,9 +74,9 @@ pub mod client {
             Ok(months)
         }
 
-        async fn get_days(year: usize, month: usize) -> Result<Vec<String>, String> {
-            let result = s3_client()
-                .await
+        async fn get_days(&self, year: usize, month: usize) -> Result<Vec<String>, String> {
+            let result = self
+                .client
                 .list_objects_v2()
                 .bucket(standard_bucked_name())
                 .prefix(format!("{year}/{month}/"))
@@ -91,9 +100,14 @@ pub mod client {
             Ok(days)
         }
 
-        async fn get_objects(year: usize, month: usize, day: usize) -> Result<Vec<String>, String> {
-            let result = s3_client()
-                .await
+        async fn get_objects(
+            &self,
+            year: usize,
+            month: usize,
+            day: usize,
+        ) -> Result<Vec<String>, String> {
+            let result = self
+                .client
                 .list_objects_v2()
                 .bucket(standard_bucked_name())
                 .prefix(format!("{year}/{month}/{day}"))

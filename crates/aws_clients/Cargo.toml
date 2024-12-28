@@ -4,10 +4,14 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-tokio = {  version =  "1", features = ["sync", "macros"] }
-aws-sdk-s3 = { version = "1", features = ["behavior-version-latest"] }
-aws-config = { version = "1", features = ["behavior-version-latest"] }
+tokio = {  version =  "1.42.0", features = ["sync", "macros"] }
+aws-sdk-s3 = { version = "1.66.0", features = ["behavior-version-latest"], optional = true }
+aws-config = { version = "1.5.11", features = ["behavior-version-latest"] }
 time_file_name = { path = "../time_file_name" }
 shared = { path = "../shared" }
-aws-sdk-dynamodb = "1.54.0"
+aws-sdk-dynamodb = { version ="1.54.0" , optional = true }
 log = "0.4.22"
+
+[features]
+db = ["aws-sdk-dynamodb"]
+standard-storage = ["aws-sdk-s3"]
