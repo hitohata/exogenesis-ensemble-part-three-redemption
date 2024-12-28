@@ -23,7 +23,8 @@ pub mod client {
         }
     }
 
-    pub trait StandardS3ClientTrait: GetFileListTrait {
+    #[mockall::automock]
+    pub trait StandardS3ClientTrait {
         fn generate_pre_signed_url_for_video(
             date_time: &str,
             extension: &str,
