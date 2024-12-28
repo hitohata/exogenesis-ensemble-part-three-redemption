@@ -1,17 +1,29 @@
-use crate::environment_values::clients::test_dynamo_client;
+use crate::dynamodb::client::DynamoDbClient;
+use crate::environment_values::dynamo::dynamodb_client;
 use aws_sdk_dynamodb::types::{
     AttributeDefinition, KeySchemaElement, KeyType, ProvisionedThroughput, ScalarAttributeType,
 };
 
-/// create a new dynamodb table named by the argument
-/// if that table already exists, this function delete it before creating a table..
-pub async fn create_table(table_name: &str) {
-    match table_existence(table_name).await {
-        true => {
-            delete_table(table_name).await;
-            _create_table(table_name).await;
+impl DynamoDbClient {
+    /// create a new dynamodb table named by the argument
+    /// if that table already exists, this function delete it before creating a table..
+    pub async fn create_table(&self, table_name: &str) {
+        match table_existence(table_name).await {
+            true => {
+                self.delete_table(table_name).await;
+                _create_table(table_name).await;
+            }
+            false => _create_table(table_name).await,
         }
-        false => _create_table(table_name).await,
+    }
+
+    async fn delete_table(&self, table_name: &str) {
+        self.client
+            .delete_table()
+            .table_name(table_name)
+            .send()
+            .await
+            .expect("delete table failed");
     }
 }
 
@@ -46,7 +58,7 @@ async fn _create_table(table_name: &str) {
         .build()
         .unwrap();
 
-    test_dynamo_client()
+    dynamodb_client()
         .await
         .create_table()
         .table_name(table_name)
@@ -60,21 +72,11 @@ async fn _create_table(table_name: &str) {
         .expect("couldn't create a table");
 }
 
-async fn delete_table(table_name: &str) {
-    test_dynamo_client()
-        .await
-        .delete_table()
-        .table_name(table_name)
-        .send()
-        .await
-        .expect("delete table failed");
-}
-
 /// Check if the table exists or not by describing the table.
 /// If there is no table, the `describe_table` returns Err.
 /// It can be considered as there is no table thus this function returns false.
 async fn table_existence(table_name: &str) -> bool {
-    let result = test_dynamo_client()
+    let result = dynamodb_client()
         .await
         .describe_table()
         .table_name(table_name)
@@ -93,7 +95,6 @@ async fn table_existence(table_name: &str) -> bool {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::dynamodb::test_util::create_table;
     use tokio;
 
     #[tokio::test]
@@ -108,8 +109,9 @@ mod test {
     #[tokio::test]
     async fn test_create_table() {
         // Arrange
+        let client = DynamoDbClient::new().await;
         let table_name = "new-table";
-        create_table(table_name).await;
+        client.create_table(table_name).await;
 
         // Act
         let result = table_existence(table_name).await;
