@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"trait":["GetFileListTrait"]};
+window.SIDEBAR_ITEMS = {"mod":["__mock_MockGetFileListTrait","__mock_MockGetFileListTrait_GetFileListTrait"],"struct":["MockGetFileListTrait","MockGetFileListTrait_GetFileListTrait"],"trait":["GetFileListTrait"]};
