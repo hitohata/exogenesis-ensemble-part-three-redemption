@@ -5,3 +5,18 @@ services:
     
     ports:
       - "8000:8000"
+  localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME:-localstack-main}"
+    image: localstack/localstack:3.8 # this is set 3.8 intentionally to avoid pulling  the latest one
+    ports:
+      - "127.0.0.1:4566:4566"            # LocalStack Gateway
+      - "127.0.0.1:4510-4559:4510-4559"  # external services port range
+    environment:
+      # LocalStack configuration: https://docs.localstack.cloud/references/configuration/
+      DEBUG: ${DEBUG:-0}
+      SERVICES: s3
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./localstack/volume}:/var/lib/localstack"
+      - "${LOCALSTACK_VOLUME_DIR:-./storage/storage/ready.d}:/etc/localstack/init/ready.d"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "${LOCALSTACK_VOLUME_DIR:-./storage/test_data}:/data" 
