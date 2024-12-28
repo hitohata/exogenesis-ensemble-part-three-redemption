@@ -74,19 +74,23 @@
 <a href="#73" id="73">73</a>
 <a href="#74" id="74">74</a>
 <a href="#75" id="75">75</a>
-<a href="#76" id="76">76</a></pre></div><pre class="rust"><code><span class="doccomment">//! This mod has s3-related functions.
+<a href="#76" id="76">76</a>
+<a href="#77" id="77">77</a>
+<a href="#78" id="78">78</a>
+<a href="#79" id="79">79</a>
+<a href="#80" id="80">80</a></pre></div><pre class="rust"><code><span class="doccomment">//! This mod has s3-related functions.
 
-</span><span class="kw">use </span>shared::traits::GetFileListTrait;
-<span class="kw">use </span><span class="kw">crate</span>::error::WebApiAppError;
+</span><span class="kw">use </span><span class="kw">crate</span>::error::WebApiAppError;
 <span class="kw">use </span><span class="kw">crate</span>::routes::return_types::return_data_types::{
     DaysVideos, MonthsVideos, VideoObjects, YearsVideos,
 };
 <span class="kw">use </span>aws_clients::s3::client::{StandardS3Client, StandardS3ClientTrait};
 <span class="kw">use </span>lambda_http::tracing::error;
+<span class="kw">use </span>shared::traits::GetFileListTrait;
 
 <span class="doccomment">/// Read the years that exist items in the s3 bucket.
 </span><span class="kw">pub async fn </span>get_years() -&gt; <span class="prelude-ty">Result</span>&lt;YearsVideos, WebApiAppError&gt; {
-    <span class="kw">match </span>StandardS3Client::get_years().<span class="kw">await </span>{
+    <span class="kw">match </span>StandardS3Client::new().<span class="kw">await</span>.get_years().<span class="kw">await </span>{
         <span class="prelude-val">Ok</span>(years) =&gt; <span class="prelude-val">Ok</span>(YearsVideos { years }),
         <span class="prelude-val">Err</span>(e) =&gt; {
             <span class="macro">error!</span>(e);
@@ -97,7 +101,7 @@
 
 <span class="doccomment">/// Read the month that existing items are narrowed down by year in the s3 bucket.
 </span><span class="kw">pub async fn </span>get_months(year: usize) -&gt; <span class="prelude-ty">Result</span>&lt;MonthsVideos, WebApiAppError&gt; {
-    <span class="kw">match </span>StandardS3Client::get_month(year).<span class="kw">await </span>{
+    <span class="kw">match </span>StandardS3Client::new().<span class="kw">await</span>.get_month(year).<span class="kw">await </span>{
         <span class="prelude-val">Ok</span>(months) =&gt; <span class="prelude-val">Ok</span>(MonthsVideos { months }),
         <span class="prelude-val">Err</span>(e) =&gt; {
             <span class="macro">error!</span>(e);
@@ -110,7 +114,7 @@
 
 <span class="doccomment">/// Read the days that existing items are narrowed down by year and month in the s3 bucket.
 </span><span class="kw">pub async fn </span>get_days(years: usize, months: usize) -&gt; <span class="prelude-ty">Result</span>&lt;DaysVideos, WebApiAppError&gt; {
-    <span class="kw">match </span>StandardS3Client::get_days(years, months).<span class="kw">await </span>{
+    <span class="kw">match </span>StandardS3Client::new().<span class="kw">await</span>.get_days(years, months).<span class="kw">await </span>{
         <span class="prelude-val">Ok</span>(days) =&gt; <span class="prelude-val">Ok</span>(DaysVideos { days }),
         <span class="prelude-val">Err</span>(e) =&gt; {
             <span class="macro">error!</span>(e);
@@ -125,7 +129,11 @@
     month: usize,
     day: usize,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;VideoObjects, WebApiAppError&gt; {
-    <span class="kw">match </span>StandardS3Client::get_objects(year, month, day).<span class="kw">await </span>{
+    <span class="kw">match </span>StandardS3Client::new()
+        .<span class="kw">await
+        </span>.get_objects(year, month, day)
+        .<span class="kw">await
+    </span>{
         <span class="prelude-val">Ok</span>(objects) =&gt; <span class="prelude-val">Ok</span>(VideoObjects { objects }),
         <span class="prelude-val">Err</span>(e) =&gt; {
             <span class="macro">error!</span>(e);

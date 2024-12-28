@@ -24,7 +24,9 @@
 <a href="#23" id="23">23</a>
 <a href="#24" id="24">24</a>
 <a href="#25" id="25">25</a>
-<a href="#26" id="26">26</a></pre></div><pre class="rust"><code><span class="doccomment">//! This is a shared crate.
+<a href="#26" id="26">26</a>
+<a href="#27" id="27">27</a>
+<a href="#28" id="28">28</a></pre></div><pre class="rust"><code><span class="doccomment">//! This is a shared crate.
 //! This crate contains general things that are used in the whole system
 
 </span><span class="kw">pub mod </span>traits {
@@ -34,16 +36,18 @@
     /// This trait defines basic access patterns
     </span><span class="kw">pub trait </span>GetFileListTrait {
         <span class="doccomment">/// get years list
-        </span><span class="kw">fn </span>get_years() -&gt; <span class="kw">impl </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt;&gt; + Send;
+        </span><span class="kw">fn </span>get_years(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt;&gt; + Send;
         <span class="doccomment">/// get months list
-        </span><span class="kw">fn </span>get_month(years: usize) -&gt; <span class="kw">impl </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt;&gt; + Send;
+        </span><span class="kw">fn </span>get_month(<span class="kw-2">&amp;</span><span class="self">self</span>, years: usize) -&gt; <span class="kw">impl </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt;&gt; + Send;
         <span class="doccomment">/// get days list
         </span><span class="kw">fn </span>get_days(
+            <span class="kw-2">&amp;</span><span class="self">self</span>,
             year: usize,
             month: usize,
         ) -&gt; <span class="kw">impl </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt;&gt; + Send;
         <span class="doccomment">/// get objects list
         </span><span class="kw">fn </span>get_objects(
+            <span class="kw-2">&amp;</span><span class="self">self</span>,
             year: usize,
             month: usize,
             day: usize,

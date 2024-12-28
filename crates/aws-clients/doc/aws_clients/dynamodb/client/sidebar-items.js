@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["get_date_list","get_now"],"struct":["DynamoDbClient"],"trait":["DynamoClientTrait"]};

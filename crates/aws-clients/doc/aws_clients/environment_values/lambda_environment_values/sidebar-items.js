@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["standard_bucked_name","table_name"]};

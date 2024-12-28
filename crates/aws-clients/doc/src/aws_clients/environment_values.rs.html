@@ -66,46 +66,30 @@
 <a href="#65" id="65">65</a>
 <a href="#66" id="66">66</a>
 <a href="#67" id="67">67</a>
-<a href="#68" id="68">68</a></pre></div><pre class="rust"><code><span class="doccomment">//! The lambda's environment values
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
+<a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
+<a href="#72" id="72">72</a></pre></div><pre class="rust"><code><span class="doccomment">//! The lambda's environment values
 
-</span><span class="kw">pub mod </span>lambda_environment_values {
+</span><span class="attr">#[cfg(feature = <span class="string">"db"</span>)]
+</span><span class="kw">pub mod </span>dynamo {
     <span class="kw">use </span>std::env::var;
     <span class="kw">use </span>std::sync::OnceLock;
+    <span class="kw">use </span>tokio::sync::OnceCell;
 
-    <span class="doccomment">/// The standard bucket name.
-    </span><span class="kw">pub fn </span>standard_bucked_name() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str {
-        <span class="kw">static </span>STANDARD_BUCKET: OnceLock&lt;String&gt; = OnceLock::new();
-        STANDARD_BUCKET.get_or_init(|| var(<span class="string">"STANDARD_BUCKET_NAME"</span>).unwrap())
-    }
+    <span class="kw">static </span>DYNAMODB_CLIENT: OnceCell&lt;aws_sdk_dynamodb::Client&gt; = OnceCell::const_new();
 
-    <span class="doccomment">/// DynamoDB table name
-    </span><span class="kw">pub fn </span>table_name() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str {
+    <span class="kw">pub fn </span>table_name() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str {
         <span class="kw">static </span>TABLE_NAME: OnceLock&lt;String&gt; = OnceLock::new();
         TABLE_NAME.get_or_init(|| var(<span class="string">"TABLE_NAME"</span>).unwrap())
     }
-}
-
-<span class="doccomment">/// The AWS Clients
-</span><span class="kw">pub mod </span>clients {
-    <span class="kw">use </span>tokio::sync::OnceCell;
-
-    <span class="kw">static </span>S3_CLIENT: OnceCell&lt;aws_sdk_s3::Client&gt; = OnceCell::const_new();
-    <span class="kw">static </span>DYNAMODB_CLIENT: OnceCell&lt;aws_sdk_dynamodb::Client&gt; = OnceCell::const_new();
-
-    <span class="doccomment">/// The s3 client
-    </span><span class="kw">pub async fn </span>s3_client() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'static </span>aws_sdk_s3::Client {
-        S3_CLIENT
-            .get_or_init(|| <span class="kw">async </span>{
-                <span class="kw">let </span>config = aws_config::load_from_env().<span class="kw">await</span>;
-                aws_sdk_s3::Client::new(<span class="kw-2">&amp;</span>config)
-            })
-            .<span class="kw">await
-    </span>}
 
     <span class="doccomment">/// The DynamoDB client
     </span><span class="attr">#[allow(dead_code)] </span><span class="comment">// TODO: fix
+    </span><span class="attr">#[cfg(all(not(test), feature = <span class="string">"db"</span>))]
     </span><span class="kw">pub async fn </span>dynamodb_client() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'static </span>aws_sdk_dynamodb::Client {
-        DYNAMODB_CLIENT
+        <span class="kw">crate</span>::environment_values::dynamo::DYNAMODB_CLIENT
             .get_or_init(|| <span class="kw">async </span>{
                 <span class="kw">let </span>config = aws_config::load_from_env().<span class="kw">await</span>;
                 aws_sdk_dynamodb::Client::new(<span class="kw-2">&amp;</span>config)
@@ -116,12 +100,12 @@
     <span class="attr">#[cfg(test)]
     </span><span class="doccomment">/// test client
     /// when this function is called at the first time, the
-    </span><span class="kw">pub async fn </span>test_dynamo_client() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'static </span>aws_sdk_dynamodb::Client {
+    </span><span class="kw">pub async fn </span>dynamodb_client() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'static </span>aws_sdk_dynamodb::Client {
         <span class="kw">use </span>aws_config::BehaviorVersion;
         <span class="kw">use </span>aws_config::Region;
         <span class="kw">use </span>aws_sdk_dynamodb::config::Credentials;
 
-        DYNAMODB_CLIENT
+        <span class="kw">crate</span>::environment_values::dynamo::DYNAMODB_CLIENT
             .get_or_init(|| <span class="kw">async </span>{
                 <span class="kw">let </span>config = aws_config::defaults(BehaviorVersion::latest())
                     .endpoint_url(<span class="string">"http://localhost:8000"</span>)
@@ -130,6 +114,30 @@
                     .load()
                     .<span class="kw">await</span>;
                 aws_sdk_dynamodb::Client::new(<span class="kw-2">&amp;</span>config)
+            })
+            .<span class="kw">await
+    </span>}
+}
+
+<span class="attr">#[cfg(feature = <span class="string">"standard-storage"</span>)]
+</span><span class="kw">pub mod </span>clients {
+    <span class="kw">use </span>std::env::var;
+    <span class="kw">use </span>std::sync::OnceLock;
+    <span class="kw">use </span>tokio::sync::OnceCell;
+
+    <span class="kw">pub fn </span>standard_bucked_name() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str {
+        <span class="kw">static </span>STANDARD_BUCKET: OnceLock&lt;String&gt; = OnceLock::new();
+        STANDARD_BUCKET.get_or_init(|| var(<span class="string">"STANDARD_BUCKET_NAME"</span>).unwrap())
+    }
+
+    <span class="kw">static </span>S3_CLIENT: OnceCell&lt;aws_sdk_s3::Client&gt; = OnceCell::const_new();
+
+    <span class="doccomment">/// The s3 client
+    </span><span class="kw">pub async fn </span>s3_client() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'static </span>aws_sdk_s3::Client {
+        S3_CLIENT
+            .get_or_init(|| <span class="kw">async </span>{
+                <span class="kw">let </span>config = aws_config::load_from_env().<span class="kw">await</span>;
+                aws_sdk_s3::Client::new(<span class="kw-2">&amp;</span>config)
             })
             .<span class="kw">await
     </span>}

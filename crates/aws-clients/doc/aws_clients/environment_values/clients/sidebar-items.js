@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["dynamodb_client","s3_client"],"static":["DYNAMODB_CLIENT","S3_CLIENT"]};
