@@ -19,7 +19,8 @@ pub mod client {
         }
     }
 
-    pub trait DynamoClientTrait: GetFileListTrait {
+    #[mockall::automock]
+    pub trait DynamoClientTrait {
         /// put a new collection item
         fn put_collection_item(
             &self,
