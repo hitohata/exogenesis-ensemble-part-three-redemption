@@ -15,7 +15,7 @@ edition = "2021"
 # and it will keep the alphabetic ordering for you.
 
 [dependencies]
-lambda_http = "0.13.0"
+lambda_http = "0.14.0"
 
 axum = "0.7.9"
 serde = "1.0.217"
