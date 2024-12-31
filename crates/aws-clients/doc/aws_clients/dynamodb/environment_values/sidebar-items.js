@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["dynamodb_client","table_name"],"static":["DYNAMODB_CLIENT"]};

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["environment_values"]};
+window.SIDEBAR_ITEMS = {"mod":["dynamodb","s3"]};

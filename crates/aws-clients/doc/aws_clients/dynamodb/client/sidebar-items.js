@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["get_date_list","get_now"],"mod":["__mock_MockDynamoClientTrait","__mock_MockDynamoClientTrait_DynamoClientTrait"],"struct":["DynamoDbClient","MockDynamoClientTrait","MockDynamoClientTrait_DynamoClientTrait"],"trait":["DynamoClientTrait"]};
