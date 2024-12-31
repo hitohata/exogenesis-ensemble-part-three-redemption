@@ -21,7 +21,7 @@ pub async fn get_years() -> Result<YearsVideos, WebApiAppError> {
 
 /// Read the month that existing items are narrowed down by year in the s3 bucket.
 pub async fn get_months(year: usize) -> Result<MonthsVideos, WebApiAppError> {
-    match StandardS3Client::new().await.get_month(year).await {
+    match StandardS3Client::new().await.get_months(year).await {
         Ok(months) => Ok(MonthsVideos { months }),
         Err(e) => {
             error!(e);
