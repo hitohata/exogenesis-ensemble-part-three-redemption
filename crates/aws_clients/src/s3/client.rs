@@ -48,7 +48,7 @@ impl GetFileListTrait for StandardS3Client {
         Ok(retrieve_prefixes(&output))
     }
 
-    async fn get_month(&self, years: usize) -> Result<Vec<String>, String> {
+    async fn get_months(&self, years: usize) -> Result<Vec<String>, String> {
         let result = self
             .client
             .list_objects_v2()
@@ -79,7 +79,7 @@ impl GetFileListTrait for StandardS3Client {
             .client
             .list_objects_v2()
             .bucket(standard_bucked_name())
-            .prefix(format!("{year}/{month}/"))
+            .prefix(format!("{year}/{}/", zero_adder(month)))
             .delimiter("/")
             .send()
             .await;
@@ -110,7 +110,7 @@ impl GetFileListTrait for StandardS3Client {
             .client
             .list_objects_v2()
             .bucket(standard_bucked_name())
-            .prefix(format!("{year}/{month}/{day}"))
+            .prefix(format!("{year}/{}/{}", zero_adder(month), zero_adder(day)))
             .send()
             .await;
 
@@ -127,9 +127,9 @@ impl GetFileListTrait for StandardS3Client {
 
         for object in saved_objects {
             if let Some(key) = &object.key {
-                // the return data contains the directory, not only the object's keys
-                if &key[key.len() - 1..] != "/" {
-                    objects.push(key.to_owned())
+                let key_vec = key.split('/').collect::<Vec<&str>>();
+                if key_vec.len() == 4 {
+                    objects.push(key_vec[3].to_owned())
                 }
             }
         }
@@ -210,6 +210,21 @@ fn remove_delimiter(prefix: &str) -> &str {
     &prefix[..prefix.len() - 1]
 }
 
+/// Add "0" if the number is less than 9.
+/// The prefix of month and day is 2 digits.
+/// ```rust
+/// # use aws_clients::s3::client::zero_adder;
+/// assert_eq!(zero_adder(1), String::from("01"));
+/// assert_eq!(zero_adder(10), String::from("10"));
+/// ```
+pub fn zero_adder(num: usize) -> String {
+    if num < 9 {
+        format!("0{}", num)
+    } else {
+        format!("{num}")
+    }
+}
+
 #[cfg(test)]
 mod test_remove_delimiter {
     use super::*;
@@ -261,9 +276,48 @@ mod client_test {
         #[tokio::test]
         async fn test_get_months() {
             // Assert
-            let result = StandardS3Client::new().await.get_month(1984).await.unwrap();
+            let result = StandardS3Client::new()
+                .await
+                .get_months(1984)
+                .await
+                .unwrap();
 
             assert_eq!(result, ["04", "05"])
+        }
+    }
+
+    mod test_get_days {
+        use super::*;
+
+        #[tokio::test]
+        async fn test_get_days() {
+            // Assert
+            let result = StandardS3Client::new()
+                .await
+                .get_days(1984, 4)
+                .await
+                .unwrap();
+
+            assert_eq!(result, ["04", "05"])
+        }
+    }
+
+    mod test_get_objects {
+        use super::*;
+
+        #[tokio::test]
+        async fn test_get_objects() {
+            // Assert
+            let result = StandardS3Client::new()
+                .await
+                .get_objects(1984, 4, 4)
+                .await
+                .unwrap();
+
+            assert_eq!(
+                result,
+                ["1984-04-04-12-34-50.MOV", "1984-04-04-12-34-51.MOV"]
+            )
         }
     }
 }
