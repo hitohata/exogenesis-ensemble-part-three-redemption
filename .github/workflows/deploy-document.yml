@@ -185,7 +185,7 @@ jobs:
         with:
           toolchain: stable
       - name: build
-        run: cargo doc --all --no-deps --document-private-items --target-dir /build
+        run: cargo doc --all --no-deps --document-private-items --all-features --target-dir /build
       - name: Write an artifact
         uses: actions/upload-artifact@v4
         with:
