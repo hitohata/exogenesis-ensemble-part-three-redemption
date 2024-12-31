@@ -1,5 +1,5 @@
 use crate::dynamodb::client::DynamoDbClient;
-use crate::environment_values::dynamo::dynamodb_client;
+use crate::dynamodb::environment_values::dynamodb_client;
 use aws_sdk_dynamodb::types::{
     AttributeDefinition, KeySchemaElement, KeyType, ProvisionedThroughput, ScalarAttributeType,
 };

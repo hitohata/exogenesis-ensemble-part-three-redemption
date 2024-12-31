@@ -1,4 +1,4 @@
-use crate::s3::enviironment_value::{standard_bucked_name, s3_client};
+use crate::s3::environment_value::{s3_client, standard_bucked_name};
 use aws_sdk_s3::operation::list_objects_v2::ListObjectsV2Output;
 use aws_sdk_s3::presigning::PresigningConfig;
 use shared::traits::GetFileListTrait;
@@ -32,7 +32,6 @@ pub trait StandardS3ClientTrait {
 
 impl GetFileListTrait for StandardS3Client {
     async fn get_years(&self) -> Result<Vec<String>, String> {
-       
         let result = self
             .client
             .list_objects_v2()
@@ -40,8 +39,6 @@ impl GetFileListTrait for StandardS3Client {
             .delimiter("/")
             .send()
             .await;
-        
-        print!("{:?}", result);
 
         let output = match result {
             Ok(out) => out,
@@ -240,20 +237,33 @@ mod test_remove_delimiter {
         // Assert
         assert_eq!(result, "1984/4/4");
     }
-    
+}
+
+#[cfg(test)]
+mod client_test {
+    use super::*;
+
     mod test_get_years {
         use super::*;
-        
+
         #[tokio::test]
         async fn test_get_years() {
             // Assert
-            let result = StandardS3Client::new()
-                .await
-                .get_years()
-                .await
-                .unwrap();
-            
+            let result = StandardS3Client::new().await.get_years().await.unwrap();
+
             assert_eq!(result, ["1984", "1985"])
+        }
+    }
+
+    mod test_get_months {
+        use super::*;
+
+        #[tokio::test]
+        async fn test_get_months() {
+            // Assert
+            let result = StandardS3Client::new().await.get_month(1984).await.unwrap();
+
+            assert_eq!(result, ["04", "05"])
         }
     }
 }
