@@ -45,7 +45,7 @@ impl GetFileListTrait for DynamoDbClient {
         get_date_list("root").await
     }
 
-    async fn get_month(&self, year: usize) -> Result<Vec<String>, String> {
+    async fn get_months(&self, year: usize) -> Result<Vec<String>, String> {
         get_date_list(format!("{year}").as_str()).await
     }
 

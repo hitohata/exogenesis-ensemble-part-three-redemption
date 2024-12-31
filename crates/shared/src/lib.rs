@@ -11,7 +11,7 @@ pub mod traits {
         /// get years list
         fn get_years(&self) -> impl Future<Output = Result<Vec<String>, String>> + Send;
         /// get months list
-        fn get_month(&self, years: usize) -> impl Future<Output = Result<Vec<String>, String>> + Send;
+        fn get_months(&self, years: usize) -> impl Future<Output = Result<Vec<String>, String>> + Send;
         /// get days list
         fn get_days(
             &self,
