@@ -10,6 +10,7 @@ pub struct DynamoDbClient {
 }
 
 impl DynamoDbClient {
+    #[allow(dead_code)]
     pub async fn new() -> Self {
         Self {
             client: dynamodb_client().await,
@@ -20,12 +21,14 @@ impl DynamoDbClient {
 #[mockall::automock]
 pub trait DynamoClientTrait {
     /// put a new collection item
+    #[allow(dead_code)]
     fn put_collection_item(
         &self,
         collection: &CollectionItem,
     ) -> impl Future<Output = Result<bool, String>> + Send;
     // put zipping time
     /// time is mill sec
+    #[allow(dead_code)]
     fn put_unzipping_item(
         &self,
         key_name: &str,
@@ -33,6 +36,7 @@ pub trait DynamoClientTrait {
     ) -> impl Future<Output = Result<bool, String>> + Send;
     /// put unzipped item
     /// time is mill sec
+    #[allow(dead_code)]
     fn put_unzipped_item(
         &self,
         key_name: &str,
