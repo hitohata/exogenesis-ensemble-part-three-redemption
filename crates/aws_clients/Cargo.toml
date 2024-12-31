@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 tokio = {  version =  "1.42.0", features = ["sync", "macros"] }
-aws-sdk-s3 = { version = "1.66.0", features = ["behavior-version-latest"], optional = true }
+aws-sdk-s3 = { version = "1.67.0", features = ["behavior-version-latest"], optional = true }
 aws-config = { version = "1.5.11", features = ["behavior-version-latest"] }
 time_file_name = { path = "../time_file_name" }
 shared = { path = "../shared" }
