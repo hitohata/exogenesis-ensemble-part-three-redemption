@@ -18,7 +18,7 @@ impl DynamoDbClient {
     }
 }
 
-#[mockall::automock]
+#[cfg_attr(feature = "mock", mockall::automock)]
 pub trait DynamoClientTrait {
     /// put a new collection item
     #[allow(dead_code)]

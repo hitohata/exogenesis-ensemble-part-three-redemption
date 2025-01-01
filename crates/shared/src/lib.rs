@@ -6,7 +6,7 @@ pub mod traits {
 
     /// The searching is shared in the DB and bucket
     /// This trait defines basic access patterns
-    #[mockall::automock]
+    #[cfg_attr(feature = "mock", mockall::automock)]
     pub trait GetFileListTrait {
         /// get years list
         fn get_years(&self) -> impl Future<Output = Result<Vec<String>, String>> + Send;

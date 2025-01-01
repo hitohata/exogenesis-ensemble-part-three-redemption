@@ -22,7 +22,7 @@ impl StandardS3Client {
     }
 }
 
-#[mockall::automock]
+#[cfg_attr(feature = "mock", mockall::automock)]
 pub trait StandardS3ClientTrait {
     fn generate_pre_signed_url_for_video(
         date_time: &str,
