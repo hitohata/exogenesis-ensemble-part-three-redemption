@@ -16,3 +16,4 @@ log = "0.4.22"
 [features]
 db = ["aws-sdk-dynamodb"]
 standard-storage = ["aws-sdk-s3"]
+mock = ["db", "standard-storage"]
