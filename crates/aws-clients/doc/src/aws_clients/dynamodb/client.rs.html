@@ -191,7 +191,7 @@
     }
 }
 
-<span class="attr">#[mockall::automock]
+<span class="attr">#[cfg_attr(feature = <span class="string">"mock"</span>, mockall::automock)]
 </span><span class="kw">pub trait </span>DynamoClientTrait {
     <span class="doccomment">/// put a new collection item
     </span><span class="attr">#[allow(dead_code)]

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["__get_days","__get_months","__get_objects","__get_years"]};

@@ -1,9 +1,0 @@
-(function() {
-    var implementors = Object.fromEntries([["shared",[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.83.0/core/fmt/trait.Display.html\" title=\"trait core::fmt::Display\">Display</a> for <a class=\"enum\" href=\"shared/traits/__mock_MockGetFileListTrait_GetFileListTrait/__get_days/enum.Matcher.html\" title=\"enum shared::traits::__mock_MockGetFileListTrait_GetFileListTrait::__get_days::Matcher\">Matcher</a>"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.83.0/core/fmt/trait.Display.html\" title=\"trait core::fmt::Display\">Display</a> for <a class=\"enum\" href=\"shared/traits/__mock_MockGetFileListTrait_GetFileListTrait/__get_months/enum.Matcher.html\" title=\"enum shared::traits::__mock_MockGetFileListTrait_GetFileListTrait::__get_months::Matcher\">Matcher</a>"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.83.0/core/fmt/trait.Display.html\" title=\"trait core::fmt::Display\">Display</a> for <a class=\"enum\" href=\"shared/traits/__mock_MockGetFileListTrait_GetFileListTrait/__get_objects/enum.Matcher.html\" title=\"enum shared::traits::__mock_MockGetFileListTrait_GetFileListTrait::__get_objects::Matcher\">Matcher</a>"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.83.0/core/fmt/trait.Display.html\" title=\"trait core::fmt::Display\">Display</a> for <a class=\"enum\" href=\"shared/traits/__mock_MockGetFileListTrait_GetFileListTrait/__get_years/enum.Matcher.html\" title=\"enum shared::traits::__mock_MockGetFileListTrait_GetFileListTrait::__get_years::Matcher\">Matcher</a>"]]]]);
-    if (window.register_implementors) {
-        window.register_implementors(implementors);
-    } else {
-        window.pending_implementors = implementors;
-    }
-})()
-//{"start":57,"fragment_lengths":[1516]}
