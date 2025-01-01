@@ -1659,9 +1659,6 @@ dependencies = [
 [[package]]
 name = "shared"
 version = "0.1.0"
-dependencies = [
- "mockall",
-]
 
 [[package]]
 name = "shlex"
