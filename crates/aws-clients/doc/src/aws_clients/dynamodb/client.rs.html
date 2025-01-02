@@ -171,22 +171,35 @@
 <a href="#170" id="170">170</a>
 <a href="#171" id="171">171</a>
 <a href="#172" id="172">172</a>
-<a href="#173" id="173">173</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::dynamodb::entities::collection::CollectionItem;
-<span class="kw">use </span><span class="kw">crate</span>::dynamodb::environment_values::{dynamodb_client, table_name};
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+<a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
+<a href="#179" id="179">179</a>
+<a href="#180" id="180">180</a>
+<a href="#181" id="181">181</a>
+<a href="#182" id="182">182</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::dynamodb::entities::collection::CollectionItem;
+<span class="attr">#[cfg(not(test))]
+</span><span class="kw">use </span><span class="kw">crate</span>::dynamodb::environment_values::{dynamodb_client, table_name};
 <span class="kw">use </span>aws_sdk_dynamodb::types::AttributeValue;
 <span class="kw">use </span>shared::traits::GetFileListTrait;
 <span class="kw">use </span>std::future::Future;
 <span class="kw">use </span>std::time::{SystemTime, UNIX_EPOCH};
 
-<span class="kw">pub struct </span>DynamoDbClient {
+<span class="kw">pub struct </span>DynamoDbClient&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">pub</span>(<span class="kw">crate</span>) client: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>aws_sdk_dynamodb::Client,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) table_name: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str,
 }
 
-<span class="kw">impl </span>DynamoDbClient {
+<span class="kw">impl </span>DynamoDbClient&lt;<span class="lifetime">'_</span>&gt; {
     <span class="attr">#[allow(dead_code)]
+    #[cfg(not(test))]
     </span><span class="kw">pub async fn </span>new() -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             client: dynamodb_client().<span class="kw">await</span>,
+            table_name: table_name(),
         }
     }
 }
@@ -198,7 +211,7 @@
     </span><span class="kw">fn </span>put_collection_item(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         collection: <span class="kw-2">&amp;</span>CollectionItem,
-    ) -&gt; <span class="kw">impl </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;bool, String&gt;&gt; + Send;
+    ) -&gt; <span class="kw">impl </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;(), String&gt;&gt; + Send;
     <span class="comment">// put zipping time
     </span><span class="doccomment">/// time is mill sec
     </span><span class="attr">#[allow(dead_code)]
@@ -206,7 +219,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         key_name: <span class="kw-2">&amp;</span>str,
         time: <span class="prelude-ty">Option</span>&lt;u128&gt;,
-    ) -&gt; <span class="kw">impl </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;bool, String&gt;&gt; + Send;
+    ) -&gt; <span class="kw">impl </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;(), String&gt;&gt; + Send;
     <span class="doccomment">/// put unzipped item
     /// time is mill sec
     </span><span class="attr">#[allow(dead_code)]
@@ -214,20 +227,20 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         key_name: <span class="kw-2">&amp;</span>str,
         time: <span class="prelude-ty">Option</span>&lt;u128&gt;,
-    ) -&gt; <span class="kw">impl </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;bool, String&gt;&gt; + Send;
+    ) -&gt; <span class="kw">impl </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;(), String&gt;&gt; + Send;
 }
 
-<span class="kw">impl </span>GetFileListTrait <span class="kw">for </span>DynamoDbClient {
+<span class="kw">impl </span>GetFileListTrait <span class="kw">for </span>DynamoDbClient&lt;<span class="lifetime">'_</span>&gt; {
     <span class="kw">async fn </span>get_years(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt; {
-        get_date_list(<span class="string">"root"</span>).<span class="kw">await
+        <span class="self">self</span>.get_date_list(<span class="string">"root"</span>).<span class="kw">await
     </span>}
 
     <span class="kw">async fn </span>get_months(<span class="kw-2">&amp;</span><span class="self">self</span>, year: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt; {
-        get_date_list(<span class="macro">format!</span>(<span class="string">"{year}"</span>).as_str()).<span class="kw">await
+        <span class="self">self</span>.get_date_list(<span class="macro">format!</span>(<span class="string">"{year}"</span>).as_str()).<span class="kw">await
     </span>}
 
     <span class="kw">async fn </span>get_days(<span class="kw-2">&amp;</span><span class="self">self</span>, year: usize, month: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt; {
-        get_date_list(<span class="macro">format!</span>(<span class="string">"{year}-{month}"</span>).as_str()).<span class="kw">await
+        <span class="self">self</span>.get_date_list(<span class="macro">format!</span>(<span class="string">"{year}-{month}"</span>).as_str()).<span class="kw">await
     </span>}
 
     <span class="kw">async fn </span>get_objects(
@@ -236,16 +249,17 @@
         month: usize,
         day: usize,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt; {
-        get_date_list(<span class="macro">format!</span>(<span class="string">"{year}-{month}-{day}"</span>).as_str()).<span class="kw">await
+        <span class="self">self</span>.get_date_list(<span class="macro">format!</span>(<span class="string">"{year}-{month}-{day}"</span>).as_str())
+            .<span class="kw">await
     </span>}
 }
 
-<span class="kw">impl </span><span class="kw">crate</span>::dynamodb::client::DynamoClientTrait <span class="kw">for </span>DynamoDbClient {
-    <span class="kw">async fn </span>put_collection_item(<span class="kw-2">&amp;</span><span class="self">self</span>, collection: <span class="kw-2">&amp;</span>CollectionItem) -&gt; <span class="prelude-ty">Result</span>&lt;bool, String&gt; {
+<span class="kw">impl </span><span class="kw">crate</span>::dynamodb::client::DynamoClientTrait <span class="kw">for </span>DynamoDbClient&lt;<span class="lifetime">'_</span>&gt; {
+    <span class="kw">async fn </span>put_collection_item(<span class="kw-2">&amp;</span><span class="self">self</span>, collection: <span class="kw-2">&amp;</span>CollectionItem) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt; {
         <span class="kw">let </span>request = <span class="self">self
             </span>.client
             .put_item()
-            .table_name(table_name())
+            .table_name(<span class="self">self</span>.table_name)
             .item(<span class="string">"PK"</span>, AttributeValue::S(collection.year.to_string()))
             .item(<span class="string">"SK"</span>, AttributeValue::N(collection.unix_time.to_string()))
             .item(<span class="string">"IsUnzipped"</span>, AttributeValue::Bool(collection.is_unzipped))
@@ -259,16 +273,16 @@
             <span class="kw">return </span><span class="prelude-val">Err</span>(e.to_string());
         }
 
-        <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>)
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>put_unzipping_item(<span class="kw-2">&amp;</span><span class="self">self</span>, key_name: <span class="kw-2">&amp;</span>str, time: <span class="prelude-ty">Option</span>&lt;u128&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;bool, String&gt; {
+    <span class="kw">async fn </span>put_unzipping_item(<span class="kw-2">&amp;</span><span class="self">self</span>, key_name: <span class="kw-2">&amp;</span>str, time: <span class="prelude-ty">Option</span>&lt;u128&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt; {
         <span class="kw">let </span>now = get_now(time)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>request = <span class="self">self
             </span>.client
             .put_item()
-            .table_name(table_name())
+            .table_name(<span class="self">self</span>.table_name)
             .item(<span class="string">"PK"</span>, AttributeValue::S(<span class="string">"Unzipping"</span>.to_string()))
             .item(<span class="string">"SK"</span>, AttributeValue::N(now.to_string()))
             .item(<span class="string">"KeyName"</span>, AttributeValue::S(key_name.to_string()));
@@ -277,16 +291,16 @@
             <span class="kw">return </span><span class="prelude-val">Err</span>(e.to_string());
         }
 
-        <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>)
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>put_unzipped_item(<span class="kw-2">&amp;</span><span class="self">self</span>, key_name: <span class="kw-2">&amp;</span>str, time: <span class="prelude-ty">Option</span>&lt;u128&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;bool, String&gt; {
+    <span class="kw">async fn </span>put_unzipped_item(<span class="kw-2">&amp;</span><span class="self">self</span>, key_name: <span class="kw-2">&amp;</span>str, time: <span class="prelude-ty">Option</span>&lt;u128&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt; {
         <span class="kw">let </span>now = get_now(time)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>request = <span class="self">self
             </span>.client
             .put_item()
-            .table_name(table_name())
+            .table_name(<span class="self">self</span>.table_name)
             .item(<span class="string">"PK"</span>, AttributeValue::S(<span class="string">"Unzipped"</span>.to_string()))
             .item(<span class="string">"SK"</span>, AttributeValue::N(now.to_string()))
             .item(<span class="string">"KeyName"</span>, AttributeValue::S(key_name.to_string()));
@@ -295,41 +309,45 @@
             <span class="kw">return </span><span class="prelude-val">Err</span>(e.to_string());
         }
 
-        <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>)
+        <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">async fn </span>get_date_list(key: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt; {
-    <span class="kw">let </span>request = dynamodb_client()
-        .<span class="kw">await
-        </span>.get_item()
-        .table_name(table_name())
-        .key(<span class="string">"PK"</span>, AttributeValue::S(key.to_string()))
-        .key(<span class="string">"SK"</span>, AttributeValue::N(<span class="string">"0"</span>.to_string()));
+<span class="kw">impl </span>DynamoDbClient&lt;<span class="lifetime">'_</span>&gt; {
+    <span class="doccomment">/// get date
+    /// doc&lt;https://hitohata.github.io/ExogenesisEnsemble-Part3-Redemption/project/docs/technical-information/DynamoDB-Definition#date-lookup&gt;
+    </span><span class="kw">async fn </span>get_date_list(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;String&gt;, String&gt; {
+        <span class="kw">let </span>request = <span class="self">self
+            </span>.client
+            .get_item()
+            .table_name(<span class="self">self</span>.table_name)
+            .key(<span class="string">"PK"</span>, AttributeValue::S(key.to_string()))
+            .key(<span class="string">"SK"</span>, AttributeValue::N(<span class="string">"0"</span>.to_string()));
 
-    <span class="kw">let </span>saved_date = <span class="kw">match </span>request.send().<span class="kw">await </span>{
-        <span class="prelude-val">Ok</span>(result) =&gt; <span class="kw">match </span>result.item {
-            <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(Vec::new()),
-            <span class="prelude-val">Some</span>(item) =&gt; <span class="kw">match </span>item.get_key_value(<span class="string">"SavedDate"</span>) {
-                <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">"Saved date is not found"</span>.to_string()),
-                <span class="prelude-val">Some</span>(val) =&gt; <span class="kw">match </span>val.<span class="number">1</span>.as_l() {
-                    <span class="prelude-val">Ok</span>(attribute) =&gt; attribute.to_owned(),
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">"Casting to list is failed."</span>.to_string()),
+        <span class="kw">let </span>saved_date = <span class="kw">match </span>request.send().<span class="kw">await </span>{
+            <span class="prelude-val">Ok</span>(result) =&gt; <span class="kw">match </span>result.item {
+                <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(Vec::new()),
+                <span class="prelude-val">Some</span>(item) =&gt; <span class="kw">match </span>item.get_key_value(<span class="string">"SavedDate"</span>) {
+                    <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">"Saved date is not found"</span>.to_string()),
+                    <span class="prelude-val">Some</span>(val) =&gt; <span class="kw">match </span>val.<span class="number">1</span>.as_l() {
+                        <span class="prelude-val">Ok</span>(attribute) =&gt; attribute.to_owned(),
+                        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">"Casting to list is failed."</span>.to_string()),
+                    },
                 },
             },
-        },
-        <span class="prelude-val">Err</span>(e) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(e.to_string()),
-    };
+            <span class="prelude-val">Err</span>(e) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(e.to_string()),
+        };
 
-    <span class="kw">let </span><span class="kw-2">mut </span>date = Vec::new();
+        <span class="kw">let </span><span class="kw-2">mut </span>date = Vec::new();
 
-    <span class="kw">for </span>attribute <span class="kw">in </span>saved_date {
-        <span class="kw">match </span>attribute.as_s() {
-            <span class="prelude-val">Ok</span>(s) =&gt; date.push(s.to_owned()),
-            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">"Invalid date is stored"</span>.to_string()),
+        <span class="kw">for </span>attribute <span class="kw">in </span>saved_date {
+            <span class="kw">match </span>attribute.as_s() {
+                <span class="prelude-val">Ok</span>(s) =&gt; date.push(s.to_owned()),
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">"Invalid date is stored"</span>.to_string()),
+            }
         }
+        <span class="prelude-val">Ok</span>(date)
     }
-    <span class="prelude-val">Ok</span>(date)
 }
 
 <span class="doccomment">/// this is a helper function.
