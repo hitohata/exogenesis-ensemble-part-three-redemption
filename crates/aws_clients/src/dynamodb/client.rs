@@ -5,15 +5,18 @@ use shared::traits::GetFileListTrait;
 use std::future::Future;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-pub struct DynamoDbClient {
+pub struct DynamoDbClient<'a> {
     pub(crate) client: &'static aws_sdk_dynamodb::Client,
+    pub(crate) table_name: &'a str,
 }
 
-impl DynamoDbClient {
+impl DynamoDbClient<'_> {
     #[allow(dead_code)]
+    #[cfg(not(test))]
     pub async fn new() -> Self {
         Self {
             client: dynamodb_client().await,
+            table_name: table_name(),
         }
     }
 }
@@ -25,7 +28,7 @@ pub trait DynamoClientTrait {
     fn put_collection_item(
         &self,
         collection: &CollectionItem,
-    ) -> impl Future<Output = Result<bool, String>> + Send;
+    ) -> impl Future<Output = Result<(), String>> + Send;
     // put zipping time
     /// time is mill sec
     #[allow(dead_code)]
@@ -33,7 +36,7 @@ pub trait DynamoClientTrait {
         &self,
         key_name: &str,
         time: Option<u128>,
-    ) -> impl Future<Output = Result<bool, String>> + Send;
+    ) -> impl Future<Output = Result<(), String>> + Send;
     /// put unzipped item
     /// time is mill sec
     #[allow(dead_code)]
@@ -41,20 +44,20 @@ pub trait DynamoClientTrait {
         &self,
         key_name: &str,
         time: Option<u128>,
-    ) -> impl Future<Output = Result<bool, String>> + Send;
+    ) -> impl Future<Output = Result<(), String>> + Send;
 }
 
-impl GetFileListTrait for DynamoDbClient {
+impl GetFileListTrait for DynamoDbClient<'_> {
     async fn get_years(&self) -> Result<Vec<String>, String> {
-        get_date_list("root").await
+        get_date_list("root", self.table_name).await
     }
 
     async fn get_months(&self, year: usize) -> Result<Vec<String>, String> {
-        get_date_list(format!("{year}").as_str()).await
+        get_date_list(format!("{year}").as_str(), self.table_name).await
     }
 
     async fn get_days(&self, year: usize, month: usize) -> Result<Vec<String>, String> {
-        get_date_list(format!("{year}-{month}").as_str()).await
+        get_date_list(format!("{year}-{month}").as_str(), self.table_name).await
     }
 
     async fn get_objects(
@@ -63,12 +66,12 @@ impl GetFileListTrait for DynamoDbClient {
         month: usize,
         day: usize,
     ) -> Result<Vec<String>, String> {
-        get_date_list(format!("{year}-{month}-{day}").as_str()).await
+        get_date_list(format!("{year}-{month}-{day}").as_str(), self.table_name).await
     }
 }
 
-impl crate::dynamodb::client::DynamoClientTrait for DynamoDbClient {
-    async fn put_collection_item(&self, collection: &CollectionItem) -> Result<bool, String> {
+impl crate::dynamodb::client::DynamoClientTrait for DynamoDbClient<'_> {
+    async fn put_collection_item(&self, collection: &CollectionItem) -> Result<(), String> {
         let request = self
             .client
             .put_item()
@@ -86,10 +89,10 @@ impl crate::dynamodb::client::DynamoClientTrait for DynamoDbClient {
             return Err(e.to_string());
         }
 
-        Ok(true)
+        Ok(())
     }
 
-    async fn put_unzipping_item(&self, key_name: &str, time: Option<u128>) -> Result<bool, String> {
+    async fn put_unzipping_item(&self, key_name: &str, time: Option<u128>) -> Result<(), String> {
         let now = get_now(time)?;
 
         let request = self
@@ -104,10 +107,10 @@ impl crate::dynamodb::client::DynamoClientTrait for DynamoDbClient {
             return Err(e.to_string());
         }
 
-        Ok(true)
+        Ok(())
     }
 
-    async fn put_unzipped_item(&self, key_name: &str, time: Option<u128>) -> Result<bool, String> {
+    async fn put_unzipped_item(&self, key_name: &str, time: Option<u128>) -> Result<(), String> {
         let now = get_now(time)?;
 
         let request = self
@@ -122,15 +125,17 @@ impl crate::dynamodb::client::DynamoClientTrait for DynamoDbClient {
             return Err(e.to_string());
         }
 
-        Ok(true)
+        Ok(())
     }
 }
 
-async fn get_date_list(key: &str) -> Result<Vec<String>, String> {
+/// get date
+/// doc<https://hitohata.github.io/ExogenesisEnsemble-Part3-Redemption/project/docs/technical-information/DynamoDB-Definition#date-lookup>
+async fn get_date_list(key: &str, table_name: &str) -> Result<Vec<String>, String> {
     let request = dynamodb_client()
         .await
         .get_item()
-        .table_name(table_name())
+        .table_name(table_name)
         .key("PK", AttributeValue::S(key.to_string()))
         .key("SK", AttributeValue::N("0".to_string()));
 
