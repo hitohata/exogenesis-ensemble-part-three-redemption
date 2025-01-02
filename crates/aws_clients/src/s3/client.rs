@@ -4,6 +4,7 @@ use aws_sdk_s3::presigning::PresigningConfig;
 use shared::traits::GetFileListTrait;
 use std::future::Future;
 use std::time::Duration;
+use aws_sdk_dynamodb::error::ProvideErrorMetadata;
 use time_file_name::file_path::FilePath;
 
 /// The expiring time for the s3 pre-signed URL
@@ -18,6 +19,48 @@ impl StandardS3Client {
     pub async fn new() -> Self {
         Self {
             client: s3_client().await,
+        }
+    }
+    
+    /// check if a key provided exists
+    pub async fn exists(&self, key: impl Into<String>) -> Result<bool, String> {
+        
+        let result = self
+            .client
+            .head_object()
+            .bucket(standard_bucked_name())
+            .key(key.into())
+            .send()
+            .await;
+        
+        match result {
+            Ok(_) => Ok(true),
+            Err(e) => match &e.code() {
+                None => Err(e.to_string()),
+                Some(code) => {
+                    if *code == "NotFound" {
+                        Ok(false)
+                    } else {
+                        Err(e.to_string())
+                    }
+                }
+            }
+        }
+    }
+    
+    /// remove an object
+    pub async fn remove_object(&self, key: impl Into<&str>) -> Result<(), String> {
+        let result = self
+            .client
+            .delete_object()
+            .bucket(standard_bucked_name())
+            .key(key.into())
+            .send()
+            .await;
+        
+        match result {
+            Ok(_) => Ok(()),
+            Err(e) => Err(format!("{}", e)),
         }
     }
 }
@@ -257,6 +300,24 @@ mod test_remove_delimiter {
 #[cfg(test)]
 mod client_test {
     use super::*;
+    
+    mod test_exists {
+        use super::*;
+        
+        #[tokio::test]
+        async fn test_exists() {
+            let result = StandardS3Client::new().await.exists("1984/04/04/1984-04-04-12-34-50.MOV").await.unwrap();
+            
+            assert_eq!(result, true);
+        }
+        
+        #[tokio::test]
+        async fn test_not_exists() {
+            let result = StandardS3Client::new().await.exists("no-key").await.unwrap();
+
+            assert_eq!(result, false);
+        }
+    }
 
     mod test_get_years {
         use super::*;
@@ -266,7 +327,7 @@ mod client_test {
             // Assert
             let result = StandardS3Client::new().await.get_years().await.unwrap();
 
-            assert_eq!(result, ["1984", "1985"])
+            assert_eq!(result, ["1984", "1985", "1999"])
         }
     }
 
