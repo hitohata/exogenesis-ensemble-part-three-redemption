@@ -28,4 +28,13 @@ pub mod collection {
             })
         }
     }
+
+    #[cfg(test)]
+    impl CollectionItem {
+        /// dummy data from datetime
+        /// the vault is just a string, "vault".
+        pub fn dummy_object(key_name: &str) -> CollectionItem {
+            CollectionItem::new_object(&key_name, "vault").unwrap()
+        }
+    }
 }
