@@ -6,7 +6,7 @@ pub async fn put_test_object(key_name: &str) {
         if target_path.exists() {
             return target_path
         }
-        
+
         let target_path = std::path::Path::new("./storage/test_data/test.MOV");
         if target_path.exists() {
             return target_path
@@ -14,9 +14,9 @@ pub async fn put_test_object(key_name: &str) {
 
         panic!("dummy object path is not found");
     };
-    
+
     let body = aws_sdk_s3::primitives::ByteStream::from_path(path()).await.unwrap();
-    
+
     let _ = s3_client()
         .await
         .put_object()

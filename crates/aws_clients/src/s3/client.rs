@@ -58,6 +58,8 @@ impl StandardS3Client {
             .send()
             .await;
         
+        println!("{:?}", result);
+        
         match result {
             Ok(_) => Ok(()),
             Err(e) => Err(format!("{}", e)),
@@ -379,6 +381,25 @@ mod client_test {
                 result,
                 ["1984-04-04-12-34-50.MOV", "1984-04-04-12-34-51.MOV"]
             )
+        }
+    }
+    
+    mod test_remove_object {
+        use crate::s3::test_utils::put_test_object;
+        use super::*;
+        
+        #[tokio::test]
+        async fn test_remove_object() {
+            // Arrange
+            let key_name = "key";
+            let _ = put_test_object(key_name).await;
+            let client = StandardS3Client::new();
+            
+            // Act
+            let result = client.await.remove_object(key_name).await;
+            
+            // Assert
+            assert!(result.is_ok());
         }
     }
 }
