@@ -57,8 +57,6 @@ impl StandardS3Client {
             .send()
             .await;
 
-        println!("{:?}", result);
-
         match result {
             Ok(_) => Ok(()),
             Err(e) => Err(format!("{}", e)),
