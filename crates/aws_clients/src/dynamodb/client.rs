@@ -1,4 +1,5 @@
 use crate::dynamodb::entities::collection::CollectionItem;
+#[cfg(not(test))]
 use crate::dynamodb::environment_values::{dynamodb_client, table_name};
 use aws_sdk_dynamodb::types::AttributeValue;
 use shared::traits::GetFileListTrait;
@@ -49,15 +50,15 @@ pub trait DynamoClientTrait {
 
 impl GetFileListTrait for DynamoDbClient<'_> {
     async fn get_years(&self) -> Result<Vec<String>, String> {
-        get_date_list("root", self.table_name).await
+        self.get_date_list("root").await
     }
 
     async fn get_months(&self, year: usize) -> Result<Vec<String>, String> {
-        get_date_list(format!("{year}").as_str(), self.table_name).await
+        self.get_date_list(format!("{year}").as_str()).await
     }
 
     async fn get_days(&self, year: usize, month: usize) -> Result<Vec<String>, String> {
-        get_date_list(format!("{year}-{month}").as_str(), self.table_name).await
+        self.get_date_list(format!("{year}-{month}").as_str()).await
     }
 
     async fn get_objects(
@@ -66,7 +67,8 @@ impl GetFileListTrait for DynamoDbClient<'_> {
         month: usize,
         day: usize,
     ) -> Result<Vec<String>, String> {
-        get_date_list(format!("{year}-{month}-{day}").as_str(), self.table_name).await
+        self.get_date_list(format!("{year}-{month}-{day}").as_str())
+            .await
     }
 }
 
@@ -75,7 +77,7 @@ impl crate::dynamodb::client::DynamoClientTrait for DynamoDbClient<'_> {
         let request = self
             .client
             .put_item()
-            .table_name(table_name())
+            .table_name(self.table_name)
             .item("PK", AttributeValue::S(collection.year.to_string()))
             .item("SK", AttributeValue::N(collection.unix_time.to_string()))
             .item("IsUnzipped", AttributeValue::Bool(collection.is_unzipped))
@@ -98,7 +100,7 @@ impl crate::dynamodb::client::DynamoClientTrait for DynamoDbClient<'_> {
         let request = self
             .client
             .put_item()
-            .table_name(table_name())
+            .table_name(self.table_name)
             .item("PK", AttributeValue::S("Unzipping".to_string()))
             .item("SK", AttributeValue::N(now.to_string()))
             .item("KeyName", AttributeValue::S(key_name.to_string()));
@@ -116,7 +118,7 @@ impl crate::dynamodb::client::DynamoClientTrait for DynamoDbClient<'_> {
         let request = self
             .client
             .put_item()
-            .table_name(table_name())
+            .table_name(self.table_name)
             .item("PK", AttributeValue::S("Unzipped".to_string()))
             .item("SK", AttributeValue::N(now.to_string()))
             .item("KeyName", AttributeValue::S(key_name.to_string()));
@@ -129,39 +131,41 @@ impl crate::dynamodb::client::DynamoClientTrait for DynamoDbClient<'_> {
     }
 }
 
-/// get date
-/// doc<https://hitohata.github.io/ExogenesisEnsemble-Part3-Redemption/project/docs/technical-information/DynamoDB-Definition#date-lookup>
-async fn get_date_list(key: &str, table_name: &str) -> Result<Vec<String>, String> {
-    let request = dynamodb_client()
-        .await
-        .get_item()
-        .table_name(table_name)
-        .key("PK", AttributeValue::S(key.to_string()))
-        .key("SK", AttributeValue::N("0".to_string()));
+impl DynamoDbClient<'_> {
+    /// get date
+    /// doc<https://hitohata.github.io/ExogenesisEnsemble-Part3-Redemption/project/docs/technical-information/DynamoDB-Definition#date-lookup>
+    async fn get_date_list(&self, key: &str) -> Result<Vec<String>, String> {
+        let request = self
+            .client
+            .get_item()
+            .table_name(self.table_name)
+            .key("PK", AttributeValue::S(key.to_string()))
+            .key("SK", AttributeValue::N("0".to_string()));
 
-    let saved_date = match request.send().await {
-        Ok(result) => match result.item {
-            None => return Ok(Vec::new()),
-            Some(item) => match item.get_key_value("SavedDate") {
-                None => return Err("Saved date is not found".to_string()),
-                Some(val) => match val.1.as_l() {
-                    Ok(attribute) => attribute.to_owned(),
-                    Err(_) => return Err("Casting to list is failed.".to_string()),
+        let saved_date = match request.send().await {
+            Ok(result) => match result.item {
+                None => return Ok(Vec::new()),
+                Some(item) => match item.get_key_value("SavedDate") {
+                    None => return Err("Saved date is not found".to_string()),
+                    Some(val) => match val.1.as_l() {
+                        Ok(attribute) => attribute.to_owned(),
+                        Err(_) => return Err("Casting to list is failed.".to_string()),
+                    },
                 },
             },
-        },
-        Err(e) => return Err(e.to_string()),
-    };
+            Err(e) => return Err(e.to_string()),
+        };
 
-    let mut date = Vec::new();
+        let mut date = Vec::new();
 
-    for attribute in saved_date {
-        match attribute.as_s() {
-            Ok(s) => date.push(s.to_owned()),
-            Err(_) => return Err("Invalid date is stored".to_string()),
+        for attribute in saved_date {
+            match attribute.as_s() {
+                Ok(s) => date.push(s.to_owned()),
+                Err(_) => return Err("Invalid date is stored".to_string()),
+            }
         }
+        Ok(date)
     }
-    Ok(date)
 }
 
 /// this is a helper function.

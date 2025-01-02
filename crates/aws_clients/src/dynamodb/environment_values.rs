@@ -4,6 +4,7 @@ use tokio::sync::OnceCell;
 
 static DYNAMODB_CLIENT: OnceCell<aws_sdk_dynamodb::Client> = OnceCell::const_new();
 
+#[cfg(not(test))]
 pub fn table_name() -> &'static str {
     static TABLE_NAME: OnceLock<String> = OnceLock::new();
     TABLE_NAME.get_or_init(|| var("TABLE_NAME").unwrap())
