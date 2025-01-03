@@ -13,6 +13,9 @@ aws-sdk-dynamodb = { version ="1.54.0" , optional = true }
 mockall = "0.13.1"
 log = "0.4.22"
 
+[dev-dependencies]
+futures = "0.3.31"
+
 [features]
 db = ["aws-sdk-dynamodb"]
 standard-storage = ["aws-sdk-s3"]
