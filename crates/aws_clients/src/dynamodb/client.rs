@@ -265,6 +265,46 @@ mod get_file_list_tests {
         // Assert
         assert_eq!(result, ["1984", "1985"]);
     }
+    
+    #[tokio::test]
+    async fn test_get_years_with_no_data() {
+        // Arrange
+        let table_name = "test_get_years_with_no_data";
+        let client = DynamoDbClient::new(table_name).await;
+
+        // Act
+        let result = client.get_years().await.unwrap();
+
+        // Assert
+        assert_eq!(result, Vec::<String>::new());
+    }
+    
+    #[tokio::test]
+    async fn test_get_months() {
+        // Arrange
+        let table_name = "test_get_months";
+        let client = DynamoDbClient::new(table_name).await;
+        save_test_data(table_name).await;
+
+        // Act
+        let result = client.get_months(1984).await.unwrap();
+
+        // Assert
+        assert_eq!(result, ["04", "05"]);
+    }
+    
+    #[tokio::test]
+    async fn test_get_months_with_no_data() {
+        // Arrange
+        let table_name = "test_get_months_with_no_data";
+        let client = DynamoDbClient::new(table_name).await;
+
+        // Act
+        let result = client.get_months(1984).await.unwrap();
+
+        // Assert
+        assert_eq!(result, Vec::<String>::new());
+    }
 
     async fn save_test_data(table_name: &str) {
         let init_data = vec![

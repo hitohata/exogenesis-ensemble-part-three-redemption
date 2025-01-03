@@ -31,7 +31,7 @@ impl<'a> DynamoDbClient<'a> {
         }
     }
 
-    async fn delete_table(&self) {
+    pub async fn delete_table(&self) {
         self.client
             .delete_table()
             .table_name(self.table_name)
