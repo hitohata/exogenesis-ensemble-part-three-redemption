@@ -86,7 +86,7 @@ impl crate::dynamodb::client::DynamoClientTrait for DynamoDbClient<'_> {
             .iter()
             .map(|collection| async { self.put_collection_item(collection).await });
         
-        let response = tokio::try_join!(self.put_years(collection))?;
+        let _ = tokio::try_join!(self.put_years(collection))?;
         
         let results = futures::future::join_all(update_collections).await;
         
