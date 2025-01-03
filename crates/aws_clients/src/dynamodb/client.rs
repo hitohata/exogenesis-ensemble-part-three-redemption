@@ -99,7 +99,7 @@ impl crate::dynamodb::client::DynamoClientTrait for DynamoDbClient<'_> {
         for result in month_results {
             result?;
         }
-       
+
         let update_collections = collections
             .iter()
             .map(|collection| async { self.put_collection_item(collection).await });
