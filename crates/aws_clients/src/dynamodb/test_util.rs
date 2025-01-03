@@ -24,17 +24,17 @@ impl<'a> DynamoDbClient<'a> {
     pub async fn create_table(&self) {
         match table_existence(self.table_name).await {
             true => {
-                self.delete_table(self.table_name).await;
+                self.delete_table().await;
                 _create_table(self.table_name).await;
             }
             false => _create_table(self.table_name).await,
         }
     }
 
-    async fn delete_table(&self, table_name: &str) {
+    async fn delete_table(&self) {
         self.client
             .delete_table()
-            .table_name(table_name)
+            .table_name(self.table_name)
             .send()
             .await
             .expect("delete table failed");
@@ -44,7 +44,7 @@ impl<'a> DynamoDbClient<'a> {
     /// the key must be the file name
     async fn add_dummy_data(&self, key_name: &str) -> Result<(), String> {
         let collection = CollectionItem::dummy_object(key_name);
-        self.put_collection_item(&collection).await?;
+        self.put_collection_items(&vec![collection]).await?;
         Ok(())
     }
 }
