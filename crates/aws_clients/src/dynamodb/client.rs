@@ -85,11 +85,11 @@ impl crate::dynamodb::client::DynamoClientTrait for DynamoDbClient<'_> {
         let update_collections = collection
             .iter()
             .map(|collection| async { self.put_collection_item(collection).await });
-        
+
         let _ = tokio::try_join!(self.put_years(collection))?;
-        
+
         let results = futures::future::join_all(update_collections).await;
-        
+
         for result in results {
             result?;
         }
@@ -144,7 +144,7 @@ impl DynamoDbClient<'_> {
             .table_name(self.table_name)
             .key("PK", AttributeValue::S(key.to_string()))
             .key("SK", AttributeValue::N("0".to_string()));
-        
+
         let saved_date = match request.send().await {
             Ok(result) => match result.item {
                 None => return Ok(Vec::new()),
@@ -158,9 +158,9 @@ impl DynamoDbClient<'_> {
             },
             Err(e) => return Err(e.to_string()),
         };
-        
+
         let mut date = Vec::new();
-        
+
         for attribute in saved_date {
             match attribute.as_s() {
                 Ok(s) => date.push(s.to_owned()),
@@ -195,22 +195,21 @@ impl DynamoDbClient<'_> {
     /// update years lookup
     async fn put_years(&self, collections: &Vec<CollectionItem>) -> Result<(), String> {
         let recorded_years = self.get_years().await?;
-        
+
         let collections_years = collections
             .iter()
             .map(|el| el.year.to_string())
             .collect::<Vec<String>>();
-        
+
         let mut years = vec![&recorded_years[..], &collections_years[..]].concat();
         years.sort_unstable();
         years.dedup();
-        
+
         // if the new vector contains new collections
         if years.len() == recorded_years.len() {
             return Ok(());
         }
-        
-        
+
         let result = self
             .client
             .put_item()
@@ -226,10 +225,8 @@ impl DynamoDbClient<'_> {
                         .collect(),
                 ),
             );
-       
-        let result = result
-            .send()
-            .await;
+
+        let result = result.send().await;
 
         match result {
             Ok(_) => Ok(()),
@@ -285,6 +282,9 @@ mod get_file_list_tests {
 
         let client: DynamoDbClient = DynamoDbClient::new(table_name).await;
 
-        client.put_collection_items(&init_collections).await.unwrap();
+        client
+            .put_collection_items(&init_collections)
+            .await
+            .unwrap();
     }
 }
