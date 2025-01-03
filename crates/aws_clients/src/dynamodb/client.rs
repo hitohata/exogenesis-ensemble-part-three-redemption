@@ -26,9 +26,9 @@ impl DynamoDbClient<'_> {
 pub trait DynamoClientTrait {
     /// put a new collection item
     #[allow(dead_code)]
-    fn put_collection_item(
+    fn put_collection_items(
         &self,
-        collection: &CollectionItem,
+        collection: &Vec<CollectionItem>,
     ) -> impl Future<Output = Result<(), String>> + Send;
     // put zipping time
     /// time is mill sec
@@ -50,15 +50,23 @@ pub trait DynamoClientTrait {
 
 impl GetFileListTrait for DynamoDbClient<'_> {
     async fn get_years(&self) -> Result<Vec<String>, String> {
-        self.get_date_list("root").await
+        let mut years = self.get_date_list("root").await?;
+        years.sort();
+        Ok(years)
     }
 
     async fn get_months(&self, year: usize) -> Result<Vec<String>, String> {
-        self.get_date_list(format!("{year}").as_str()).await
+        let mut months = self.get_date_list(format!("{year}").as_str()).await?;
+        months.sort();
+        Ok(months)
     }
 
     async fn get_days(&self, year: usize, month: usize) -> Result<Vec<String>, String> {
-        self.get_date_list(format!("{year}-{month}").as_str()).await
+        let mut days = self
+            .get_date_list(format!("{year}-{month}").as_str())
+            .await?;
+        days.sort();
+        Ok(days)
     }
 
     async fn get_objects(
@@ -73,22 +81,17 @@ impl GetFileListTrait for DynamoDbClient<'_> {
 }
 
 impl crate::dynamodb::client::DynamoClientTrait for DynamoDbClient<'_> {
-    async fn put_collection_item(&self, collection: &CollectionItem) -> Result<(), String> {
-        let request = self
-            .client
-            .put_item()
-            .table_name(self.table_name)
-            .item("PK", AttributeValue::S(collection.year.to_string()))
-            .item("SK", AttributeValue::N(collection.unix_time.to_string()))
-            .item("IsUnzipped", AttributeValue::Bool(collection.is_unzipped))
-            .item("Vault", AttributeValue::S(collection.vault.to_string()))
-            .item(
-                "KeyName",
-                AttributeValue::S(collection.key_name.to_string()),
-            );
-
-        if let Err(e) = request.send().await {
-            return Err(e.to_string());
+    async fn put_collection_items(&self, collection: &Vec<CollectionItem>) -> Result<(), String> {
+        let update_collections = collection
+            .iter()
+            .map(|collection| async { self.put_collection_item(collection).await });
+        
+        let response = tokio::try_join!(self.put_years(collection))?;
+        
+        let results = futures::future::join_all(update_collections).await;
+        
+        for result in results {
+            result?;
         }
 
         Ok(())
@@ -141,7 +144,7 @@ impl DynamoDbClient<'_> {
             .table_name(self.table_name)
             .key("PK", AttributeValue::S(key.to_string()))
             .key("SK", AttributeValue::N("0".to_string()));
-
+        
         let saved_date = match request.send().await {
             Ok(result) => match result.item {
                 None => return Ok(Vec::new()),
@@ -155,9 +158,9 @@ impl DynamoDbClient<'_> {
             },
             Err(e) => return Err(e.to_string()),
         };
-
+        
         let mut date = Vec::new();
-
+        
         for attribute in saved_date {
             match attribute.as_s() {
                 Ok(s) => date.push(s.to_owned()),
@@ -165,6 +168,73 @@ impl DynamoDbClient<'_> {
             }
         }
         Ok(date)
+    }
+
+    /// put a collection item
+    async fn put_collection_item(&self, collection: &CollectionItem) -> Result<(), String> {
+        let request = self
+            .client
+            .put_item()
+            .table_name(self.table_name)
+            .item("PK", AttributeValue::S(collection.year.to_string()))
+            .item("SK", AttributeValue::N(collection.unix_time.to_string()))
+            .item("IsUnzipped", AttributeValue::Bool(collection.is_unzipped))
+            .item("Vault", AttributeValue::S(collection.vault.to_string()))
+            .item(
+                "KeyName",
+                AttributeValue::S(collection.key_name.to_string()),
+            );
+
+        if let Err(e) = request.send().await {
+            return Err(e.to_string());
+        }
+
+        Ok(())
+    }
+
+    /// update years lookup
+    async fn put_years(&self, collections: &Vec<CollectionItem>) -> Result<(), String> {
+        let recorded_years = self.get_years().await?;
+        
+        let collections_years = collections
+            .iter()
+            .map(|el| el.year.to_string())
+            .collect::<Vec<String>>();
+        
+        let mut years = vec![&recorded_years[..], &collections_years[..]].concat();
+        years.sort_unstable();
+        years.dedup();
+        
+        // if the new vector contains new collections
+        if years.len() == recorded_years.len() {
+            return Ok(());
+        }
+        
+        
+        let result = self
+            .client
+            .put_item()
+            .table_name(self.table_name)
+            .item("PK", AttributeValue::S("root".to_string()))
+            .item("SK", AttributeValue::N("0".to_string()))
+            .item(
+                "SavedDate",
+                AttributeValue::L(
+                    years
+                        .iter()
+                        .map(|el| AttributeValue::S(el.to_string()))
+                        .collect(),
+                ),
+            );
+       
+        let result = result
+            .send()
+            .await;
+
+        match result {
+            Ok(_) => Ok(()),
+            Err(e) => return Err(e.to_string()),
+        }
     }
 }
 
@@ -184,10 +254,20 @@ fn get_now(time: Option<u128>) -> Result<u128, String> {
 #[cfg(test)]
 mod get_file_list_tests {
     use super::*;
-    use std::sync::Arc;
 
     #[tokio::test]
-    async fn test_get_years() {}
+    async fn test_get_years() {
+        // Arrange
+        let table_name = "test_get_years";
+        let client = DynamoDbClient::new(table_name).await;
+        save_test_data(table_name).await;
+
+        // Act
+        let result = client.get_years().await.unwrap();
+
+        // Assert
+        assert_eq!(result, ["1984", "1985"]);
+    }
 
     async fn save_test_data(table_name: &str) {
         let init_data = vec![
@@ -197,17 +277,14 @@ mod get_file_list_tests {
             "1984/05/04/1984-05-04-12-34-50.MOV",
             "1985/04/04/1985-04-04-12-34-50.MOV",
         ];
-        
-        let client: Arc<DynamoDbClient> = Arc::new(DynamoDbClient::new(table_name).await);
-        
-        let data_functions = init_data.iter().map(|el| async {
-            let client = client.clone();
-            let collection = CollectionItem::dummy_object(el);
-            client.put_collection_item(&collection).await
-        });
 
-        let _ = futures::future::join_all(data_functions).await;
-        
+        let init_collections: Vec<CollectionItem> = init_data
+            .iter()
+            .map(|data| CollectionItem::dummy_object(data))
+            .collect();
+
+        let client: DynamoDbClient = DynamoDbClient::new(table_name).await;
+
+        client.put_collection_items(&init_collections).await.unwrap();
     }
-    
 }
