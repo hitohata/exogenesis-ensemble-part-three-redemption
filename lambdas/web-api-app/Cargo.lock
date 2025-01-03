@@ -496,6 +496,7 @@ dependencies = [
  "aws-config",
  "aws-sdk-dynamodb",
  "aws-sdk-s3",
+ "futures",
  "log",
  "mockall",
  "shared",
@@ -1961,9 +1962,6 @@ dependencies = [
 [[package]]
 name = "shared"
 version = "0.1.0"
-dependencies = [
- "mockall",
-]
 
 [[package]]
 name = "shlex"
