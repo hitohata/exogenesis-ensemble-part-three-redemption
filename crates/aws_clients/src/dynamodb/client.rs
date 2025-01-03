@@ -180,3 +180,36 @@ fn get_now(time: Option<u128>) -> Result<u128, String> {
         },
     }
 }
+
+#[cfg(test)]
+mod get_file_list_tests {
+    use super::*;
+    use std::sync::Arc;
+    use crate::dynamodb::environment_values::dynamodb_client;
+
+    #[tokio::test]
+    async fn test_get_years() {}
+
+    async fn save_test_data() {
+        let init_data = vec![
+            "1984/04/04/1984-04-04-12-34-50.MOV",
+            "1984/04/04/1984-04-04-12-34-51.MOV",
+            "1984/04/05/1984-04-05-12-34-50.MOV",
+            "1984/05/04/1984-05-04-12-34-50.MOV",
+            "1985/04/04/1985-04-04-12-34-50.MOV",
+        ];
+        
+        let mut data_functions = Vec::with_capacity(init_data.len());
+        
+        init_data.iter().for_each(|el| {
+            data_functions.push(|| async {
+                let client: DynamoDbClient = dynamodb_client().await;
+                let collection = CollectionItem::dummy_object(el);
+                client.put_collection_item(&collection).await
+            })
+        });
+        
+        
+        let _ = tokio::join!(data_functions.iter().collect_tuple().unwrap()).await;
+    }
+}
