@@ -48,7 +48,6 @@ pub mod collection {
         #[allow(dead_code)]
         pub days: Vec<(usize, usize, Vec<String>)>,
         /// (year, month, days, [objects])
-        #[allow(dead_code)]
         pub objects: Vec<(usize, usize, usize, Vec<String>)>,
     }
 
