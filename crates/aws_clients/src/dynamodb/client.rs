@@ -111,6 +111,18 @@ impl crate::dynamodb::client::DynamoClientTrait for DynamoDbClient<'_> {
         for result in day_results {
             result?;
         }
+        
+        // objects
+        let object_results = futures::future::join_all(
+            look_up_items
+                .objects
+                .iter()
+                .map(|day| self.put_objects(day.0, day.1, day.2, day.3.as_ref())),
+        ).await;
+
+        for result in object_results {
+            result?;
+        }
 
         let update_collections = collections
             .iter()
