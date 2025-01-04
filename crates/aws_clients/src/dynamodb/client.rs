@@ -99,16 +99,30 @@ impl crate::dynamodb::client::DynamoClientTrait for DynamoDbClient<'_> {
         for result in month_results {
             result?;
         }
-        
+
         // days
         let day_results = futures::future::join_all(
             look_up_items
                 .days
                 .iter()
                 .map(|day| self.put_days(day.0, day.1, day.2.as_ref())),
-        ).await;
-        
+        )
+        .await;
+
         for result in day_results {
+            result?;
+        }
+
+        // objects
+        let object_results = futures::future::join_all(
+            look_up_items
+                .objects
+                .iter()
+                .map(|day| self.put_objects(day.0, day.1, day.2, day.3.as_ref())),
+        )
+        .await;
+
+        for result in object_results {
             result?;
         }
 
@@ -324,6 +338,47 @@ impl DynamoDbClient<'_> {
             Err(e) => return Err(e.to_string()),
         }
     }
+
+    async fn put_objects(
+        &self,
+        years: usize,
+        month: usize,
+        day: usize,
+        objects: &Vec<String>,
+    ) -> Result<(), String> {
+        let recorded_months = self.get_objects(years, month, day).await?;
+
+        let mut concat_objects = vec![&recorded_months[..], &objects[..]].concat();
+        concat_objects.sort_unstable();
+        concat_objects.dedup();
+
+        if concat_objects.len() == recorded_months.len() {
+            return Ok(());
+        }
+
+        let result = self
+            .client
+            .put_item()
+            .table_name(self.table_name)
+            .item("PK", AttributeValue::S(format!("{years}-{month}-{day}")))
+            .item("SK", AttributeValue::N("0".to_string()))
+            .item(
+                "SavedDate",
+                AttributeValue::L(
+                    concat_objects
+                        .iter()
+                        .map(|el| AttributeValue::S(el.to_string()))
+                        .collect(),
+                ),
+            );
+
+        let result = result.send().await;
+
+        match result {
+            Ok(_) => Ok(()),
+            Err(e) => return Err(e.to_string()),
+        }
+    }
 }
 
 /// this is a helper function.
@@ -388,6 +443,56 @@ mod get_file_list_tests {
     async fn test_get_months_with_no_data() {
         // Arrange
         let table_name = "test_get_months_with_no_data";
+        let client = DynamoDbClient::new(table_name).await;
+
+        // Act
+        let result = client.get_months(1984).await.unwrap();
+
+        // Assert
+        assert_eq!(result, Vec::<String>::new());
+    }
+
+    #[tokio::test]
+    async fn test_get_objects() {
+        // Arrange
+        let table_name = "test_get_objects";
+        let client = DynamoDbClient::new(table_name).await;
+        save_test_data(table_name).await;
+
+        // Act
+        let (result_1984_4_4, result_1984_4_5, result_1984_5_4, result_1985_4_4) = tokio::join!(
+            client.get_objects(1984, 4, 4),
+            client.get_objects(1984, 4, 5),
+            client.get_objects(1984, 5, 4),
+            client.get_objects(1985, 4, 4),
+        );
+
+        // Assert
+        assert_eq!(
+            result_1984_4_4.unwrap(),
+            [
+                "1984/04/04/1984-04-04-12-34-50.MOV",
+                "1984/04/04/1984-04-04-12-34-51.MOV"
+            ]
+        );
+        assert_eq!(
+            result_1984_4_5.unwrap(),
+            ["1984/04/05/1984-04-05-12-34-50.MOV"]
+        );
+        assert_eq!(
+            result_1984_5_4.unwrap(),
+            ["1984/05/04/1984-05-04-12-34-50.MOV"]
+        );
+        assert_eq!(
+            result_1985_4_4.unwrap(),
+            ["1985/04/04/1985-04-04-12-34-50.MOV"]
+        );
+    }
+
+    #[tokio::test]
+    async fn test_get_objects_with_no_data() {
+        // Arrange
+        let table_name = "test_get_objects_with_no_data";
         let client = DynamoDbClient::new(table_name).await;
 
         // Act
