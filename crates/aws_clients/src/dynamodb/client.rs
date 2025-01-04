@@ -1,4 +1,4 @@
-use crate::dynamodb::entities::collection::CollectionItem;
+use crate::dynamodb::entities::collection::{CollectionItem, LookUpItems};
 #[cfg(not(test))]
 use crate::dynamodb::environment_values::{dynamodb_client, table_name};
 use aws_sdk_dynamodb::types::AttributeValue;
@@ -81,12 +81,28 @@ impl GetFileListTrait for DynamoDbClient<'_> {
 }
 
 impl crate::dynamodb::client::DynamoClientTrait for DynamoDbClient<'_> {
-    async fn put_collection_items(&self, collection: &Vec<CollectionItem>) -> Result<(), String> {
-        let update_collections = collection
+    async fn put_collection_items(&self, collections: &Vec<CollectionItem>) -> Result<(), String> {
+        let look_up_items = LookUpItems::new(collections)?;
+
+        // years
+        self.put_years(&look_up_items.years).await?;
+
+        // month
+        let month_results = futures::future::join_all(
+            look_up_items
+                .months
+                .iter()
+                .map(|month| self.put_months(month.0, month.1.as_ref())),
+        )
+        .await;
+
+        for result in month_results {
+            result?;
+        }
+
+        let update_collections = collections
             .iter()
             .map(|collection| async { self.put_collection_item(collection).await });
-
-        let _ = tokio::try_join!(self.put_years(collection))?;
 
         let results = futures::future::join_all(update_collections).await;
 
@@ -193,20 +209,15 @@ impl DynamoDbClient<'_> {
     }
 
     /// update years lookup
-    async fn put_years(&self, collections: &Vec<CollectionItem>) -> Result<(), String> {
+    async fn put_years(&self, years: &Vec<String>) -> Result<(), String> {
         let recorded_years = self.get_years().await?;
 
-        let collections_years = collections
-            .iter()
-            .map(|el| el.year.to_string())
-            .collect::<Vec<String>>();
-
-        let mut years = vec![&recorded_years[..], &collections_years[..]].concat();
-        years.sort_unstable();
-        years.dedup();
+        let mut concat_years = vec![&recorded_years[..], &years[..]].concat();
+        concat_years.sort_unstable();
+        concat_years.dedup();
 
         // if the new vector contains new collections
-        if years.len() == recorded_years.len() {
+        if concat_years.len() == recorded_years.len() {
             return Ok(());
         }
 
@@ -219,7 +230,41 @@ impl DynamoDbClient<'_> {
             .item(
                 "SavedDate",
                 AttributeValue::L(
-                    years
+                    concat_years
+                        .iter()
+                        .map(|el| AttributeValue::S(el.to_string()))
+                        .collect(),
+                ),
+            );
+
+        let result = result.send().await;
+
+        match result {
+            Ok(_) => Ok(()),
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
+    async fn put_months(&self, years: usize, months: &Vec<String>) -> Result<(), String> {
+        let recorded_months = self.get_months(years).await?;
+
+        let mut concat_months = vec![&recorded_months[..], &months[..]].concat();
+        concat_months.sort_unstable();
+        concat_months.dedup();
+
+        if concat_months.len() == recorded_months.len() {
+            return Ok(());
+        }
+        let result = self
+            .client
+            .put_item()
+            .table_name(self.table_name)
+            .item("PK", AttributeValue::S(format!("{years}")))
+            .item("SK", AttributeValue::N("0".to_string()))
+            .item(
+                "SavedDate",
+                AttributeValue::L(
+                    concat_months
                         .iter()
                         .map(|el| AttributeValue::S(el.to_string()))
                         .collect(),
@@ -264,6 +309,46 @@ mod get_file_list_tests {
 
         // Assert
         assert_eq!(result, ["1984", "1985"]);
+    }
+
+    #[tokio::test]
+    async fn test_get_years_with_no_data() {
+        // Arrange
+        let table_name = "test_get_years_with_no_data";
+        let client = DynamoDbClient::new(table_name).await;
+
+        // Act
+        let result = client.get_years().await.unwrap();
+
+        // Assert
+        assert_eq!(result, Vec::<String>::new());
+    }
+
+    #[tokio::test]
+    async fn test_get_months() {
+        // Arrange
+        let table_name = "test_get_months";
+        let client = DynamoDbClient::new(table_name).await;
+        save_test_data(table_name).await;
+
+        // Act
+        let result = client.get_months(1984).await.unwrap();
+
+        // Assert
+        assert_eq!(result, ["4", "5"]);
+    }
+
+    #[tokio::test]
+    async fn test_get_months_with_no_data() {
+        // Arrange
+        let table_name = "test_get_months_with_no_data";
+        let client = DynamoDbClient::new(table_name).await;
+
+        // Act
+        let result = client.get_months(1984).await.unwrap();
+
+        // Assert
+        assert_eq!(result, Vec::<String>::new());
     }
 
     async fn save_test_data(table_name: &str) {
