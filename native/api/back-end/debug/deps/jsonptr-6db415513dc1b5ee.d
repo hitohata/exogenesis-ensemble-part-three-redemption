@@ -1,0 +1,13 @@
+/build/debug/deps/libjsonptr-6db415513dc1b5ee.rmeta: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/assign.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/delete.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/resolve.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/pointer.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/token.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/index.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/component.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/../README.md
+
+/build/debug/deps/jsonptr-6db415513dc1b5ee.d: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/assign.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/delete.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/resolve.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/pointer.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/token.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/index.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/component.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/../README.md
+
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/lib.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/assign.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/delete.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/resolve.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/pointer.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/token.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/index.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/component.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/jsonptr-0.6.3/src/../README.md:

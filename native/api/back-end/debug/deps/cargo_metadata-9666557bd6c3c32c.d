@@ -1,0 +1,11 @@
+/build/debug/deps/libcargo_metadata-9666557bd6c3c32c.rmeta: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/dependency.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/diagnostic.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/errors.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/messages.rs
+
+/build/debug/deps/libcargo_metadata-9666557bd6c3c32c.rlib: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/dependency.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/diagnostic.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/errors.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/messages.rs
+
+/build/debug/deps/cargo_metadata-9666557bd6c3c32c.d: /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/lib.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/dependency.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/diagnostic.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/errors.rs /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/messages.rs
+
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/lib.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/dependency.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/diagnostic.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/errors.rs:
+/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/cargo_metadata-0.19.1/src/messages.rs:
