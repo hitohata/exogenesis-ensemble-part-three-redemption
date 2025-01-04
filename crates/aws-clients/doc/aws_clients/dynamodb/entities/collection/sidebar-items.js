@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["CollectionItem"]};
+window.SIDEBAR_ITEMS = {"struct":["CollectionItem","LookUpItems"]};
