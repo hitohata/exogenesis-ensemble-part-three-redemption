@@ -100,6 +100,18 @@ impl crate::dynamodb::client::DynamoClientTrait for DynamoDbClient<'_> {
             result?;
         }
 
+        // days
+        let day_results = futures::future::join_all(
+            look_up_items
+                .days
+                .iter()
+                .map(|day| self.put_days(day.0, day.1, day.2.as_ref())),
+        ).await;
+
+        for result in day_results {
+            result?;
+        }
+
         let update_collections = collections
             .iter()
             .map(|collection| async { self.put_collection_item(collection).await });
@@ -279,6 +291,40 @@ impl DynamoDbClient<'_> {
         }
     }
 
+    async fn put_days(&self, years: usize, month: usize, days: &Vec<String>) -> Result<(), String> {
+        let recorded_days = self.get_days(years, month).await?;
+
+        let mut concat_days = vec![&recorded_days[..], &days[..]].concat();
+        concat_days.sort_unstable();
+        concat_days.dedup();
+
+        if concat_days.len() == recorded_days.len() {
+            return Ok(());
+        }
+        let result = self
+            .client
+            .put_item()
+            .table_name(self.table_name)
+            .item("PK", AttributeValue::S(format!("{years}-{month}")))
+            .item("SK", AttributeValue::N("0".to_string()))
+            .item(
+                "SavedDate",
+                AttributeValue::L(
+                    concat_days
+                        .iter()
+                        .map(|el| AttributeValue::S(el.to_string()))
+                        .collect(),
+                ),
+            );
+
+        let result = result.send().await;
+
+        match result {
+            Ok(_) => Ok(()),
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
     async fn put_objects(
         &self,
         years: usize,
@@ -437,6 +483,39 @@ mod get_file_list_tests {
 
         // Act
         let result = client.get_months(1984).await.unwrap();
+
+        // Assert
+        assert_eq!(result, Vec::<String>::new());
+    }
+
+    #[tokio::test]
+    async fn test_get_days() {
+        // Arrange
+        let table_name = "test_get_days";
+        let client = DynamoDbClient::new(table_name).await;
+        save_test_data(table_name).await;
+
+        // Act
+        let (result_1984_4, result_1984_5, result_1985_4) = tokio::join!(
+            client.get_days(1984, 4),
+            client.get_days(1984, 5),
+            client.get_days(1985, 4)
+        );
+
+        // Assert
+        assert_eq!(result_1984_4.unwrap(), ["4", "5"]);
+        assert_eq!(result_1984_5.unwrap(), ["4"]);
+        assert_eq!(result_1985_4.unwrap(), ["4"]);
+    }
+
+    #[tokio::test]
+    async fn test_get_days_with_no_data() {
+        // Arrange
+        let table_name = "test_get_days_with_no_data";
+        let client = DynamoDbClient::new(table_name).await;
+
+        // Act
+        let result = client.get_days(1984, 4).await.unwrap();
 
         // Assert
         assert_eq!(result, Vec::<String>::new());
