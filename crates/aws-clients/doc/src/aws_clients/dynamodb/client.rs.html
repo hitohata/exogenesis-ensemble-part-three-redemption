@@ -373,7 +373,86 @@
 <a href="#372" id="372">372</a>
 <a href="#373" id="373">373</a>
 <a href="#374" id="374">374</a>
-<a href="#375" id="375">375</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::dynamodb::entities::collection::{CollectionItem, LookUpItems};
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
+<a href="#381" id="381">381</a>
+<a href="#382" id="382">382</a>
+<a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+<a href="#390" id="390">390</a>
+<a href="#391" id="391">391</a>
+<a href="#392" id="392">392</a>
+<a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+<a href="#398" id="398">398</a>
+<a href="#399" id="399">399</a>
+<a href="#400" id="400">400</a>
+<a href="#401" id="401">401</a>
+<a href="#402" id="402">402</a>
+<a href="#403" id="403">403</a>
+<a href="#404" id="404">404</a>
+<a href="#405" id="405">405</a>
+<a href="#406" id="406">406</a>
+<a href="#407" id="407">407</a>
+<a href="#408" id="408">408</a>
+<a href="#409" id="409">409</a>
+<a href="#410" id="410">410</a>
+<a href="#411" id="411">411</a>
+<a href="#412" id="412">412</a>
+<a href="#413" id="413">413</a>
+<a href="#414" id="414">414</a>
+<a href="#415" id="415">415</a>
+<a href="#416" id="416">416</a>
+<a href="#417" id="417">417</a>
+<a href="#418" id="418">418</a>
+<a href="#419" id="419">419</a>
+<a href="#420" id="420">420</a>
+<a href="#421" id="421">421</a>
+<a href="#422" id="422">422</a>
+<a href="#423" id="423">423</a>
+<a href="#424" id="424">424</a>
+<a href="#425" id="425">425</a>
+<a href="#426" id="426">426</a>
+<a href="#427" id="427">427</a>
+<a href="#428" id="428">428</a>
+<a href="#429" id="429">429</a>
+<a href="#430" id="430">430</a>
+<a href="#431" id="431">431</a>
+<a href="#432" id="432">432</a>
+<a href="#433" id="433">433</a>
+<a href="#434" id="434">434</a>
+<a href="#435" id="435">435</a>
+<a href="#436" id="436">436</a>
+<a href="#437" id="437">437</a>
+<a href="#438" id="438">438</a>
+<a href="#439" id="439">439</a>
+<a href="#440" id="440">440</a>
+<a href="#441" id="441">441</a>
+<a href="#442" id="442">442</a>
+<a href="#443" id="443">443</a>
+<a href="#444" id="444">444</a>
+<a href="#445" id="445">445</a>
+<a href="#446" id="446">446</a>
+<a href="#447" id="447">447</a>
+<a href="#448" id="448">448</a>
+<a href="#449" id="449">449</a>
+<a href="#450" id="450">450</a>
+<a href="#451" id="451">451</a>
+<a href="#452" id="452">452</a>
+<a href="#453" id="453">453</a>
+<a href="#454" id="454">454</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::dynamodb::entities::collection::{CollectionItem, LookUpItems};
 <span class="attr">#[cfg(not(test))]
 </span><span class="kw">use </span><span class="kw">crate</span>::dynamodb::environment_values::{dynamodb_client, table_name};
 <span class="kw">use </span>aws_sdk_dynamodb::types::AttributeValue;
@@ -472,6 +551,18 @@
         .<span class="kw">await</span>;
 
         <span class="kw">for </span>result <span class="kw">in </span>month_results {
+            result<span class="question-mark">?</span>;
+        }
+        
+        <span class="comment">// days
+        </span><span class="kw">let </span>day_results = futures::future::join_all(
+            look_up_items
+                .days
+                .iter()
+                .map(|day| <span class="self">self</span>.put_days(day.<span class="number">0</span>, day.<span class="number">1</span>, day.<span class="number">2</span>.as_ref())),
+        ).<span class="kw">await</span>;
+        
+        <span class="kw">for </span>result <span class="kw">in </span>day_results {
             result<span class="question-mark">?</span>;
         }
 
@@ -653,6 +744,40 @@
             <span class="prelude-val">Err</span>(e) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(e.to_string()),
         }
     }
+
+    <span class="kw">async fn </span>put_days(<span class="kw-2">&amp;</span><span class="self">self</span>, years: usize, month: usize, days: <span class="kw-2">&amp;</span>Vec&lt;String&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt; {
+        <span class="kw">let </span>recorded_days = <span class="self">self</span>.get_days(years, month).<span class="kw">await</span><span class="question-mark">?</span>;
+
+        <span class="kw">let </span><span class="kw-2">mut </span>concat_days = <span class="macro">vec!</span>[<span class="kw-2">&amp;</span>recorded_days[..], <span class="kw-2">&amp;</span>days[..]].concat();
+        concat_days.sort_unstable();
+        concat_days.dedup();
+
+        <span class="kw">if </span>concat_days.len() == recorded_days.len() {
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(());
+        }
+        <span class="kw">let </span>result = <span class="self">self
+            </span>.client
+            .put_item()
+            .table_name(<span class="self">self</span>.table_name)
+            .item(<span class="string">"PK"</span>, AttributeValue::S(<span class="macro">format!</span>(<span class="string">"{years}-{month}"</span>)))
+            .item(<span class="string">"SK"</span>, AttributeValue::N(<span class="string">"0"</span>.to_string()))
+            .item(
+                <span class="string">"SavedDate"</span>,
+                AttributeValue::L(
+                    concat_days
+                        .iter()
+                        .map(|el| AttributeValue::S(el.to_string()))
+                        .collect(),
+                ),
+            );
+
+        <span class="kw">let </span>result = result.send().<span class="kw">await</span>;
+
+        <span class="kw">match </span>result {
+            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(()),
+            <span class="prelude-val">Err</span>(e) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(e.to_string()),
+        }
+    }
 }
 
 <span class="doccomment">/// this is a helper function.
@@ -721,6 +846,39 @@
 
         <span class="comment">// Act
         </span><span class="kw">let </span>result = client.get_months(<span class="number">1984</span>).<span class="kw">await</span>.unwrap();
+
+        <span class="comment">// Assert
+        </span><span class="macro">assert_eq!</span>(result, Vec::&lt;String&gt;::new());
+    }
+
+    <span class="attr">#[tokio::test]
+    </span><span class="kw">async fn </span>test_get_days() {
+        <span class="comment">// Arrange
+        </span><span class="kw">let </span>table_name = <span class="string">"test_get_days"</span>;
+        <span class="kw">let </span>client = DynamoDbClient::new(table_name).<span class="kw">await</span>;
+        save_test_data(table_name).<span class="kw">await</span>;
+
+        <span class="comment">// Act
+        </span><span class="kw">let </span>(result_1984_4, result_1984_5, result_1985_4) = <span class="macro">tokio::join!</span>(
+            client.get_days(<span class="number">1984</span>, <span class="number">4</span>),
+            client.get_days(<span class="number">1984</span>, <span class="number">5</span>),
+            client.get_days(<span class="number">1985</span>, <span class="number">4</span>)
+        );
+
+        <span class="comment">// Assert
+        </span><span class="macro">assert_eq!</span>(result_1984_4.unwrap(), [<span class="string">"4"</span>, <span class="string">"5"</span>]);
+        <span class="macro">assert_eq!</span>(result_1984_5.unwrap(), [<span class="string">"4"</span>]);
+        <span class="macro">assert_eq!</span>(result_1985_4.unwrap(), [<span class="string">"4"</span>]);
+    }
+
+    <span class="attr">#[tokio::test]
+    </span><span class="kw">async fn </span>test_get_days_with_no_data() {
+        <span class="comment">// Arrange
+        </span><span class="kw">let </span>table_name = <span class="string">"test_get_days_with_no_data"</span>;
+        <span class="kw">let </span>client = DynamoDbClient::new(table_name).<span class="kw">await</span>;
+
+        <span class="comment">// Act
+        </span><span class="kw">let </span>result = client.get_days(<span class="number">1984</span>, <span class="number">4</span>).<span class="kw">await</span>.unwrap();
 
         <span class="comment">// Assert
         </span><span class="macro">assert_eq!</span>(result, Vec::&lt;String&gt;::new());
