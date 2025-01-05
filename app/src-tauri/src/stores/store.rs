@@ -1,6 +1,6 @@
+use crate::errors;
 use std::collections::{HashMap, HashSet};
 use std::sync::RwLock;
-use crate::errors;
 
 pub struct DateMapper {
     /// the years
@@ -17,10 +17,21 @@ pub struct DateMapper {
 }
 
 impl DateMapper {
+    /// get years
     pub fn years(&self) -> Result<Vec<String>, errors::ExogenesisError> {
         match self.years.read() {
-            Ok(read) => Ok(read.iter().collect::<Vec<String>>()),
+            Ok(read) => Ok(read.clone().into_iter().collect::<Vec<_>>()),
             Err(_) => Err(errors::ExogenesisError::ReadLockFailed("years".to_string()))
+        }
+    }
+
+    pub fn months(&self, year: &str) -> Result<Vec<String>, errors::ExogenesisError> {
+        let Ok(months) = self.months.read() else {
+            return  Err(errors::ExogenesisError::ReadLockFailed("years".to_string()))
+        };
+        match months.get(year) {
+            Some(months) => Ok(months.clone().into_iter().collect::<Vec<_>>()),
+            None => Ok(Vec::new())
         }
     }
 }
