@@ -42,15 +42,9 @@ impl DateMapper {
         month: &str,
         day: &str,
     ) -> Result<Vec<String>, errors::ExogenesisError> {
-        let Ok(objects) = self.objects.read() else {
-            return Err(errors::ExogenesisError::ReadLockFailed(
-                "objects".to_string(),
-            ));
-        };
-        match objects.get(format!("{year}-{month}-{day}").as_str()) {
-            Some(objects) => Ok(objects.clone().into_iter().collect::<Vec<_>>()),
-            None => Ok(Vec::new()),
-        }
+        let mut objects = self.read_objects(year, month, day)?.into_iter().collect::<Vec<_>>();
+        objects.sort();
+        Ok(objects)
     }
 
     /// add new years data
@@ -129,6 +123,37 @@ impl DateMapper {
 
         Ok(())
     }
+    
+    /// add new objects data
+    pub fn add_objects(
+        &mut self,
+        year: &str,
+        month: &str,
+        day: &str,
+        objects: Vec<String>,
+    ) -> Result<(), errors::ExogenesisError> {
+        let year_month_day = format!("{year}-{month}-{day}");
+
+        let mut current_objects = self.read_objects(year, month, day)?;
+        let provided_objects = objects.into_iter().collect::<HashSet<String>>();
+
+        current_objects.extend(provided_objects);
+
+        let Ok(mut lock) = self.objects.write() else {
+            return Err(errors::ExogenesisError::WriteLockFailed("objects".to_string()));
+        };
+
+        match lock.get_mut(&year_month_day) {
+            Some(current_object) => {
+                current_object.extend(current_objects);
+            }
+            None => {
+                lock.insert(year_month_day, current_objects.clone());
+            }
+        };
+
+        Ok(())
+    }
 
     fn read_years(&self) -> Result<HashSet<String>, errors::ExogenesisError> {
         match self.years.read() {
@@ -154,11 +179,26 @@ impl DateMapper {
         year: &str,
         month: &str,
     ) -> Result<HashSet<String>, errors::ExogenesisError> {
-        let Ok(months) = self.days.read() else {
+        let Ok(days) = self.days.read() else {
             return Err(errors::ExogenesisError::ReadLockFailed("days".to_string()));
         };
-        match months.get(format!("{year}-{month}").as_str()) {
+        match days.get(format!("{year}-{month}").as_str()) {
             Some(days) => Ok(days.clone()),
+            None => Ok(HashSet::new()),
+        }
+    }
+    
+    fn read_objects(
+        &self,
+        year: &str,
+        month: &str,
+        day: &str,
+    ) -> Result<HashSet<String>, errors::ExogenesisError> {
+        let Ok(objects) = self.objects.read() else {
+            return Err(errors::ExogenesisError::ReadLockFailed("objects".to_string()));
+        };
+        match objects.get(format!("{year}-{month}-{day}").as_str()) {
+            Some(objects) => Ok(objects.clone()),
             None => Ok(HashSet::new()),
         }
     }
@@ -234,5 +274,27 @@ mod tests {
 
         // Assert
         assert_eq!(new_days, vec!["3", "4", "5"]);
+    }
+    
+    #[test]
+    fn test_add_objects() {
+        // Arrange
+        let mut mapper = DateMapper::default();
+        let year = "1984";
+        let month = "4";
+        let day = "4";
+        
+        mapper
+            .add_objects(year, month, day, vec!["3".to_string(), "4".to_string()])
+            .unwrap();
+        mapper
+            .add_objects(year, month, day, vec!["4".to_string(), "5".to_string()])
+            .unwrap();
+
+        // Act
+        let new_objects = mapper.objects(year, month, day).unwrap();
+
+        // Assert
+        assert_eq!(new_objects, vec!["3", "4", "5"]);
     }
 }
