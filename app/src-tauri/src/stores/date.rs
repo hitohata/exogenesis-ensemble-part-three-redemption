@@ -64,7 +64,10 @@ impl DateMapper {
         month: &str,
         day: &str,
     ) -> Result<Vec<String>, errors::ExogenesisError> {
-        let mut objects = self.read_objects(year, month, day)?.into_iter().collect::<Vec<_>>();
+        let mut objects = self
+            .read_objects(year, month, day)?
+            .into_iter()
+            .collect::<Vec<_>>();
         objects.sort();
         Ok(objects)
     }
@@ -145,7 +148,7 @@ impl DateMapper {
 
         Ok(())
     }
-    
+
     /// add new objects data
     pub fn add_objects(
         &mut self,
@@ -162,7 +165,9 @@ impl DateMapper {
         current_objects.extend(provided_objects);
 
         let Ok(mut lock) = self.objects.write() else {
-            return Err(errors::ExogenesisError::WriteLockFailed("objects".to_string()));
+            return Err(errors::ExogenesisError::WriteLockFailed(
+                "objects".to_string(),
+            ));
         };
 
         match lock.get_mut(&year_month_day) {
@@ -209,7 +214,7 @@ impl DateMapper {
             None => Ok(HashSet::new()),
         }
     }
-    
+
     fn read_objects(
         &self,
         year: &str,
@@ -217,7 +222,9 @@ impl DateMapper {
         day: &str,
     ) -> Result<HashSet<String>, errors::ExogenesisError> {
         let Ok(objects) = self.objects.read() else {
-            return Err(errors::ExogenesisError::ReadLockFailed("objects".to_string()));
+            return Err(errors::ExogenesisError::ReadLockFailed(
+                "objects".to_string(),
+            ));
         };
         match objects.get(format!("{year}-{month}-{day}").as_str()) {
             Some(objects) => Ok(objects.clone()),
@@ -297,7 +304,7 @@ mod tests {
         // Assert
         assert_eq!(new_days, vec!["3", "4", "5"]);
     }
-    
+
     #[test]
     fn test_add_objects() {
         // Arrange
@@ -305,7 +312,7 @@ mod tests {
         let year = "1984";
         let month = "4";
         let day = "4";
-        
+
         mapper
             .add_objects(year, month, day, vec!["3".to_string(), "4".to_string()])
             .unwrap();
