@@ -2,6 +2,7 @@ use crate::stores::date;
 
 /// the root state of this app
 pub struct Store {
+    #[allow(dead_code)] // TODO: remove
     date: date::DateStates,
 }
 
