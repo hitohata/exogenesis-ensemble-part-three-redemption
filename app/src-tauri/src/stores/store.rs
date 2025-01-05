@@ -27,9 +27,19 @@ impl DateMapper {
 
     pub fn months(&self, year: &str) -> Result<Vec<String>, errors::ExogenesisError> {
         let Ok(months) = self.months.read() else {
-            return  Err(errors::ExogenesisError::ReadLockFailed("years".to_string()))
+            return  Err(errors::ExogenesisError::ReadLockFailed("months".to_string()))
         };
         match months.get(year) {
+            Some(months) => Ok(months.clone().into_iter().collect::<Vec<_>>()),
+            None => Ok(Vec::new())
+        }
+    }
+    
+    pub fn days(&self, year: &str, month: &str) -> Result<Vec<String>, errors::ExogenesisError> {
+        let Ok(months) = self.days.read() else {
+            return  Err(errors::ExogenesisError::ReadLockFailed("days".to_string()))
+        };
+        match months.get(format!("{year}-{month}").as_str()) {
             Some(months) => Ok(months.clone().into_iter().collect::<Vec<_>>()),
             None => Ok(Vec::new())
         }
