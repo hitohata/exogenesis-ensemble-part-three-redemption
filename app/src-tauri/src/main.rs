@@ -6,7 +6,9 @@ pub mod handlers;
 pub mod local_file;
 pub mod stores;
 
+use crate::stores::store::Store;
 use handlers::select_file::select_file;
+use tauri::Manager;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -26,6 +28,10 @@ fn main() {
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_os::init())
         .invoke_handler(tauri::generate_handler![greet, select_file])
+        .setup(|app| {
+            app.manage(Store::default());
+            Ok(())
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
