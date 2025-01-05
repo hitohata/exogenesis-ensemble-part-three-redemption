@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["DateMapper"]};
+window.SIDEBAR_ITEMS = {"struct":["Store"]};

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["store"]};
+window.SIDEBAR_ITEMS = {"mod":["date","store"]};
