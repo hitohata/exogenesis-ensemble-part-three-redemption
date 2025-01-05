@@ -166,6 +166,9 @@ jobs:
       - name: Check format
         run: bun run format:check
 
+  check-rust-format:
+    uses: ./.github/workflows/rust-format.yml
+
   action-timeline:
     needs:
       - check-project-doc
@@ -177,6 +180,7 @@ jobs:
       - check-crate-time-file-name
       - check-crate-aws-client
       - check-crate-shared
+      - check-rust-format
     runs-on: ubuntu-latest
     steps:
       - uses: Kesin11/actions-timeline@v2
