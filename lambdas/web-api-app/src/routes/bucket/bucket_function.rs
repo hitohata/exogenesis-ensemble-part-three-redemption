@@ -10,7 +10,7 @@ use shared::traits::GetFileListTrait;
 
 /// Read the years that exist items in the s3 bucket.
 pub async fn get_years() -> Result<YearsVideos, WebApiAppError> {
-    match StandardS3Client::get_years().await {
+    match StandardS3Client::new().await.get_years().await {
         Ok(years) => Ok(YearsVideos { years }),
         Err(e) => {
             error!(e);
@@ -21,7 +21,7 @@ pub async fn get_years() -> Result<YearsVideos, WebApiAppError> {
 
 /// Read the month that existing items are narrowed down by year in the s3 bucket.
 pub async fn get_months(year: usize) -> Result<MonthsVideos, WebApiAppError> {
-    match StandardS3Client::get_month(year).await {
+    match StandardS3Client::new().await.get_months(year).await {
         Ok(months) => Ok(MonthsVideos { months }),
         Err(e) => {
             error!(e);
@@ -34,7 +34,7 @@ pub async fn get_months(year: usize) -> Result<MonthsVideos, WebApiAppError> {
 
 /// Read the days that existing items are narrowed down by year and month in the s3 bucket.
 pub async fn get_days(years: usize, months: usize) -> Result<DaysVideos, WebApiAppError> {
-    match StandardS3Client::get_days(years, months).await {
+    match StandardS3Client::new().await.get_days(years, months).await {
         Ok(days) => Ok(DaysVideos { days }),
         Err(e) => {
             error!(e);
@@ -49,7 +49,11 @@ pub async fn get_objects(
     month: usize,
     day: usize,
 ) -> Result<VideoObjects, WebApiAppError> {
-    match StandardS3Client::get_objects(year, month, day).await {
+    match StandardS3Client::new()
+        .await
+        .get_objects(year, month, day)
+        .await
+    {
         Ok(objects) => Ok(VideoObjects { objects }),
         Err(e) => {
             error!(e);

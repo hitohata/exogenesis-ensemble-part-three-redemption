@@ -15,13 +15,13 @@ edition = "2021"
 # and it will keep the alphabetic ordering for you.
 
 [dependencies]
-lambda_http = "0.13.0"
+lambda_http = "0.14.0"
 
-axum = "0.7"
-serde = "1"
-serde_json = "1"
-tokio = { version = "1", features = ["macros"] }
+axum = "0.7.9"
+serde = "1.0.217"
+serde_json = "1.0.134"
+tokio = { version = "1.42.0", features = ["macros"] }
 
-aws_clients = { path = "../../crates/aws_clients" }
+aws_clients = { path = "../../crates/aws_clients", features = ["standard-storage", "db"] }
 shared = { path = "../../crates/shared" }
 thiserror = "2.0.3"
