@@ -19,10 +19,9 @@ pub struct DateMapper {
 impl DateMapper {
     /// get years
     pub fn years(&self) -> Result<Vec<String>, errors::ExogenesisError> {
-        match self.years.read() {
-            Ok(read) => Ok(read.clone().into_iter().collect::<Vec<_>>()),
-            Err(_) => Err(errors::ExogenesisError::ReadLockFailed("years".to_string())),
-        }
+        let mut years = self.read_years()?.into_iter().collect::<Vec<_>>();
+        years.sort();
+        Ok(years)
     }
 
     pub fn months(&self, year: &str) -> Result<Vec<String>, errors::ExogenesisError> {
@@ -63,6 +62,31 @@ impl DateMapper {
             None => Ok(Vec::new()),
         }
     }
+
+    /// add a new year data
+    pub fn add_years(&mut self, years: Vec<String>) -> Result<(), errors::ExogenesisError> {
+        let mut current_years = self.read_years()?;
+        let provided_years: HashSet<String> = years.into_iter().collect();
+
+        current_years.extend(provided_years);
+
+        match self.years.write() {
+            Ok(mut lock) => {
+                *lock = current_years;
+                Ok(())
+            }
+            Err(_) => Err(errors::ExogenesisError::WriteLockFailed(
+                "years".to_string(),
+            )),
+        }
+    }
+
+    fn read_years(&self) -> Result<HashSet<String>, errors::ExogenesisError> {
+        match self.years.read() {
+            Ok(read) => Ok(read.clone()),
+            Err(_) => Err(errors::ExogenesisError::ReadLockFailed("years".to_string())),
+        }
+    }
 }
 
 impl Default for DateMapper {
@@ -73,5 +97,28 @@ impl Default for DateMapper {
             days: RwLock::new(HashMap::new()),
             objects: RwLock::new(HashMap::new()),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_add_year() {
+        // Arrange
+        let mut mapper = DateMapper::default();
+        mapper
+            .add_years(vec!["1984".to_string(), "1985".to_string()])
+            .unwrap();
+        mapper
+            .add_years(vec!["1985".to_string(), "1986".to_string()])
+            .unwrap();
+
+        // Act
+        let new_years = mapper.years().unwrap();
+
+        // Assert
+        assert_eq!(new_years, vec!["1984", "1985", "1986"]);
     }
 }
