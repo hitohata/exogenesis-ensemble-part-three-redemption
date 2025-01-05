@@ -36,13 +36,23 @@ impl DateMapper {
     }
     
     pub fn days(&self, year: &str, month: &str) -> Result<Vec<String>, errors::ExogenesisError> {
-        let Ok(months) = self.days.read() else {
+        let Ok(days) = self.days.read() else {
             return  Err(errors::ExogenesisError::ReadLockFailed("days".to_string()))
         };
-        match months.get(format!("{year}-{month}").as_str()) {
-            Some(months) => Ok(months.clone().into_iter().collect::<Vec<_>>()),
+        match days.get(format!("{year}-{month}").as_str()) {
+            Some(days) => Ok(days.clone().into_iter().collect::<Vec<_>>()),
             None => Ok(Vec::new())
         }
+    }
+    
+    pub fn objects(&self, year: &str, month: &str, day: &str) -> Result<Vec<String>, errors::ExogenesisError> {
+         let Ok(objects) = self.objects.read() else {
+            return  Err(errors::ExogenesisError::ReadLockFailed("objects".to_string()))
+        };
+        match objects.get(format!("{year}-{month}-{day}").as_str()) {
+            Some(objects) => Ok(objects.clone().into_iter().collect::<Vec<_>>()),
+            None => Ok(Vec::new())
+        }       
     }
 }
 
