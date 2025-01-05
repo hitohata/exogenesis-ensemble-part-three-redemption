@@ -9,4 +9,6 @@ pub enum ExogenesisError {
     #[allow(dead_code)] // TODO: must be removed
     #[error("Writing error: {0}")]
     FileWriteError(String),
+    #[error("Couldn't get a read lock at {}")]
+    ReadLockFailed(String),
 }

@@ -4,7 +4,7 @@
 pub mod errors;
 pub mod handlers;
 pub mod local_file;
-
+pub mod stores;
 
 use handlers::select_file::select_file;
 
