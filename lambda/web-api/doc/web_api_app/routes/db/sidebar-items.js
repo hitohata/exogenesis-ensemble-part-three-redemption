@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["routes"]};
+window.SIDEBAR_ITEMS = {"mod":["db_function","routes"]};

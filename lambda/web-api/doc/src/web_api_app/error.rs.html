@@ -23,9 +23,18 @@
 <a href="#22" id="22">22</a>
 <a href="#23" id="23">23</a>
 <a href="#24" id="24">24</a>
-<a href="#25" id="25">25</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::error::WebApiAppError::{StorageError, ValidationError};
+<a href="#25" id="25">25</a>
+<a href="#26" id="26">26</a>
+<a href="#27" id="27">27</a>
+<a href="#28" id="28">28</a>
+<a href="#29" id="29">29</a>
+<a href="#30" id="30">30</a>
+<a href="#31" id="31">31</a>
+<a href="#32" id="32">32</a>
+<a href="#33" id="33">33</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::error::WebApiAppError::{DBError, StorageError, ValidationError};
 <span class="kw">use </span>axum::http::StatusCode;
 <span class="kw">use </span>axum::response::IntoResponse;
+<span class="kw">use </span>lambda_http::tracing::log;
 <span class="kw">use </span>thiserror::Error;
 
 <span class="attr">#[derive(Error, Debug)]
@@ -35,6 +44,8 @@
     </span>ValidationError(String),
     <span class="attr">#[error(<span class="string">"Storage error: {0}"</span>)]
     </span>StorageError(String),
+    <span class="attr">#[error(<span class="string">"DB error: {0}"</span>)]
+    </span>DBError(String),
 }
 
 <span class="kw">impl </span>WebApiAppError {
@@ -43,6 +54,11 @@
         <span class="kw">match </span><span class="self">self </span>{
             ValidationError(reason) =&gt; (StatusCode::BAD_REQUEST, reason.to_owned()).into_response(),
             StorageError(reason) =&gt; {
+                <span class="macro">log::error!</span>(<span class="string">"{}"</span>, reason);
+                (StatusCode::INTERNAL_SERVER_ERROR, reason.to_owned()).into_response()
+            }
+            DBError(reason) =&gt; {
+                <span class="macro">log::error!</span>(<span class="string">"{}"</span>, reason);
                 (StatusCode::INTERNAL_SERVER_ERROR, reason.to_owned()).into_response()
             }
         }

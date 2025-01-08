@@ -62,40 +62,20 @@
 <a href="#61" id="61">61</a>
 <a href="#62" id="62">62</a>
 <a href="#63" id="63">63</a>
-<a href="#64" id="64">64</a>
-<a href="#65" id="65">65</a>
-<a href="#66" id="66">66</a>
-<a href="#67" id="67">67</a>
-<a href="#68" id="68">68</a>
-<a href="#69" id="69">69</a>
-<a href="#70" id="70">70</a>
-<a href="#71" id="71">71</a>
-<a href="#72" id="72">72</a>
-<a href="#73" id="73">73</a>
-<a href="#74" id="74">74</a>
-<a href="#75" id="75">75</a>
-<a href="#76" id="76">76</a>
-<a href="#77" id="77">77</a>
-<a href="#78" id="78">78</a>
-<a href="#79" id="79">79</a>
-<a href="#80" id="80">80</a></pre></div><pre class="rust"><code><span class="doccomment">//! This mod has s3-related functions.
+<a href="#64" id="64">64</a></pre></div><pre class="rust"><code><span class="doccomment">//! This mod has s3-related functions.
 
 </span><span class="kw">use </span><span class="kw">crate</span>::error::WebApiAppError;
 <span class="kw">use </span><span class="kw">crate</span>::routes::return_types::return_data_types::{
     DaysVideos, MonthsVideos, VideoObjects, YearsVideos,
 };
 <span class="kw">use </span>aws_clients::s3::client::{StandardS3Client, StandardS3ClientTrait};
-<span class="kw">use </span>lambda_http::tracing::error;
 <span class="kw">use </span>shared::traits::GetFileListTrait;
 
 <span class="doccomment">/// Read the years that exist items in the s3 bucket.
 </span><span class="kw">pub async fn </span>get_years() -&gt; <span class="prelude-ty">Result</span>&lt;YearsVideos, WebApiAppError&gt; {
     <span class="kw">match </span>StandardS3Client::new().<span class="kw">await</span>.get_years().<span class="kw">await </span>{
         <span class="prelude-val">Ok</span>(years) =&gt; <span class="prelude-val">Ok</span>(YearsVideos { years }),
-        <span class="prelude-val">Err</span>(e) =&gt; {
-            <span class="macro">error!</span>(e);
-            <span class="prelude-val">Err</span>(WebApiAppError::StorageError(<span class="string">"Get years failed"</span>.to_string()))
-        }
+        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(WebApiAppError::StorageError(<span class="string">"Get years failed"</span>.to_string())),
     }
 }
 
@@ -103,12 +83,9 @@
 </span><span class="kw">pub async fn </span>get_months(year: usize) -&gt; <span class="prelude-ty">Result</span>&lt;MonthsVideos, WebApiAppError&gt; {
     <span class="kw">match </span>StandardS3Client::new().<span class="kw">await</span>.get_months(year).<span class="kw">await </span>{
         <span class="prelude-val">Ok</span>(months) =&gt; <span class="prelude-val">Ok</span>(MonthsVideos { months }),
-        <span class="prelude-val">Err</span>(e) =&gt; {
-            <span class="macro">error!</span>(e);
-            <span class="prelude-val">Err</span>(WebApiAppError::StorageError(
-                <span class="string">"Get months failed"</span>.to_string(),
-            ))
-        }
+        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(WebApiAppError::StorageError(
+            <span class="string">"Get months failed"</span>.to_string(),
+        )),
     }
 }
 
@@ -116,10 +93,7 @@
 </span><span class="kw">pub async fn </span>get_days(years: usize, months: usize) -&gt; <span class="prelude-ty">Result</span>&lt;DaysVideos, WebApiAppError&gt; {
     <span class="kw">match </span>StandardS3Client::new().<span class="kw">await</span>.get_days(years, months).<span class="kw">await </span>{
         <span class="prelude-val">Ok</span>(days) =&gt; <span class="prelude-val">Ok</span>(DaysVideos { days }),
-        <span class="prelude-val">Err</span>(e) =&gt; {
-            <span class="macro">error!</span>(e);
-            <span class="prelude-val">Err</span>(WebApiAppError::StorageError(<span class="string">"Get days failed"</span>.to_string()))
-        }
+        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(WebApiAppError::StorageError(<span class="string">"Get days failed"</span>.to_string())),
     }
 }
 
@@ -135,12 +109,9 @@
         .<span class="kw">await
     </span>{
         <span class="prelude-val">Ok</span>(objects) =&gt; <span class="prelude-val">Ok</span>(VideoObjects { objects }),
-        <span class="prelude-val">Err</span>(e) =&gt; {
-            <span class="macro">error!</span>(e);
-            <span class="prelude-val">Err</span>(WebApiAppError::StorageError(
-                <span class="string">"Get objects failed"</span>.to_string(),
-            ))
-        }
+        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(WebApiAppError::StorageError(
+            <span class="string">"Get objects failed"</span>.to_string(),
+        )),
     }
 }
 
@@ -150,12 +121,9 @@
 ) -&gt; <span class="prelude-ty">Result</span>&lt;String, WebApiAppError&gt; {
     <span class="kw">match </span>StandardS3Client::generate_pre_signed_url_for_video(date_time, extension).<span class="kw">await </span>{
         <span class="prelude-val">Ok</span>(url) =&gt; <span class="prelude-val">Ok</span>(url),
-        <span class="prelude-val">Err</span>(e) =&gt; {
-            <span class="macro">error!</span>(<span class="string">"{}"</span>, e);
-            <span class="prelude-val">Err</span>(WebApiAppError::StorageError(
-                <span class="string">"generate_pre_signed_url_for_video failed"</span>.to_string(),
-            ))
-        }
+        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(WebApiAppError::StorageError(
+            <span class="string">"generate_pre_signed_url_for_video failed"</span>.to_string(),
+        )),
     }
 }
 </code></pre></div></section></main></body></html>
