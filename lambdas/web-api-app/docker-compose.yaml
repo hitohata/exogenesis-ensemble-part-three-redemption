@@ -1,0 +1,34 @@
+services:
+  ensemble-aws-clients:
+    build:
+      dockerfile: ./mock-data/dockerfile/Dockerfile
+    command: bash -b "cargo lambda watch"
+    working_dir: /code
+    volumes:
+      - ".:/code"
+    environment:
+      DYNAMO_HOST: "ensemble-dynamo-db"
+      STORAGE_HOST: "ensemble-localstack"
+    depends_on:
+      - ensemble-dynamo-db
+      - ensemble-localstack
+  ensemble-dynamo-db:
+    image: amazon/dynamodb-local
+    command: "-jar DynamoDBLocal.jar -sharedDb"
+    ports:
+      - "8000:8000"
+  ensemble-localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME:-localstack-ensemble}"
+    image: localstack/localstack:3.8 # this is set 3.8 intentionally to avoid pulling  the latest one
+    ports:
+      - "127.0.0.1:4566:4566"            # LocalStack Gateway
+      - "127.0.0.1:4510-4559:4510-4559"  # external services port range
+    environment:
+      # LocalStack configuration: https://docs.localstack.cloud/references/configuration/
+      DEBUG: ${DEBUG:-0}
+      SERVICES: s3
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./localstack/volume}:/var/lib/localstack"
+      - "${LOCALSTACK_VOLUME_DIR:-./mock-data/storage/scripts}:/etc/localstack/init"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "${LOCALSTACK_VOLUME_DIR:-./mock-data/storage/test_data}:/data"

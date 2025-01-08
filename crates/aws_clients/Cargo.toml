@@ -18,3 +18,5 @@ futures = "0.3.31"
 db = ["aws-sdk-dynamodb"]
 standard-storage = ["aws-sdk-s3"]
 mock = ["db", "standard-storage"]
+# for test app
+mock-app = ["db", "standard-storage"]
