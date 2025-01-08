@@ -4,9 +4,7 @@ use crate::error::WebApiAppError;
 use crate::routes::return_types::return_data_types::{
     DaysVideos, MonthsVideos, VideoObjects, YearsVideos,
 };
-use aws_clients::dynamodb::client::{DynamoClientTrait, DynamoDbClient};
-use aws_clients::s3::client::StandardS3Client;
-use lambda_http::tracing::error;
+use aws_clients::dynamodb::client::DynamoDbClient;
 use shared::traits::GetFileListTrait;
 
 /// get years that stored in the DB
@@ -45,8 +43,6 @@ pub async fn get_objects(
         .await
     {
         Ok(objects) => Ok(VideoObjects { objects }),
-        Err(e) => Err(WebApiAppError::StorageError(
-            "Get objects failed".to_string(),
-        )),
+        Err(e) => Err(WebApiAppError::DBError(e)),
     }
 }
